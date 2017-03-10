@@ -12,8 +12,9 @@ const styles = StyleSheet.create({
   },
   bodyContainerOnSideMenu: {
     flex: 1,
-    marginTop: 64,
-    backgroundColor: 'white'
+    // marginTop: 64,
+    paddingTop: 64,
+    backgroundColor: 'white',
   },
   textStyleNavBarTitle: {
     fontWeight: '500',

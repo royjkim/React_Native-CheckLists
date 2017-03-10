@@ -2,15 +2,21 @@ import React from 'react'
 import {
   View,
   Text,
+  ListView,
 } from 'react-native'
 import styles from '../components/styles'
 import {
-  Button
+  Button,
+  List,
+  ListItem,
 } from 'react-native-elements'
+
+import ListDetailsComponent from './listDetails/listDetailsComponent'
+import MySideMenu from '../components/mySideMenu'
 
 import Reactotron from 'reactotron-react-native'
 
-class CheckList {
+class customersList {
   constructor(name, category) {
     this.name = name
     this.category = category
@@ -26,41 +32,89 @@ export default class TemplateListsComponent extends React.Component {
     super(props)
     this.state = {
       tempResult: '',
-      checkList: [
-        {name: 'Jack', category: 'GoingFishing'}
-      ]
+      // customersList: [
+      //   {name: 'Jack1', category: 'GoingFishing1'},
+      //   {name: 'Jack2', category: 'GoingFishing2'},
+      //   {name: 'Jack3', category: 'GoingFishing3'},
+      //   {name: 'Jack4', category: 'GoingFishing4'},
+      //   {name: 'Jack5', category: 'GoingFishing5'}
+      // ],
+      templateList: [
+        { title: 'GoingFishing1', category: 'Hobby' },
+        { title: 'GoOut', category: 'NormalDay' }
+      ],
+      customersList: [
+        { CustomerName: 'Jack1', templateTitle: 'GoingFishing1'},
+        { CustomerName: 'Jack2', templateTitle: 'GoingFishing1'},
+        { CustomerName: 'Jack3', templateTitle: 'GoingFishing1'},
+        { CustomerName: 'Mike', templateTitle: 'GoOut'},
+        { CustomerName: 'Sam', templateTitle: 'GoOut'},
+      ],
+      ds: new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 }),
+      dataSourceTemplateList: ''
     }
   }
 
+  componentWillMount() {
+    this.setState({
+      dataSourceTemplateList: this.state.ds.cloneWithRows(this.state.templateList)
+    })
+  }
+
   render() {
-    const createCheckList = async (name, category) => {
-      let myCheckList = new CheckList(name, category)
+    const { navigator } = this.props
+    const createcustomersList = async (name, category) => {
+      let mycustomersList = new customersList(name, category)
       await this.setState({
-        tempResult: myCheckList.getInfo()
+        tempResult: mycustomersList.getInfo()
       })
-      Reactotron.log(`Between setState() - this.state.checkList : ${JSON.stringify(this.state.checkList, null, 3)}`)
+      Reactotron.log(`Between setState() - this.state.customersList : ${JSON.stringify(this.state.customersList, null, 3)}`)
       this.setState({
-        checkList: this.state.checkList.concat(this.state.tempResult)
+        customersList: this.state.customersList.concat(this.state.tempResult)
       })
-      Reactotron.log(`After setState() - this.state.checkList : ${JSON.stringify(this.state.checkList, null, 3)}`)
+      Reactotron.log(`After setState() - this.state.customersList : ${JSON.stringify(this.state.customersList, null, 3)}`)
     }
     const addTemp = () => {
       this.setState({
         // Don't use push. It makes unexpected results.
-        // checkList: this.state.checkList.push({...this.state.tempResult})
-        // checkList: this.state.checkList.concat({...this.state.tempResult})
-        checkList: this.state.checkList.concat(this.state.tempResult)
+        // customersList: this.state.customersList.push({...this.state.tempResult})
+        // customersList: this.state.customersList.concat({...this.state.tempResult})
+        customersList: this.state.customersList.concat(this.state.tempResult)
       })
-      Reactotron.log(`After setState() - this.state.checkList : ${JSON.stringify(this.state.checkList, null, 3)}`)
+      Reactotron.log(`After setState() - this.state.customersList : ${JSON.stringify(this.state.customersList, null, 3)}`)
     }
+    const renderRow = (rowData, sectionID) => <ListItem
+      key={sectionID}
+      title={rowData.title}
+      subtitle={rowData.category}
+      onPress={() => navigator.push({
+        passProps: {
+          customerListOfChosenTemplate: this.state.customersList.filter(data => data.templateTitle == rowData.title),
+          // nextRightButtonPageComponent: MySideMenu,
+          // nextRightButtonPageTitle: 'MySideMenu',
+          nextRightButtonPageComponent: ListDetailsComponent,
+          nextRightButtonPageTitle: 'ListDetailsComponent'
+        },
+        title: 'MySideMenu',
+        component: MySideMenu,
+      })
+      }
+    />
     return(
       <View style={styles.bodyContainer}>
         <Text>
           Template Lists Component
         </Text>
+        <List>
+          <ListView
+            dataSource={this.state.dataSourceTemplateList}
+            renderRow={renderRow}
+            enableEmptySections={true}
+          />
+        </List>
         <Button
-          title='createCheckList'
-          onPress={() => createCheckList('Sam2', 'HomeClean2')}
+          title='createcustomersList'
+          onPress={() => createcustomersList('Sam2', 'HomeClean2')}
         />
         {/* <Button
           title='addTemp()'
@@ -69,13 +123,13 @@ export default class TemplateListsComponent extends React.Component {
         {/* <Text>
           this.state.tempResult : {JSON.stringify(this.state.tempResult, null, 3)}
           {'\n'}
-          this.state.checkList : {JSON.stringify(this.state.checkList, null, 3)}
+          this.state.customersList : {JSON.stringify(this.state.customersList, null, 3)}
         </Text> */}
-        {this.state.checkList.map((value, index) => (
+        {this.state.templateList.map((value, index) => (
           <Text
             key={index}
             >
-            name : {value.name}, category : {value.category}
+            title : {value.title}, category : {value.category}
           </Text>
         ))}
       </View>
