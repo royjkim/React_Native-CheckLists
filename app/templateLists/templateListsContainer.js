@@ -25,6 +25,7 @@ export default class TemplateListsContainer extends React.Component {
     )
   }
 }
+
 // import { connect } from 'react-redux'
 
 // const templateLists = [

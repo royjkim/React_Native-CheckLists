@@ -5,14 +5,15 @@ import {
 } from 'react-native'
 import styles from './components/styles'
 
-// import CustomNavigator from '../components/navigator'
-// import Home from '../components/home'
-// import ListSummary from '../components/listSummary'
-// import MySideMenu from '../components/mySideMenu'
+import { Provider } from 'react-redux'
+import initializeStore from './config/store'
 
+import RootContainer from './container/rootContainer'
 import Reactotron from 'reactotron-react-native'
 
-import MyTabs from './components/myTabs'
+
+// import MyTabs from './components/myTabs'
+const store = initializeStore()
 
 export default class App extends React.Component {
 
@@ -23,10 +24,13 @@ export default class App extends React.Component {
 
   render() {
     return(
-      <View style={styles.container}>
-        <MyTabs />
-        {/* <MySideMenu /> */}
-      </View>
+      <Provider store={store}>
+        <RootContainer />
+        {/* <MyTabs /> */}
+      </Provider>
+      // <View style={styles.container}>
+      //   <MyTabs />
+      // </View>
     )
   }
 }

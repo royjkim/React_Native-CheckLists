@@ -1,4 +1,4 @@
 import { AppRegistry } from 'react-native'
-import App from './app'
 import './app/config/reactotronConfig'
+import App from './app'
 AppRegistry.registerComponent('CheckLists', () => App)
