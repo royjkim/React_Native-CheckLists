@@ -13,11 +13,11 @@ export default class TemplateListsContainer extends React.Component {
           passProps: {
             firstPageTitleMakeBackDisabled: 'Template Lists',
             nextRightButtonPageTitle: 'Add',
-            nextRightButtonPageComponent: { TemplateListAdd }
+            nextRightButtonPageComponent: TemplateListAdd
           },
           title: 'Template Lists',
           component: TemplateListsComponent,
-           }}
+        }}
         // firstPageTitleMakeBackDisabled='Template Lists'
         // nextRightButtonPageTitle='Add'
         // nextRightButtonPageComponent={TemplateListAdd}

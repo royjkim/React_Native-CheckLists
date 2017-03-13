@@ -32,13 +32,6 @@ export default class TemplateListsComponent extends React.Component {
     super(props)
     this.state = {
       tempResult: '',
-      // customersList: [
-      //   {name: 'Jack1', category: 'GoingFishing1'},
-      //   {name: 'Jack2', category: 'GoingFishing2'},
-      //   {name: 'Jack3', category: 'GoingFishing3'},
-      //   {name: 'Jack4', category: 'GoingFishing4'},
-      //   {name: 'Jack5', category: 'GoingFishing5'}
-      // ],
       templateList: [
         { title: 'GoingFishing1', category: 'Hobby' },
         { title: 'GoOut', category: 'NormalDay' }
@@ -50,14 +43,15 @@ export default class TemplateListsComponent extends React.Component {
         { CustomerName: 'Mike', templateTitle: 'GoOut'},
         { CustomerName: 'Sam', templateTitle: 'GoOut'},
       ],
-      ds: new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 }),
+      // ds: new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 }),
       dataSourceTemplateList: ''
     }
+    this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
   }
 
   componentWillMount() {
     this.setState({
-      dataSourceTemplateList: this.state.ds.cloneWithRows(this.state.templateList)
+      dataSourceTemplateList: this.ds.cloneWithRows(this.state.templateList)
     })
   }
 
@@ -95,7 +89,8 @@ export default class TemplateListsComponent extends React.Component {
           nextRightButtonPageComponent: ListDetailsComponent,
           nextRightButtonPageTitle: 'ListDetailsComponent'
         },
-        title: 'MySideMenu',
+        // title: 'MySideMenu',
+        title: 'ListDetailsComponent',
         component: MySideMenu,
       })
       }

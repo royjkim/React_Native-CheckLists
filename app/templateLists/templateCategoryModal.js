@@ -64,7 +64,10 @@ export default class TemplateCategoryModal extends React.Component {
         />
         <Button
           title='save'
-          onPress={() => categoryAddFn(this.state.newCategory)}
+          onPress={() => {
+            categoryAddFn(this.state.newCategory)
+            closeFn()
+          }}
           buttonStyle={{ marginTop: 10 }}
         />
       </View>

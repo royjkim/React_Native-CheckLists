@@ -11,10 +11,13 @@ import {
 
 import TemplateListAdd from '../templateLists/templateListAdd'
 
+import Reactotron from 'reactotron-react-native'
+
 export default class HomeComponent extends React.Component {
 
   render() {
     const { route, navigator } = this.props
+    Reactotron.log(`navigator exists or not, ${navigator !== ''}`)
     return(
       <View style={styles.bodyContainer}>
         <Text>
@@ -24,9 +27,25 @@ export default class HomeComponent extends React.Component {
           icon={{ name: 'note-add' }}
           title='Add Template'
           // onPress={() => alert(`needed props to move Tab.add`)}
-          onPress={() => navigator.push({ title: 'Add', component: TemplateListAdd }) }
+          onPress={() => navigator.push({
+            passProps: {
+              firstPageTitleMakeBackDisabled: '',
+              nextRightButtonPageTitle: '',
+              nextRightButtonPageComponent: ''
+            },
+            title: 'Add',
+            component: TemplateListAdd
+          })}
         />
       </View>
     )
   }
 }
+
+// passProps: {
+//   firstPageTitleMakeBackDisabled: 'Template Lists',
+//   nextRightButtonPageTitle: 'Add',
+//   nextRightButtonPageComponent: { TemplateListAdd }
+// },
+// title: 'Template Lists',
+// component: TemplateListsComponent,

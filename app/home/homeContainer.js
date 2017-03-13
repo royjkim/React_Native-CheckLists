@@ -12,14 +12,14 @@ export default class HomeContainer extends React.Component {
         // initialRoute={{title: 'Home', component: HomeComponent, passProps: { firstPageTitleMakeBackDisabled: 'Home' }}}
         initialRoute={{
           passProps: {
-            firstPageTitleMakeBackDisabled: 'Home'
+            firstPageTitleMakeBackDisabled: 'Home',
+            nextRightButtonPageTitle: '',
+            nextRightButtonPageComponent: ''
           },
           title: 'Home',
           component: HomeComponent
         }}
-        firstPageTitleMakeBackDisabled='Home'
       />
     )
   }
 }
-// initialRoute, firstPageTitleMakeBackDisabled, nextRightButtonPageComponent, nextRightButtonPageTitle
