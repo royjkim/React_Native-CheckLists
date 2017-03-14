@@ -1,8 +1,10 @@
-import reducers from './reducers'
+import dataReducer from './dataReducer'
+import navigationReducer from './navigationReducer'
 import { combineReducers } from 'redux'
 
 const reducer = combineReducers({
-  reducers
+  dataReducer,
+  navigationReducer
 })
 
 export default reducer

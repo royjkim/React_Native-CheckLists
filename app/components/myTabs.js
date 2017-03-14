@@ -24,6 +24,7 @@ export default class MyTabs extends React.Component {
   }
 
   render() {
+    const { state, actions } = this.props
     return(
       <Tabs>
         <Tab
@@ -36,7 +37,7 @@ export default class MyTabs extends React.Component {
             />}
           onPress={() => this.setState({ selectedTab: 'home' })}
           >
-          <HomeContainer />
+          <HomeContainer state={state} actions={actions} />
         </Tab>
         <Tab
           selected={this.state.selectedTab == 'templateList'}
@@ -50,7 +51,7 @@ export default class MyTabs extends React.Component {
           // But this 'myTabs.js' is not a child of 'Navigator' page.
           // onPress={() => (this.state.selectedTab == 'templateList' ? navigator.popToTop() : this.setState({ selectedTab: 'templateList' }))}
           >
-          <TemplateListsContainer />
+          <TemplateListsContainer state={state} actions={actions} />
         </Tab>
         <Tab
           selected={this.state.selectedTab == 'settings'}
@@ -61,7 +62,7 @@ export default class MyTabs extends React.Component {
             onPress={() => this.setState({ selectedTab: 'settings'})}
           />}
           >
-          <SettingsContainer />
+          <SettingsContainer state={state} actions={actions} />
         </Tab>
       </Tabs>
     )

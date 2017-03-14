@@ -6,7 +6,7 @@ import {
 import styles from './components/styles'
 
 import { Provider } from 'react-redux'
-import initializeStore from './config/store'
+import initializeStore from './config/configureStore'
 
 import RootContainer from './container/rootContainer'
 import Reactotron from 'reactotron-react-native'

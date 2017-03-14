@@ -1,4 +1,4 @@
-import types from './actions'
+import types from './dataActions'
 
 // const ADD_TEMPLATE = 'addNewTemplate',
 //       MODIFY_TEMPLATE = 'modifyExistingTemplate',
@@ -11,9 +11,10 @@ function internalAddNewTemplate() {
 
 }
 
-export function addNewTemplate() {
+export function addNewTemplate(newData) {
   return {
-    type: types.ADD_TEMPLATE
+    type: types.ADD_TEMPLATE,
+    newData
   }
 }
 
