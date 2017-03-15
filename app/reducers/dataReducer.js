@@ -45,27 +45,31 @@ const addNewTemplate = (state, action) => ({
   ]
 })
 
+const addCustomer = (state, action) => ({
+  ...state,
+  customerList: [
+    ...state.customerList,
+    action.newData
+  ]
+})
+
 export default function dataReducer(state = initialState, action) {
   const reducerMap = {
-    [types.ADD_TEMPLATE]: ({
-      ...state,
-    }),
+    [types.ADD_TEMPLATE]: addNewTemplate,
     [types.MODIFY_TEMPLATE]: ({
       ...state,
     }),
     [types.DELETE_TEMPLATE]: ({
       ...state,
     }),
-    [types.CREATE_NEW_CUSTOMTER_DATA]: ({
+    [types.ADD_CUSTOMER]: addCustomer,
+    [types.DELETE_CUSTOMER]: ({
       ...state,
     }),
-    [types.DELETE_CUSTOMER_DATA]: ({
-      ...state,
-    }),
-    [types.MODIFY_CUSTOMER_DATA]: ({
+    [types.MODIFY_CUSTOMER]: ({
       ...state
     })
   }
   const handler = reducerMap[action.type]
-  return (typeof handler == 'function' ? handler : state)
+  return (typeof handler == 'function' ? handler(state, action) : state)
 }

@@ -17,63 +17,43 @@ import Reactotron from 'reactotron-react-native'
 
 export default class ListDetailsComponent extends React.Component {
 
-  constructor(props) {
-    super(props)
-    this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
-    this.dataSourceCustomerListOfChosenTemplate = this.ds.cloneWithRows([])
-    Reactotron.log(`dataSourceCustomerListOfChosenTemplate =${JSON.stringify(this.dataSourceCustomerListOfChosenTemplate, null, 3)}`)
-  }
-
-  componentWillMount() {
-    this.dataSourceCustomerListOfChosenTemplate = this.ds.cloneWithRows(this.props.route.passProps.customerListOfChosenTemplate)
-  }
-
   render() {
-    const { route, navigator, toggleSideMenu } = this.props
+    const { route, navigator, dataState } = this.props
     renderRow = (rowData, sectionID) => <ListItem
       key={sectionID}
-      title={rowData.CustomerName}
+      title={rowData.customerName}
       subtitle={rowData.templateTitle}
-      onPress={() => navigator.push({
-        passProps: {
-          firstPageTitleMakeBackDisabled: '',
-          nextRightButtonPageTitle: 'menu',
-          nextRightButtonPageComponent: '',
-          chosenCustomerPrivateData: rowData
-        },
-        title: `${rowData.CustomerName}\'s Data`,
-        component: CustomerPrivateData
-      })}
+      // onPress={() => navigator.push({
+      //   passProps: {
+      //     firstPageTitleMakeBackDisabled: '',
+      //     nextRightButtonPageTitle: 'menu',
+      //     nextRightButtonPageComponent: '',
+      //     chosenCustomerPrivateData: rowData
+      //   },
+      //   title: `${rowData.CustomerName}\'s Data`,
+      //   component: CustomerPrivateData
+      // })}
     />
     return(
-      // <View style={{ backgroundColor: 'transparent', marginTop: 300 }}>
-      //   <Text>
-      //     sideMenuVisible : {this.props.sideMenuVisible.toString()}
-      //   </Text>
-      //   <Button
-      //     title='Toggle Side Menu'
-      //     onPress={() => toggleSideMenu()}
-      //   />
-      // </View>
       <View style={styles.bodyContainerOnSideMenu}>
         <List>
           <ListView
-            dataSource={this.dataSourceCustomerListOfChosenTemplate}
+            dataSource={dataState.dataSourceCustomerList}
             renderRow={renderRow}
             enableEmptySections={true}
           />
         </List>
-        <Button
+        {/* <Button
           title='Toggle Side Menu'
           onPress={() => toggleSideMenu()}
         />
         <Text>
           sideMenuVisible : {String(this.props.sideMenuVisible)}
           {'\n'}
-          {/* dataSourceCustomerListOfChosenTemplate : ${JSON.stringify(this.dataSourceCustomerListOfChosenTemplate, null, 3)}
-          {'\n'} */}
+          dataSourceCustomerListOfChosenTemplate : ${JSON.stringify(this.dataSourceCustomerListOfChosenTemplate, null, 3)}
+          {'\n'}
           route : {JSON.stringify(route, null, 3)}
-        </Text>
+        </Text> */}
       </View>
     )
   }

@@ -19,7 +19,7 @@ import {
 import TemplateCategoryModal from './templateCategoryModal'
 import ItemsInputedListModal from './itemsInputedListModal'
 
-export default class TemplateListAdd extends React.Component {
+export default class TemplateAdd extends React.Component {
   constructor(props) {
     super(props)
     this.state = {

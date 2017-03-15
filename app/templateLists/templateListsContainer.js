@@ -1,32 +1,6 @@
-import React from 'react'
-
-import NavBar from '../components/navBar'
 import TemplateListsComponent from './templateListsComponent'
-import TemplateListAdd from './templateListAdd'
-
-export default class TemplateListsContainer extends React.Component {
-  render() {
-    return(
-      <NavBar
-        // initialRoute={{ title: 'Template Lists', component: TemplateListsComponent }}
-        initialRoute={{
-          passProps: {
-            firstPageTitleMakeBackDisabled: 'Template Lists',
-            nextRightButtonPageTitle: 'Add',
-            nextRightButtonPageComponent: TemplateListAdd
-          },
-          title: 'Template Lists',
-          component: TemplateListsComponent,
-        }}
-        // firstPageTitleMakeBackDisabled='Template Lists'
-        // nextRightButtonPageTitle='Add'
-        // nextRightButtonPageComponent={TemplateListAdd}
-      />
-    )
-  }
-}
-
-// import { connect } from 'react-redux'
+import { connect } from 'react-redux'
+import mySelectors from '../container/selectors'
 
 // const templateLists = [
 // ]
@@ -47,3 +21,20 @@ export default class TemplateListsContainer extends React.Component {
 
 
 // const { initialRoute, firstPageTitleMakeBackDisabled, nextRightButtonPageComponent, nextRightButtonPageTitle } = this.props
+
+const make_mapStateToProps = () => {
+  const make_get_dataSourceTemplateList = mySelectors.make_get_dataSourceTemplateList()
+  const make_get_badgeValueOfTemplateList = mySelectors.make_get_badgeValueOfTemplateList()
+  const mapStateToProps = (state, ownProps) => ({
+    dataState: {
+      ...state.dataReducer,
+      dataSourceTemplateList: make_get_dataSourceTemplateList(state.dataReducer),
+      badgeValueOfTemplateList: make_get_badgeValueOfTemplateList(state.dataReducer)
+    },
+    route: ownProps.route,
+    navigator: ownProps.navigator
+  })
+  return mapStateToProps
+}
+
+export default connect(make_mapStateToProps)(TemplateListsComponent)

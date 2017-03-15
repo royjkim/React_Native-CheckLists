@@ -5,26 +5,38 @@ import {
 } from 'react-native'
 import styles from '../components/styles'
 
-export default class SettingsComponent extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      version: '0.1'
-    }
-  }
-
-  render() {
-    return(
-      <View style={styles.bodyContainer}>
-        <Text>
-          SettingsComponent
-          {'\n'}
-          version : {this.state.version}
-        </Text>
-        <Text>
-          Developer : roy
-        </Text>
-      </View>
-    )
-  }
+const SettingsComponent = props => {
+  const currentVersion = '0.1'
+  return (
+    <View style={styles.bodyContainer}>
+      <Text>
+        SettingsComponent
+        {'\n'}
+        version : {currentVersion}
+      </Text>
+      <Text>
+        Developer : roy
+      </Text>
+    </View>
+  )
 }
+
+export default SettingsComponent
+
+// export default class SettingsComponent extends React.Component {
+//   render() {
+//     const currentVersion = '0.1'
+//     return(
+//       <View style={styles.bodyContainer}>
+//         <Text>
+//           SettingsComponent
+//           {'\n'}
+//           version : {currentVersion}
+//         </Text>
+//         <Text>
+//           Developer : roy
+//         </Text>
+//       </View>
+//     )
+//   }
+// }

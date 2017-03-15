@@ -1,51 +1,47 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import NavBar from '../components/navBar'
 import HomeComponent from './homeComponent'
 import { bindActionCreators } from 'redux'
-import * as navigationActionCreators from '../actions/navigationActionCreators'
 
+import mySelectors from '../container/selectors'
 import Reactotron from 'reactotron-react-native'
 
-class HomeContainer extends React.Component {
-  render() {
-    // const { state, actions } = this.props
-    const { navigationState, navigationActions } = this.props
-    console.log(`HomeContainer : this.props : ${JSON.stringify(this.props, null, 2)}`)
-    return (
-      <NavBar
-        navigationState={navigationState}
-        navigationActions={navigationActions}
-      />
-    )
-    // return(
-    //   <NavBar
-    //     // initialRoute={{title: 'Home', component: HomeComponent, passProps: { firstPageTitleMakeBackDisabled: 'Home' }}}
-    //     initialRoute={{
-    //       passProps: {
-    //         firstPageTitleMakeBackDisabled: 'Home',
-    //         nextRightButtonPageTitle: '',
-    //         nextRightButtonPageComponent: '',
-    //         state,
-    //         actions
-    //       },
-    //       title: 'Home',
-    //       component: HomeComponent
-    //     }}
-    //   />
-    // )
+const make_mapStateToProps = () => {
+  const make_get_dataSourceTemplateList = mySelectors.make_get_dataSourceTemplateList()
+  const make_get_badgeValueOfTemplateList = mySelectors.make_get_badgeValueOfTemplateList()
+  const mapStateToProps = (state, ownProps) => {
+    return {
+      dataState: {
+        ...state.dataReducer,
+        dataSourceTemplateList: make_get_dataSourceTemplateList(state.dataReducer),
+        badgeValueOfTemplateList: make_get_badgeValueOfTemplateList(state.dataReducer)
+      },
+      route: ownProps.route,
+      navigator: ownProps.navigator
+    }
   }
+  return mapStateToProps
 }
+// const mapStateToProps = (state, ownProps) => {
+//   // console.log(`homeContainer - mapStateToProps - state : ${JSON.stringify(state, null, 2)}`)
+//   return {
+//     // navigationState: state.navigationReducer,
+//     dataState: {
+//       ...state.dataReducer,
+//       dataSourceTemplateList: mySelectors.get_dataSourceTemplateList(state.dataReducer),
+//       badgeValueOfTemplateList: mySelectors.get_badgeValueOfTemplateList(state.dataReducer)
+//       // dataSourceCustomerList: mySelectors.get_dataSourceCustomerList(state.dataReducer),
+//       // dataSourceItemsOnEachTemplate: mySelectors.get_dataSourceItemsOnEachTemplate(state.dataReducer),
+//       // dataSourceTemplateCategoryList: mySelectors.get_dataSourceTemplateCategoryList(state.dataReducer)
+//     },
+//     route: ownProps.route,
+//     navigator: ownProps.navigator
+//   }
+// }
 
-const mapStateToProps = (state, ownProps) => {
-  console.log(`homeContainer - mapStateToProps - state : ${JSON.stringify(state, null, 2)}`)
-  return {
-    navigationState: state.navigationReducer
-  }
-}
+// const mapDispatchToProps = (dispatch, ownProps) => ({
+//   navigationActions: bindActionCreators(navigationActionCreators, dispatch)
+// })
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  navigationActions: bindActionCreators(navigationActionCreators, dispatch)
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(HomeContainer)
+// export default connect(mapStateToProps)(HomeComponent)
+export default connect(make_mapStateToProps)(HomeComponent)

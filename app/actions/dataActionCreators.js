@@ -3,10 +3,9 @@ import types from './dataActions'
 // const ADD_TEMPLATE = 'addNewTemplate',
 //       MODIFY_TEMPLATE = 'modifyExistingTemplate',
 //       DELETE_TEMPLATE = 'deleteExistingTemplate',
-//       CREATE_NEW_CUSTOMTER_DATA = 'creteNewCustomerData',
-//       DELETE_CUSTOMER_DATA = 'deleteExistingCustomerData',
-//       MODIFY_CUSTOMER_DATA = 'modifyExistingCustomerData';
-
+//       ADD_CUSTOMER = 'addCustomer',
+//       DELETE_CUSTOMER = 'deleteCustomer',
+//       MODIFY_CUSTOMER = 'modifyCustomer';
 function internalAddNewTemplate() {
 
 }
@@ -38,13 +37,14 @@ export function delTemplate() {
   }
 }
 
-function internalCreateNewCustomer() {
+function internalAddCustomer() {
 
 }
 
-export function createNewCustomer() {
+export function addCustomer(newData) {
   return {
-    type: types.CREATE_NEW_CUSTOMTER_DATA
+    type: types.ADD_CUSTOMER,
+    newData
   }
 }
 
@@ -54,7 +54,7 @@ function internalDelCustomer() {
 
 export function delCustomer() {
   return {
-    type: types.DELETE_CUSTOMER_DATA
+    type: types.DELETE_CUSTOMER
   }
 }
 
@@ -64,6 +64,6 @@ function internalModifyCustomer() {
 
 export function modifyCustomer() {
   return {
-    type: types.MODIFY_CUSTOMER_DATA
+    type: types.MODIFY_CUSTOMER
   }
 }

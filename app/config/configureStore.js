@@ -4,36 +4,30 @@ import thunk from 'redux-thunk'
 import Reactotron from 'reactotron-react-native'
 import reducer from '../reducers/reducer'
 import * as dataActionCreators from '../actions/dataActionCreators'
-import * as navigationActionCreators from '../actions/navigationActionCreators'
 
-import HomeComponent from '../home/homeComponent'
+import HomeContainer from '../home/homeContainer'
 
 const logger = createLogger()
 
 export default function initializeStore() {
   const store = Reactotron.createStore(reducer, compose(applyMiddleware(thunk, logger)))
-  store.dispatch(navigationActionCreators.pushRoute(
-    {
-      passProps: {
-        leftButton: {
-          title: '',
-          component: '',
-        },
-        rightButton: {
-          title: '',
-          component: '',
-        },
-      },
-    title: 'Home',
-    component: HomeComponent,
-    // sideMenuVisible: false
-    }
-  ))
   store.dispatch(dataActionCreators.addNewTemplate(
-    { title: 'GoingFishing1', category: 'Hobby' }
+    { title: 'GoingFishing', category: 'Hobby' }
   ))
   store.dispatch(dataActionCreators.addNewTemplate(
     { title: 'GoOut', category: 'NormalDay' }
+  ))
+  store.dispatch(dataActionCreators.addNewTemplate(
+    { title: 'StayHome', category: 'Relax'}
+  ))
+  store.dispatch(dataActionCreators.addCustomer(
+    { customerId: 1, customerName: 'Jack', templateTitle: 'GoingFishing' }
+  ))
+  store.dispatch(dataActionCreators.addCustomer(
+    { customerId: 2, customerName: 'Jimmy', templateTitle: 'StayHome' }
+  ))
+  store.dispatch(dataActionCreators.addCustomer(
+    { customerId: 1, customerName: 'Jack', templateTitle: 'StayHome' }
   ))
   return store
 

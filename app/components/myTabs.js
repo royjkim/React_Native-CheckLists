@@ -11,33 +11,47 @@ import {
 } from 'react-native-elements'
 
 import HomeContainer from '../home/homeContainer'
+import TemplateAdd from '../templateLists/templateAdd'
 import TemplateListsContainer from '../templateLists/templateListsContainer'
 import SettingsContainer from '../settings/settingsContainer'
+import NavBar from '../container/navBarContainer'
 import styles from './styles'
 
 export default class MyTabs extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedTab: 'home'
+      selectedTab: 'Home'
     }
   }
 
   render() {
-    const { state, actions } = this.props
+    // const { navigationState } = this.props
+    // const { state, actions } = this.props
     return(
       <Tabs>
         <Tab
-          titleStyle={{ fontWeight: 'bold', fontSize: 10 }}
+          titleStyle={styles.tabTitleStyle}
           selectedTitleStyle={{ marginTop: 0, marginBottom: 6 }}
-          selected={this.state.selectedTab == 'home'}
-          title={this.state.selectedTab == 'home' ? 'Home' : null}
+          selected={this.state.selectedTab == 'Home'}
+          title={this.state.selectedTab == 'Home' ? 'Home' : null}
           renderIcon={() => <Icon
             name='home'
             />}
-          onPress={() => this.setState({ selectedTab: 'home' })}
+          onPress={() => this.setState({ selectedTab: 'Home' })}
           >
-          <HomeContainer state={state} actions={actions} />
+          {/* <HomeContainer state={state} actions={actions} /> */}
+          <NavBar
+            initialRoute={{
+              passProps: {
+                leftButton: { title: '', component: '' },
+                rightButton: { title: '', component: '' }
+              },
+              title: 'Home',
+              sideMenuVisible: false,
+              component: HomeContainer
+            }}
+          />
         </Tab>
         <Tab
           selected={this.state.selectedTab == 'templateList'}
@@ -51,7 +65,18 @@ export default class MyTabs extends React.Component {
           // But this 'myTabs.js' is not a child of 'Navigator' page.
           // onPress={() => (this.state.selectedTab == 'templateList' ? navigator.popToTop() : this.setState({ selectedTab: 'templateList' }))}
           >
-          <TemplateListsContainer state={state} actions={actions} />
+          {/* <TemplateListsContainer state={state} actions={actions} /> */}
+          <NavBar
+            initialRoute={{
+              passProps: {
+                leftButton: { title: '', component: '' },
+                rightButton: { title: 'Add', component: TemplateAdd }
+              },
+              title: 'Template List',
+              sideMenuVisible: false,
+              component: TemplateListsContainer
+            }}
+          />
         </Tab>
         <Tab
           selected={this.state.selectedTab == 'settings'}
@@ -62,7 +87,18 @@ export default class MyTabs extends React.Component {
             onPress={() => this.setState({ selectedTab: 'settings'})}
           />}
           >
-          <SettingsContainer state={state} actions={actions} />
+          {/* <SettingsContainer state={state} actions={actions} /> */}
+          <NavBar
+            initialRoute={{
+              passProps: {
+                leftButton: { title: '', component: '' },
+                rightButton: { title: '', component: '' }
+              },
+              title: 'Setting',
+              sideMenuVisible: false,
+              component: SettingsContainer
+            }}
+          />
         </Tab>
       </Tabs>
     )
