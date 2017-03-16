@@ -11,25 +11,59 @@ const logger = createLogger()
 
 export default function initializeStore() {
   const store = Reactotron.createStore(reducer, compose(applyMiddleware(thunk, logger)))
-  store.dispatch(dataActionCreators.addNewTemplate(
-    { title: 'GoingFishing', category: 'Hobby' }
+  store.dispatch(dataActionCreators.addOriginalTemplate(
+    { id: 1, title: 'GoingFishing', category: 'Hobby' }
   ))
-  store.dispatch(dataActionCreators.addNewTemplate(
-    { title: 'GoOut', category: 'NormalDay' }
+  store.dispatch(dataActionCreators.addOriginalTemplate(
+    { id: 2, title: 'BeforeGoOutHome', category: 'NormalDay' }
   ))
-  store.dispatch(dataActionCreators.addNewTemplate(
-    { title: 'StayHome', category: 'Relax'}
+  store.dispatch(dataActionCreators.addOriginalTemplate(
+    { id: 3, title: 'StayHome', category: 'Relax'}
   ))
-  store.dispatch(dataActionCreators.addCustomer(
-    { customerId: 1, customerName: 'Jack', templateTitle: 'GoingFishing' }
+  store.dispatch(dataActionCreators.addOriginalInstance(
+    { id: 1, name: 'Jack', template: 'GoingFishing'}
   ))
-  store.dispatch(dataActionCreators.addCustomer(
-    { customerId: 2, customerName: 'Jimmy', templateTitle: 'StayHome' }
+  store.dispatch(dataActionCreators.addOriginalInstance(
+    { id: 1, name: 'Jack', template: 'StayHome'}
   ))
-  store.dispatch(dataActionCreators.addCustomer(
-    { customerId: 1, customerName: 'Jack', templateTitle: 'StayHome' }
+  store.dispatch(dataActionCreators.addOriginalInstance(
+    { id: 2, name: 'Jimmy', template: 'StayHome'}
   ))
+  store.dispatch(dataActionCreators.addOriginalInstance(
+    { id: 3, name: 'Mike', template: 'BeforeGoOutHome'}
+  ))
+  store.dispatch(dataActionCreators.my_normalize())
+  // setTimeout(() => store.dispatch(my_normalize()), 4000)
   return store
+
+  // const initialState = {
+  //   templateList: [
+  //     { id: 1, title: 'GoingFishing', category: 'Hobby' },
+  //     { id: 2, title: 'BeforeGoOutHome', category: 'NormalDay' },
+  //     { id: 3, title: 'StayHome', category: 'Relax'}
+  //   ],
+  //   instanceList: [
+  //     { id: 1, name: 'Jack', template: 'GoingFishing'},
+  //     { id: 1, name: 'Jack', template: 'StayHome'},
+  //     { id: 2, name: 'Jimmy', template: 'StayHome'},
+  //     { id: 3, name: 'Mike', template: 'BeforeGoOutHome'},
+  //     { id: 4, name: 'Sam', template: 'BeforeGoOutHome'},
+  //   ],
+  //   items: [
+  //     { id: 1, desc: 'Wear life vest', template: 'GoingFishing', orderNum: 5 },
+  //     { id: 2, desc: 'Wathing TV', template: 'StayHome', orderNum: 1  },
+  //     { id: 3, desc: 'Get on the boat', template: 'GoingFishing', orderNum: 1 },
+  //     { id: 4, desc: 'Close Door', template: 'BeforeGoOutHome', orderNum: 10 },
+  //     { id: 5, desc: 'Open Door', template: 'BeforeGoOutHome', orderNum: 8 },
+  //   ],
+  //   sideMenuVisible: false,
+  //   templateCategoryList: [
+  //     { title: 'rowing', icon: 'rowing' },
+  //     { id: 1, title: 'Hobby' },
+  //     { id: 2, title: 'NormalDat' },
+  //     { id: 3, title: 'Relax' }
+  //   ]
+  // }
 
 }
 
@@ -62,27 +96,245 @@ export default function initializeStore() {
 
 // const initialState = {
 //   templateList: [
-//     { title: 'GoingFishing', category: 'Hobby' },
-//     { title: 'GoOut', category: 'NormalDay' },
-//     { title: 'StayHome', category: 'Relax'}
+//     { id: 1, title: 'GoingFishing', category: 'Hobby' },
+//     { id: 2, title: 'BeforeGoOutHome', category: 'NormalDay' },
+//     { id: 3, title: 'StayHome', category: 'Relax'}
 //   ],
-//   customerList: [
-//     { customerId: 1, customerName: 'Jack', templateTitle: 'GoingFishing'},
-//     { customerId: 1, customerName: 'Jack', templateTitle: 'StayHome'},
-//     { customerId: 2, customerName: 'Jimmy', templateTitle: 'StayHome'},
-//     { customerId: 3, customerName: 'Mike', templateTitle: 'GoOut'},
-//     { customerId: 4, customerName: 'Sam', templateTitle: 'GoOut'},
+//   instanceList: [
+//     { id: 1, name: 'Jack', template: 'GoingFishing'},
+//     { id: 1, name: 'Jack', template: 'StayHome'},
+//     { id: 2, name: 'Jimmy', template: 'StayHome'},
+//     { id: 3, name: 'Mike', template: 'BeforeGoOutHome'},
+//     { id: 4, name: 'Sam', template: 'BeforeGoOutHome'},
 //   ],
-//   itemsOnEachTemplate: [
-//     { itemDesc: 'Wear life vest', template: 'GoingFishing', orderNum: 5 },
-//     { itemDesc: 'Wathing TV', template: 'StayHome', orderNum: 1  },
-//     { itemDesc: 'Get on the boat', template: 'GoingFishing', orderNum: 1 },
-//     { itemDesc: 'Close Door', template: 'GoOut', orderNum: 10 },
-//     { itemDesc: 'Open Door', template: 'GoOut', orderNum: 8 },
+//   items: [
+//     { id: 1, desc: 'Wear life vest', template: 'GoingFishing', orderNum: 5 },
+//     { id: 2, desc: 'Wathing TV', template: 'StayHome', orderNum: 1  },
+//     { id: 3, desc: 'Get on the boat', template: 'GoingFishing', orderNum: 1 },
+//     { id: 4, desc: 'Close Door', template: 'BeforeGoOutHome', orderNum: 10 },
+//     { id: 5, desc: 'Open Door', template: 'BeforeGoOutHome', orderNum: 8 },
 //   ],
 //   sideMenuVisible: false,
 //   templateCategoryList: [
 //     { title: 'rowing', icon: 'rowing' },
-//     { title: 'call', icon: 'call' },
+//     { id: 1, title: 'Hobby' },
+//     { id: 2, title: 'NormalDat' },
+//     { id: 3, title: 'Relax' }
 //   ]
 // }
+
+
+// result_templateList : {
+    //  "1": {
+    //   "id": 1,
+    //   "title": "GoingFishing",
+    //   "category": "Hobby"
+    //  },
+    //  "2": {
+    //   "id": 2,
+    //   "title": "BeforeGoOutHome",
+    //   "category": "NormalDay"
+    //  },
+    //  "3": {
+    //   "id": 3,
+    //   "title": "StayHome",
+    //   "category": "Relax"
+    //  }
+    // }
+
+    // result_instanceList : {
+    //  "1": {
+    //   "id": 1,
+    //   "name": "Jack",
+    //   "template": "GoingFishing"
+    //  },
+    //  "2": {
+    //   "id": 2,
+    //   "name": "Jack",
+    //   "template": "StayHome"
+    //  },
+    //  "3": {
+    //   "id": 3,
+    //   "name": "Jimmy",
+    //   "template": "StayHome"
+    //  },
+    //  "4": {
+    //   "id": 4,
+    //   "name": "Mike",
+    //   "template": "BeforeGoOutHome"
+    //  },
+    //  "5": {
+    //   "id": 5,
+    //   "name": "Sam",
+    //   "template": "BeforeGoOutHome"
+    //  }
+    // }
+
+    // result_items : {
+    //  "1": {
+    //   "id": 1,
+    //   "desc": "Wear life vest",
+    //   "template": "GoingFishing",
+    //   "orderNum": 5
+    //  },
+    //  "2": {
+    //   "id": 2,
+    //   "desc": "Wathing TV",
+    //   "template": "StayHome",
+    //   "orderNum": 1
+    //  },
+    //  "3": {
+    //   "id": 3,
+    //   "desc": "Get on the boat",
+    //   "template": "GoingFishing",
+    //   "orderNum": 1
+    //  },
+    //  "4": {
+    //   "id": 4,
+    //   "desc": "Close Door",
+    //   "template": "BeforeGoOutHome",
+    //   "orderNum": 10
+    //  },
+    //  "5": {
+    //   "id": 5,
+    //   "desc": "Open Door",
+    //   "template": "BeforeGoOutHome",
+    //   "orderNum": 8
+    //  }
+    // }
+
+    // result_templateCategoryList : {
+    //  "1": {
+    //   "id": 1,
+    //   "title": "Hobby"
+    //  },
+    //  "2": {
+    //   "id": 2,
+    //   "title": "NormalDay"
+    //  },
+    //  "3": {
+    //   "id": 3,
+    //   "title": "Relax"
+    //  }
+    // }
+
+    // this.normalizedData : {
+    //   "entities": {
+    //     "templateList": {
+    //       "1": {
+    //         "id": 1,
+    //         "title": "GoingFishing",
+    //         "category": "Hobby"
+    //       },
+    //       "2": {
+    //         "id": 2,
+    //         "title": "BeforeGoOutHome",
+    //         "category": "NormalDay"
+    //       },
+    //       "3": {
+    //         "id": 3,
+    //         "title": "StayHome",
+    //         "category": "Relax"
+    //       }
+    //     },
+    //     "instanceList": {
+    //       "1": {
+    //         "id": 1,
+    //         "name": "Jack",
+    //         "template": "GoingFishing"
+    //       },
+    //       "2": {
+    //         "id": 2,
+    //         "name": "Jack",
+    //         "template": "StayHome"
+    //       },
+    //       "3": {
+    //         "id": 3,
+    //         "name": "Jimmy",
+    //         "template": "StayHome"
+    //       },
+    //       "4": {
+    //         "id": 4,
+    //         "name": "Mike",
+    //         "template": "BeforeGoOutHome"
+    //       },
+    //       "5": {
+    //         "id": 5,
+    //         "name": "Sam",
+    //         "template": "BeforeGoOutHome"
+    //       }
+    //     },
+    //     "items": {
+    //       "1": {
+    //         "id": 1,
+    //         "desc": "Wear life vest",
+    //         "template": "GoingFishing",
+    //         "orderNum": 5
+    //       },
+    //       "2": {
+    //         "id": 2,
+    //         "desc": "Wathing TV",
+    //         "template": "StayHome",
+    //         "orderNum": 1
+    //       },
+    //       "3": {
+    //         "id": 3,
+    //         "desc": "Get on the boat",
+    //         "template": "GoingFishing",
+    //         "orderNum": 1
+    //       },
+    //       "4": {
+    //         "id": 4,
+    //         "desc": "Close Door",
+    //         "template": "BeforeGoOutHome",
+    //         "orderNum": 10
+    //       },
+    //       "5": {
+    //         "id": 5,
+    //         "desc": "Open Door",
+    //         "template": "BeforeGoOutHome",
+    //         "orderNum": 8
+    //       }
+    //     },
+    //     "templateCategoryList": {
+    //       "1": {
+    //         "id": 1,
+    //         "title": "Hobby"
+    //       },
+    //       "2": {
+    //         "id": 2,
+    //         "title": "NormalDay"
+    //       },
+    //       "3": {
+    //         "id": 3,
+    //         "title": "Relax"
+    //       }
+    //     }
+    //   },
+    //   "result": {
+    //     "templateList": [
+    //       1,
+    //       2,
+    //       3
+    //     ],
+    //     "instanceList": [
+    //       1,
+    //       2,
+    //       3,
+    //       4,
+    //       5
+    //     ],
+    //     "items": [
+    //       1,
+    //       2,
+    //       3,
+    //       4,
+    //       5
+    //     ],
+    //     "templateCategoryList": [
+    //       1,
+    //       2,
+    //       3
+    //     ]
+    //   }
+    // }

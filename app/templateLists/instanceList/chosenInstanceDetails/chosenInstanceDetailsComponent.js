@@ -8,16 +8,14 @@ import {
   ListItem,
   Button,
 } from 'react-native-elements'
-import styles from '../../components/styles'
+import styles from '../../../components/styles'
 
-export default class CustomerPrivateData extends React.Component {
+export default class ChosenInstanceDetails extends React.Component {
   render() {
     const { route, navigator } = this.props
     return(
-      <View style={styles.bodyContainerOnSideMenu}>
+      <View style={styles.bodyContainer}>
         <Text>
-          chosenCustomerPrivateData : {JSON.stringify(route.passProps.chosenCustomerPrivateData, null, 3)}
-          {'\n'}
           route : {JSON.stringify(route, null, 3)}
         </Text>
       </View>

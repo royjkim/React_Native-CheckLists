@@ -12,39 +12,12 @@ import {
   FormLabel,
 } from 'react-native-elements'
 
-import ListDetailsContainer from './listDetails/listDetailsContainer'
+import InstanceListContainer from './instanceList/instanceListContainer'
 import MySideMenu from '../components/mySideMenu'
 
 import Reactotron from 'reactotron-react-native'
 
 export default class TemplateListsComponent extends React.Component {
-  constructor(props) {
-    super(props)
-    // this.state = {
-    //   tempResult: '',
-    //   templateList: [
-    //     { title: 'GoingFishing1', category: 'Hobby' },
-    //     { title: 'GoOut', category: 'NormalDay' }
-    //   ],
-    //   customersList: [
-    //     { CustomerName: 'Jack1', templateTitle: 'GoingFishing1'},
-    //     { CustomerName: 'Jack2', templateTitle: 'GoingFishing1'},
-    //     { CustomerName: 'Jack3', templateTitle: 'GoingFishing1'},
-    //     { CustomerName: 'Mike', templateTitle: 'GoOut'},
-    //     { CustomerName: 'Sam', templateTitle: 'GoOut'},
-    //   ],
-    //   // ds: new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 }),
-    //   dataSourceTemplateList: ''
-    // }
-    // this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
-  }
-
-  // componentWillMount() {
-  //   this.setState({
-  //     dataSourceTemplateList: this.ds.cloneWithRows(this.state.templateList)
-  //   })
-  // }
-
   render() {
     const { route, navigator, dataState } = this.props
     const renderRow = (rowData, sectionID) => <ListItem
@@ -56,28 +29,35 @@ export default class TemplateListsComponent extends React.Component {
         badgeTextStyle: { color: 'white'},
         badgeContainerStyle: { marginTop: 5 }
       }}
-      onPress={() => navigator.push(
-        {
-          passProps: {
-            leftButton: {
-              title: 'back',
-              component: ''
-            },
-            rightButton: {
-              title: '',
-              component: ''
-            },
-            chosenTemplate: rowData.title
-          },
-          title: `Customer List of ${rowData.Title}`,
-          component: ListDetailsContainer,
+      onPress={() => {
+        if(typeof dataState.badgeValueOfTemplateList[rowData.title] == 'number' && dataState.badgeValueOfTemplateList[rowData.title] > 0) {
+          navigator.push(
+            {
+              passProps: {
+                leftButton: {
+                  title: 'back',
+                  component: ''
+                },
+                rightButton: {
+                  title: '',
+                  component: ''
+                },
+                chosenTemplate: rowData.title
+              },
+              // title: `Customer List of ${rowData.title}`,
+              title: `${rowData.title}`,
+              component: InstanceListContainer,
+            }
+          )
         }
-      )}
+      }}
+      hideChevron={((typeof dataState.badgeValueOfTemplateList[rowData.title] == 'number') && (dataState.badgeValueOfTemplateList[rowData.title] > 0) ?
+      false : true)}
     />
     return(
       <View style={styles.bodyContainer}>
         <FormLabel>
-          Check List Template : {dataState.templateList.length}
+          Check List Template : {dataState.templateListLength}
         </FormLabel>
         <List>
           <ListView

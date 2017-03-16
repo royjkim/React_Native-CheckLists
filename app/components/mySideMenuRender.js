@@ -9,7 +9,7 @@ import {
   ListItem,
 } from 'react-native-elements'
 
-import CustomerPrivateData from '../templateLists/listDetails/customerPrivateData'
+// import CustomerPrivateData from '../templateLists/instanceList/customerPrivateData'
 
 export default class MySideMenuRender extends React.Component {
   render() {
@@ -27,16 +27,16 @@ export default class MySideMenuRender extends React.Component {
           key={index}
           title={value.CustomerName}
           subtitle={value.templateTitle}
-          onPress={() => navigator.push({
-            passProps: {
-              firstPageTitleMakeBackDisabled: '',
-              nextRightButtonPageTitle: 'menu',
-              nextRightButtonPageComponent: '',
-              chosenCustomerPrivateData: value
-            },
-            title: `${value.CustomerName}\'s Data`,
-            component: CustomerPrivateData,
-          })}
+          // onPress={() => navigator.push({
+          //   passProps: {
+          //     firstPageTitleMakeBackDisabled: '',
+          //     nextRightButtonPageTitle: 'menu',
+          //     nextRightButtonPageComponent: '',
+          //     chosenCustomerPrivateData: value
+          //   },
+          //   title: `${value.CustomerName}\'s Data`,
+          //   component: CustomerPrivateData,
+          // })}
         />)}
       </View>
     )

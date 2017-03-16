@@ -3,9 +3,13 @@ import types from './dataActions'
 // const ADD_TEMPLATE = 'addNewTemplate',
 //       MODIFY_TEMPLATE = 'modifyExistingTemplate',
 //       DELETE_TEMPLATE = 'deleteExistingTemplate',
-//       ADD_CUSTOMER = 'addCustomer',
-//       DELETE_CUSTOMER = 'deleteCustomer',
-//       MODIFY_CUSTOMER = 'modifyCustomer';
+//       ADD_INSTANCE = 'addInstance',
+//       DELETE_INSTANCE = 'deleteInstance',
+//       MODIFY_INSTANCE = 'modifyInstance';
+//       MY_NORMALIZE = 'my_normalize',
+//       ORIGINAL_DATA_ADD_TEMPLATE = 'addOriginalTemplate',
+//       ORIGINAL_DATA_ADD_INSTANCE = 'addOriginalInstance';
+
 function internalAddNewTemplate() {
 
 }
@@ -37,33 +41,53 @@ export function delTemplate() {
   }
 }
 
-function internalAddCustomer() {
+function internal_addInstance() {
 
 }
 
-export function addCustomer(newData) {
+export function addInstance(newData) {
   return {
-    type: types.ADD_CUSTOMER,
+    type: types.ADD_INSTANCE,
     newData
   }
 }
 
-function internalDelCustomer() {
+function internal_delInstance() {
 
 }
 
-export function delCustomer() {
+export function delInstance() {
   return {
-    type: types.DELETE_CUSTOMER
+    type: types.DELETE_INSTANCE
   }
 }
 
-function internalModifyCustomer() {
+function internal_modifyInstance() {
 
 }
 
-export function modifyCustomer() {
+export function modifyInstance() {
   return {
-    type: types.MODIFY_CUSTOMER
+    type: types.MODIFY_INSTANCE
+  }
+}
+
+export function my_normalize() {
+  return {
+    type: types.MY_NORMALIZE
+  }
+}
+
+export function addOriginalTemplate(newData) {
+  return {
+    type: types.ORIGINAL_DATA_ADD_TEMPLATE,
+    newData
+  }
+}
+
+export function addOriginalInstance(newData) {
+  return {
+    type: types.ORIGINAL_DATA_ADD_INSTANCE,
+    newData
   }
 }

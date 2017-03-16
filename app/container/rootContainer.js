@@ -14,11 +14,11 @@ import MyTabs from '../components/myTabs'
 //   console.log(`rootContainer - mapStateToProps - state : ${JSON.stringify(state, null, 3)}`)
 //   return {
 //     // dataState: {
-//     //   ...state.dataReducer,
-//     //   dataSourceTemplateList: mySelectors.get_dataSourceTemplateList(state.dataReducer),
-//     //   dataSourceCustomerList: mySelectors.get_dataSourceCustomerList(state.dataReducer),
-//     //   dataSourceItemsOnEachTemplate: mySelectors.get_dataSourceItemsOnEachTemplate(state.dataReducer),
-//     //   dataSourceTemplateCategoryList: mySelectors.get_dataSourceTemplateCategoryList(state.dataReducer)
+//     //   ...state.originaldataReducer,
+//     //   dataSourceTemplateList: mySelectors.get_dataSourceTemplateList(state.originaldataReducer),
+//     //   dataSourceCustomerList: mySelectors.get_dataSourceCustomerList(state.originaldataReducer),
+//     //   dataSourceItemsOnEachTemplate: mySelectors.get_dataSourceItemsOnEachTemplate(state.originaldataReducer),
+//     //   dataSourceTemplateCategoryList: mySelectors.get_dataSourceTemplateCategoryList(state.originaldataReducer)
 //     //   // // BadgeValueOfTemplateList = state.reducers.customerList.filter((element, index, array) => index == array.findIndex(data => data.templateTitle == element.templateTitle))
 //     // },
 //     navigationState: state.navigationReducer

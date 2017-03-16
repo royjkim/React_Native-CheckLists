@@ -49,12 +49,12 @@ export default class HomeComponent extends React.Component {
         badgeTextStyle: { color: 'white' },
         badgeContainerStyle: { marginTop: 5 }
       }}
-      hideChevron
     />
     return(
       <View style={styles.bodyContainer}>
         <FormLabel>
-          Check List Template : {dataState.templateList.length}
+          Check List Template : {dataState.templateListLength}
+
         </FormLabel>
         <List>
           <ListView

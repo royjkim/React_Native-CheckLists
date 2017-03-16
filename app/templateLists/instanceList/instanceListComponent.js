@@ -11,18 +11,18 @@ import {
   ListItem,
 } from 'react-native-elements'
 
-import CustomerPrivateData from './customerPrivateData'
+import ChosenInstanceDetailsComponent from './chosenInstanceDetails/chosenInstanceDetailsComponent'
 
 import Reactotron from 'reactotron-react-native'
 
-export default class ListDetailsComponent extends React.Component {
+export default class InstanceListComponent extends React.Component {
 
   render() {
     const { route, navigator, dataState } = this.props
     renderRow = (rowData, sectionID) => <ListItem
       key={sectionID}
-      title={rowData.customerName}
-      subtitle={rowData.templateTitle}
+      title={rowData.name}
+      subtitle={rowData.template}
       // onPress={() => navigator.push({
       //   passProps: {
       //     firstPageTitleMakeBackDisabled: '',
@@ -38,7 +38,7 @@ export default class ListDetailsComponent extends React.Component {
       <View style={styles.bodyContainerOnSideMenu}>
         <List>
           <ListView
-            dataSource={dataState.dataSourceCustomerList}
+            dataSource={dataState.dataSourceInstanceList}
             renderRow={renderRow}
             enableEmptySections={true}
           />
@@ -50,7 +50,7 @@ export default class ListDetailsComponent extends React.Component {
         <Text>
           sideMenuVisible : {String(this.props.sideMenuVisible)}
           {'\n'}
-          dataSourceCustomerListOfChosenTemplate : ${JSON.stringify(this.dataSourceCustomerListOfChosenTemplate, null, 3)}
+          dataSourceInstanceListOfChosenTemplate : ${JSON.stringify(this.dataSourceInstanceListOfChosenTemplate, null, 3)}
           {'\n'}
           route : {JSON.stringify(route, null, 3)}
         </Text> */}
