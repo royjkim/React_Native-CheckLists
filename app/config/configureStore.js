@@ -130,11 +130,25 @@ export default function initializeStore() {
 
   initialData = normalizeStore.addOriginalInstance(initialData,
     {
-      id: 2,
+      id: 3,
       name: 'Mike',
       template: 'BeforeGoOutHome',
       items: [
         { id: 4, desc: 'Close Door', orderNum: 10, status: false },
+        { id: 5, desc: 'Open Door', orderNum: 8, status: false }
+      ]
+    }
+  )
+
+  initialData = normalizeStore.addOriginalInstance(initialData,
+    //     { id: 3, name: 'Mike', template: 'BeforeGoOutHome'},
+    {
+      id: 3,
+      name: 'Mike',
+      template: 'StayHome',
+      items: [
+        { id: 4, desc: 'Close Door', orderNum: 10, status: false },
+        { id: 2, desc: 'Wathing TV', orderNum: 1, status: true  },
         { id: 5, desc: 'Open Door', orderNum: 8, status: false }
       ]
     }

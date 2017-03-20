@@ -26,7 +26,8 @@ export default class HomeComponent extends React.Component {
       title={rowData.title}
       subtitle={rowData.category}
       badge={{
-        value: (typeof state.badgeValueOfTemplates[rowData.title] !== 'number' ? 0 : state.badgeValueOfTemplates[rowData.title]),
+        // value: (typeof state.badgeValueOfTemplates[rowData.title] !== 'number' ? 0 : state.badgeValueOfTemplates[rowData.title]),
+        value: (state.badgeValueOfTemplates.hasOwnProperty(rowData.title) ? state.badgeValueOfTemplates[rowData.title] : 0),
         badgeTextStyle: { color: 'white' },
         badgeContainerStyle: { marginTop: 5 }
       }}

@@ -11,7 +11,7 @@ import {
   ListItem,
 } from 'react-native-elements'
 
-import ChosenInstanceDetailsComponent from './chosenInstanceDetails/chosenInstanceDetailsComponent'
+import ChosenInstanceDetailsContainer from './chosenInstanceDetails/chosenInstanceDetailsContainer'
 
 import Reactotron from 'reactotron-react-native'
 
@@ -23,6 +23,11 @@ export default class InstanceListComponent extends React.Component {
       key={sectionID}
       title={rowData.name}
       subtitle={rowData.template}
+      badge={{
+        value: state.badgeValueOfItemsOfChosenInstance[rowData.id],
+        badgeTextStyle: { color: 'white' },
+        badgeContainerStyle: { marginTop: 5 }
+      }}
       onPress={() => navigator.push(
         {
           passProps: {
@@ -34,10 +39,10 @@ export default class InstanceListComponent extends React.Component {
               title: '',
               component: ''
             },
-            chosenInstance: rowData.name
+            chosenInstance: rowData
           },
           title: `${rowData.name}`,
-          component: ChosenInstanceDetailsComponent,
+          component: ChosenInstanceDetailsContainer,
         }
       )}
     />
