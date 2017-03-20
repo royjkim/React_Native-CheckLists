@@ -20,32 +20,13 @@ import Reactotron from 'reactotron-react-native'
 export default class HomeComponent extends React.Component {
 
   render() {
-    const { route, navigator, dataState } = this.props
-    // const { route, navigator, dataState, navigationState, navigationActions } = this.props
-    // console.log(`HomeComponent - this.props : ${JSON.stringify(this.props, null, 2)}`)
-    // HomeComponent - this.props - key : route, value : [object Object]
-    // HomeComponent - this.props - key : navigator, value : [object Object]
-    // HomeComponent - this.props - key : navigationState, value : [object Object]
-    // HomeComponent - this.props - key : dataState, value : [object Object]
-    // HomeComponent - this.props - key : navigationActions, value : [object Object]
-    // for(let key in this.props) {
-    //   console.log(`HomeComponent - this.props - key : ${key}, value : ${this.props[key]}`)
-    // }
-    // console.log(`HomeComponent - this.props.route : ${JSON.stringify(this.props.route, null, 2)}`)
-    // console.log(`HomeComponent - dataState.badgeValueOfTemplateList : ${JSON.stringify(dataState.badgeValueOfTemplateList, null, 2)}`)
-    // console.log(`HomeComponent - this.props.navigationState : ${JSON.stringify(this.props.navigationState, null, 2)}`)
-    // console.log(`HomeComponent - this.props.dataState : ${JSON.stringify(this.props.dataState, null, 2)}`)
-
-    // const { route, navigator, navigationState, navigationActions } = this.props
-    // const { route, navigator } = this.props
-    // const { state, actions } = route.passProps
-    // Reactotron.log(`HomeComponent - this.props.state : ${JSON.stringify(state, null, 3)}`)
+    const { route, navigator, state } = this.props
     const renderRow = (rowData, sectionID) => <ListItem
       key={sectionID}
       title={rowData.title}
       subtitle={rowData.category}
       badge={{
-        value: (typeof dataState.badgeValueOfTemplateList[rowData.title] !== 'number' ? 0 : dataState.badgeValueOfTemplateList[rowData.title]),
+        value: (typeof state.badgeValueOfTemplates[rowData.title] !== 'number' ? 0 : state.badgeValueOfTemplates[rowData.title]),
         badgeTextStyle: { color: 'white' },
         badgeContainerStyle: { marginTop: 5 }
       }}
@@ -53,12 +34,11 @@ export default class HomeComponent extends React.Component {
     return(
       <View style={styles.bodyContainer}>
         <FormLabel>
-          Check List Template : {dataState.templateListLength}
-
+          Check List Template : {state.templatesLength}
         </FormLabel>
         <List>
           <ListView
-            dataSource={dataState.dataSourceTemplateList}
+            dataSource={state.dataSourceTemplates}
             renderRow={renderRow}
             enableEmptySections={true}
           />
@@ -82,7 +62,6 @@ export default class HomeComponent extends React.Component {
               },
               title: 'Template Add',
               component: TemplateAdd,
-              sideMenuVisible: false
             })
             // navigator.push({
             //   passProps: {

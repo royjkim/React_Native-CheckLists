@@ -1,30 +1,17 @@
 import types from '../actions/dataActions'
 const initialState = {
   result: {
-    templateList: [],
-    instanceList: [],
+    templates: [],
+    instances: [],
     items: [],
-    templateCategoryList: []
+    templateCategories: []
   }
 }
 
-// const ADD_TEMPLATE = 'addNewTemplate',
-//       MODIFY_TEMPLATE = 'modifyExistingTemplate',
-//       DELETE_TEMPLATE = 'deleteExistingTemplate',
-//       ADD_INSTANCE = 'addInstance',
-//       DELETE_INSTANCE = 'deleteInstance',
-//       MODIFY_INSTANCE = 'modifyInstance',
-//       ADD_ITEM = 'addItem',
-//       MODIFY_ITEM = 'modifyItem',
-//       DEL_ITEM = 'delItem',
-//       ADD_TEMPLATE_CATEGORY = 'addTemplateCategory',
-//       MODIFY_TEMPLATE_CATEGORY = 'modifyTemplateCategory',
-//       DEL_TEMPLATE_CATEGORY = 'delTemplateCategory',
-
 const addTemplate = (state, action) => ({
   ...state,
-  templateList: [
-    ...state.templateList,
+  templates: [
+    ...state.templates,
     action.newData.id
   ]
 })
@@ -39,38 +26,11 @@ const delTemplate = (state, action) => ({
 
 const addInstance = (state, action) => ({
   ...state,
-  instanceList: [
-    ...state.instanceList,
+  instances: [
+    ...state.instances,
     action.newData.id
   ]
 })
-
-//   "result": {
-//     "templateList": [
-//       1,
-//       2,
-//       3
-//     ],
-//     "instanceList": [
-//       1,
-//       2,
-//       3,
-//       4,
-//       5
-//     ],
-//     "items": [
-//       1,
-//       2,
-//       3,
-//       4,
-//       5
-//     ],
-//     "templateCategoryList": [
-//       1,
-//       2,
-//       3
-//     ]
-//   }
 
 const deleteInstance = (state, action) => ({
 
@@ -104,6 +64,8 @@ const delTemplateCategory = (state, action) => ({
 
 })
 
+const normalizedDataInput = (state, action) => action.data.result
+
 export default function resultReducer(state = initialState, action) {
   const reducerMap = {
     [types.ADD_TEMPLATE]: addTemplate,
@@ -117,10 +79,12 @@ export default function resultReducer(state = initialState, action) {
     [types.DEL_ITEM]: delItem,
     [types.ADD_TEMPLATE_CATEGORY]: addTemplateCategory,
     [types.MODIFY_TEMPLATE_CATEGORY]: modifyTemplateCategory,
-    [types.DEL_TEMPLATE_CATEGORY]: delTemplateCategory
+    [types.DEL_TEMPLATE_CATEGORY]: delTemplateCategory,
+    [types.INITIATE_NORMALIZED_DATA_INPUT]: normalizedDataInput
   }
   const handler = reducerMap[action.type]
-  return (typeof handler == 'function' ? handler(state.result, action) : state)
+  // return (typeof handler == 'function' ? handler(state.result, action) : state)
+  return (reducerMap.hasOwnProperty(action.type) ? handler(state, action) : state)
 }
 
 //   "result": {

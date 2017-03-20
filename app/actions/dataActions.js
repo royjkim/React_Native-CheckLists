@@ -11,8 +11,7 @@ const ADD_TEMPLATE = 'addNewTemplate',
       MODIFY_TEMPLATE_CATEGORY = 'modifyTemplateCategory',
       DEL_TEMPLATE_CATEGORY = 'delTemplateCategory',
       MY_NORMALIZE = 'my_normalize',
-      ORIGINAL_DATA_ADD_TEMPLATE = 'addOriginalTemplate',
-      ORIGINAL_DATA_ADD_INSTANCE = 'addOriginalInstance';
+      INITIATE_NORMALIZED_DATA_INPUT = 'normalizedDataInput';
 
 const types = {
   ADD_TEMPLATE,
@@ -28,8 +27,7 @@ const types = {
   MODIFY_TEMPLATE_CATEGORY,
   DEL_TEMPLATE_CATEGORY,
   MY_NORMALIZE,
-  ORIGINAL_DATA_ADD_TEMPLATE,
-  ORIGINAL_DATA_ADD_INSTANCE
+  INITIATE_NORMALIZED_DATA_INPUT
 }
 
 export default types

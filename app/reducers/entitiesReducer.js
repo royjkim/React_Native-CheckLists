@@ -5,176 +5,25 @@ const initialState = {
     templateList: [],
     instanceList: [],
     items: [],
-    sideMenuVisible: false,
-    templateCategoryList: []
+    templateCategories: []
   }
 }
 
-// const ADD_TEMPLATE = 'addNewTemplate',
-//       MODIFY_TEMPLATE = 'modifyExistingTemplate',
-//       DELETE_TEMPLATE = 'deleteExistingTemplate',
-//       ADD_INSTANCE = 'addInstance',
-//       DELETE_INSTANCE = 'deleteInstance',
-//       MODIFY_INSTANCE = 'modifyInstance',
-//       ADD_ITEM = 'addItem',
-//       MODIFY_ITEM = 'modifyItem',
-//       DEL_ITEM = 'delItem',
-//       ADD_TEMPLATE_CATEGORY = 'addTemplateCategory',
-//       MODIFY_TEMPLATE_CATEGORY = 'modifyTemplateCategory',
-//       DEL_TEMPLATE_CATEGORY = 'delTemplateCategory',
-
-// this.normalizedData : {
-//   "entities": {
-//     "templateList": {
-//       "1": {
-//         "id": 1,
-//         "title": "GoingFishing",
-//         "category": "Hobby"
-//       },
-//       "2": {
-//         "id": 2,
-//         "title": "BeforeGoOutHome",
-//         "category": "NormalDay"
-//       },
-//       "3": {
-//         "id": 3,
-//         "title": "StayHome",
-//         "category": "Relax"
-//       }
-//     },
-//     "instanceList": {
-//       "1": {
-//         "id": 1,
-//         "name": "Jack",
-//         "template": "GoingFishing"
-//       },
-//       "2": {
-//         "id": 2,
-//         "name": "Jack",
-//         "template": "StayHome"
-//       },
-//       "3": {
-//         "id": 3,
-//         "name": "Jimmy",
-//         "template": "StayHome"
-//       },
-//       "4": {
-//         "id": 4,
-//         "name": "Mike",
-//         "template": "BeforeGoOutHome"
-//       },
-//       "5": {
-//         "id": 5,
-//         "name": "Sam",
-//         "template": "BeforeGoOutHome"
-//       }
-//     },
-//     "items": {
-//       "1": {
-//         "id": 1,
-//         "desc": "Wear life vest",
-//         "template": "GoingFishing",
-//         "orderNum": 5
-//       },
-//       "2": {
-//         "id": 2,
-//         "desc": "Wathing TV",
-//         "template": "StayHome",
-//         "orderNum": 1
-//       },
-//       "3": {
-//         "id": 3,
-//         "desc": "Get on the boat",
-//         "template": "GoingFishing",
-//         "orderNum": 1
-//       },
-//       "4": {
-//         "id": 4,
-//         "desc": "Close Door",
-//         "template": "BeforeGoOutHome",
-//         "orderNum": 10
-//       },
-//       "5": {
-//         "id": 5,
-//         "desc": "Open Door",
-//         "template": "BeforeGoOutHome",
-//         "orderNum": 8
-//       }
-//     },
-//     "templateCategoryList": {
-//       "1": {
-//         "id": 1,
-//         "title": "Hobby"
-//       },
-//       "2": {
-//         "id": 2,
-//         "title": "NormalDay"
-//       },
-//       "3": {
-//         "id": 3,
-//         "title": "Relax"
-//       }
-//     }
-//   },
-//   "result": {
-//     "templateList": [
-//       1,
-//       2,
-//       3
-//     ],
-//     "instanceList": [
-//       1,
-//       2,
-//       3,
-//       4,
-//       5
-//     ],
-//     "items": [
-//       1,
-//       2,
-//       3,
-//       4,
-//       5
-//     ],
-//     "templateCategoryList": [
-//       1,
-//       2,
-//       3
-//     ]
-//   }
-// }
-
-
 const addTemplate = (state, action) => ({
   ...state,
-  templateList: {
-    ...state.templateList,
+  templates: {
+    ...state.templates,
     [action.newData.id]: { ...action.newData }
   }
 })
 
 const addInstance = (state, action) => ({
   ...state,
-  instanceList: {
-    ...state.instanceList,
+  instances: {
+    ...state.instances,
     [action.newData.id]: { ...action.newDate }
   }
 })
-
-
-// this.normalizedData : {
-//   "entities": {
-//     "templateList": {
-//       "1": {
-//         "id": 1,
-//         "title": "GoingFishing",
-//         "category": "Hobby"
-//       },
-//       "2": {
-//         "id": 2,
-//         "title": "BeforeGoOutHome",
-//         "category": "NormalDay"
-//       },
 
 const modifyTemplate = (state, action) => ({
 
@@ -238,6 +87,8 @@ const delTemplateCategory = (state, action) => ({
 
 })
 
+const normalizedDataInput = (state, action) => action.data.entities
+
 export default function resultReducer(state = initialState, action) {
   const reducerMap = {
     [types.ADD_TEMPLATE]: addTemplate,
@@ -251,8 +102,10 @@ export default function resultReducer(state = initialState, action) {
     [types.DEL_ITEM]: delItem,
     [types.ADD_TEMPLATE_CATEGORY]: addTemplateCategory,
     [types.MODIFY_TEMPLATE_CATEGORY]: modifyTemplateCategory,
-    [types.DEL_TEMPLATE_CATEGORY]: delTemplateCategory
+    [types.DEL_TEMPLATE_CATEGORY]: delTemplateCategory,
+    [types.INITIATE_NORMALIZED_DATA_INPUT]: normalizedDataInput
   }
   const handler = reducerMap[action.type]
-  return (typeof handler == 'function' ? handler(state.entities, action) : state)
+  // return (typeof handler == 'function' ? handler(state.entities, action) : state)
+  return (reducerMap.hasOwnProperty(action.type) ? handler(state, action) : state)
 }

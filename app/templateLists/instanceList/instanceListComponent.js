@@ -18,27 +18,34 @@ import Reactotron from 'reactotron-react-native'
 export default class InstanceListComponent extends React.Component {
 
   render() {
-    const { route, navigator, dataState } = this.props
+    const { route, navigator, state } = this.props
     renderRow = (rowData, sectionID) => <ListItem
       key={sectionID}
       title={rowData.name}
       subtitle={rowData.template}
-      // onPress={() => navigator.push({
-      //   passProps: {
-      //     firstPageTitleMakeBackDisabled: '',
-      //     nextRightButtonPageTitle: 'menu',
-      //     nextRightButtonPageComponent: '',
-      //     chosenCustomerPrivateData: rowData
-      //   },
-      //   title: `${rowData.CustomerName}\'s Data`,
-      //   component: CustomerPrivateData
-      // })}
+      onPress={() => navigator.push(
+        {
+          passProps: {
+            leftButton: {
+              title: 'back',
+              component: ''
+            },
+            rightButton: {
+              title: '',
+              component: ''
+            },
+            chosenInstance: rowData.name
+          },
+          title: `${rowData.name}`,
+          component: ChosenInstanceDetailsComponent,
+        }
+      )}
     />
     return(
       <View style={styles.bodyContainerOnSideMenu}>
         <List>
           <ListView
-            dataSource={dataState.dataSourceInstanceList}
+            dataSource={state.dataSourceInstances}
             renderRow={renderRow}
             enableEmptySections={true}
           />
@@ -50,7 +57,7 @@ export default class InstanceListComponent extends React.Component {
         <Text>
           sideMenuVisible : {String(this.props.sideMenuVisible)}
           {'\n'}
-          dataSourceInstanceListOfChosenTemplate : ${JSON.stringify(this.dataSourceInstanceListOfChosenTemplate, null, 3)}
+          dataSourceInstancesOfChosenTemplate : ${JSON.stringify(this.dataSourceInstancesOfChosenTemplate, null, 3)}
           {'\n'}
           route : {JSON.stringify(route, null, 3)}
         </Text> */}

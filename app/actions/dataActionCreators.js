@@ -9,6 +9,7 @@ import types from './dataActions'
 //       MY_NORMALIZE = 'my_normalize',
 //       ORIGINAL_DATA_ADD_TEMPLATE = 'addOriginalTemplate',
 //       ORIGINAL_DATA_ADD_INSTANCE = 'addOriginalInstance';
+//       INITIATE_NORMALIZED_DATA_INPUT = 'normalizedDataInput';
 
 function internalAddNewTemplate() {
 
@@ -89,5 +90,12 @@ export function addOriginalInstance(newData) {
   return {
     type: types.ORIGINAL_DATA_ADD_INSTANCE,
     newData
+  }
+}
+
+export function normalizedDataInput(data) {
+  return {
+    type: types.INITIATE_NORMALIZED_DATA_INPUT,
+    data
   }
 }

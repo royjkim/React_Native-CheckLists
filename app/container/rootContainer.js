@@ -15,7 +15,7 @@ import MyTabs from '../components/myTabs'
 //   return {
 //     // dataState: {
 //     //   ...state.originaldataReducer,
-//     //   dataSourceTemplateList: mySelectors.get_dataSourceTemplateList(state.originaldataReducer),
+//     //   dataSourceTemplates: mySelectors.get_dataSourceTemplates(state.originaldataReducer),
 //     //   dataSourceCustomerList: mySelectors.get_dataSourceCustomerList(state.originaldataReducer),
 //     //   dataSourceItemsOnEachTemplate: mySelectors.get_dataSourceItemsOnEachTemplate(state.originaldataReducer),
 //     //   dataSourceTemplateCategoryList: mySelectors.get_dataSourceTemplateCategoryList(state.originaldataReducer)
