@@ -1,16 +1,5 @@
 import types from './dataActions'
 
-// const ADD_TEMPLATE = 'addNewTemplate',
-//       MODIFY_TEMPLATE = 'modifyExistingTemplate',
-//       DELETE_TEMPLATE = 'deleteExistingTemplate',
-//       ADD_INSTANCE = 'addInstance',
-//       DELETE_INSTANCE = 'deleteInstance',
-//       MODIFY_INSTANCE = 'modifyInstance';
-//       MY_NORMALIZE = 'my_normalize',
-//       ORIGINAL_DATA_ADD_TEMPLATE = 'addOriginalTemplate',
-//       ORIGINAL_DATA_ADD_INSTANCE = 'addOriginalInstance';
-//       INITIATE_NORMALIZED_DATA_INPUT = 'normalizedDataInput';
-
 function internalAddNewTemplate() {
 
 }
@@ -67,17 +56,25 @@ function internal_modifyInstance() {
 
 }
 
-export function modifyInstance() {
+export function modifyInstance(targetData) {
+  console.log(`actionCreators - modifyInstance - targetInstance : ${JSON.stringify(targetInstance, null, 1)}`)
   return {
     type: types.MODIFY_INSTANCE
   }
 }
 
-export function my_normalize() {
+export function modifyItemsCustomized(targetData) {
   return {
-    type: types.MY_NORMALIZE
+    type: types.MODIFY_ITEMS_CUSTOMIZED,
+    targetData
   }
 }
+
+// export function my_normalize() {
+//   return {
+//     type: types.MY_NORMALIZE
+//   }
+// }
 
 export function addOriginalTemplate(newData) {
   return {

@@ -22,11 +22,11 @@ export default class InstanceListComponent extends React.Component {
     renderRow = (rowData, sectionID) => <ListItem
       key={sectionID}
       title={rowData.name}
-      subtitle={rowData.template}
+      // subtitle={`templateId(FK)${rowData.template.toString()}`}
       badge={{
-        value: state.badgeValueOfItemsOfChosenInstance[rowData.id],
+        value: state.badgeValueOfItemsOfEachInstanceOfChosenTemplate[rowData.instanceId],
         badgeTextStyle: { color: 'white' },
-        badgeContainerStyle: { marginTop: 5 }
+        badgeContainerStyle: { marginTop: 2 }
       }}
       onPress={() => navigator.push(
         {
@@ -50,22 +50,11 @@ export default class InstanceListComponent extends React.Component {
       <View style={styles.bodyContainerOnSideMenu}>
         <List>
           <ListView
-            dataSource={state.dataSourceInstances}
+            dataSource={state.dataSourceInstancesOfChosenTemplate}
             renderRow={renderRow}
             enableEmptySections={true}
           />
         </List>
-        {/* <Button
-          title='Toggle Side Menu'
-          onPress={() => toggleSideMenu()}
-        />
-        <Text>
-          sideMenuVisible : {String(this.props.sideMenuVisible)}
-          {'\n'}
-          dataSourceInstancesOfChosenTemplate : ${JSON.stringify(this.dataSourceInstancesOfChosenTemplate, null, 3)}
-          {'\n'}
-          route : {JSON.stringify(route, null, 3)}
-        </Text> */}
       </View>
     )
   }

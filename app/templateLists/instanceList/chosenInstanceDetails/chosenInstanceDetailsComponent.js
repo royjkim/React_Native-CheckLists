@@ -9,59 +9,78 @@ import {
   ListItem,
   Button,
   FormLabel,
-  Checkbox,
+  CheckBox,
 } from 'react-native-elements'
 import styles from '../../../components/styles'
 
 export default class ChosenInstanceDetailsComponent extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      testCheckbox: false
+    }
+  }
   render() {
-    const { route, navigator, state } = this.props
-    console.log(`ChosenInstanceDetailsComponent - route : ${JSON.stringify(route, null, 1)}`)
+    const { route, navigator, state, modifyItemsCustomized } = this.props
+    const { chosenInstance } = route.passProps
+    console.log('ChosenInstanceDetailsComponent - state : ', state)
     const renderRow = (rowData, sectionId) => {
       return (
         <View>
-          <View style={{ backgroundColor: 'lightgray', height: 1 }} />
-          {/* <Checkbox
+          {/* <View style={{ backgroundColor: 'lightgray', height: 1 }} /> */}
+          <CheckBox
             title={rowData.desc}
             checked={rowData.status}
-            onIconPress={() => alert('test')}
-          /> */}
-          <Text>
-            {rowData.desc}
-          </Text>
-          <View style={{ flexDirection: 'row' }}>
-          </View>
-          <View style={{ backgroundColor: 'lightgray', height: 1 }} />
+            onPress={() => modifyItemsCustomized(rowData)}
+          />
+          {/* <View style={{ flexDirection: 'row' }}>
+          </View> */}
+          {/* <View style={{ backgroundColor: 'lightgray', height: 1 }} /> */}
         </View>
       )
     }
-    const renderRowNormal = (rowData, sectionId) => {
-      console.log(`renderRow - rowData : ${JSON.stringify(rowData, null, 1)}`)
-      return <ListItem
-        title={rowData.desc}
-        subtitle={`orderNum : ${rowData.orderNum.toString()} / item_id : ${rowData.id}`}
-        // { id: 4, desc: 'Close Door', template: 'BeforeGoOutHome', orderNum: 10 }
-      />
-    }
+    // const renderRowNormal = (rowData, sectionId) => {
+    //   return <ListItem
+    //     title={rowData.desc}
+    //     subtitle={`orderNum : ${rowData.orderNum.toString()} / item_id : ${rowData.itemCustomizedId} / status : ${rowData.status.toString()}`}
+    //     // { id: 4, desc: 'Close Door', template: 'BeforeGoOutHome', orderNum: 10 }
+    //   />
+    // }
     return(
       <View style={styles.bodyContainer}>
         <FormLabel>
-          Items
+          Name : {chosenInstance.name}
+        </FormLabel>
+        <FormLabel>
+          Template : {state.chosenTemplate.title}
+        </FormLabel>
+        <FormLabel>
+          Items : {state.countsOfStatusCompleted.total} (Completed : {state.countsOfStatusCompleted.completed}, Uncompleted : {state.countsOfStatusCompleted.uncompleted})
         </FormLabel>
         <List>
           <ListView
-            dataSource={state.dataSourceItemsOfChosenInstance}
+            dataSource={state.dataSourceItemsCustomizedOfChosenInstance}
             renderRow={renderRow}
             enableEmptySections={true}
           />
         </List>
-        <List>
+        {/* <List>
           <ListView
-            dataSource={state.dataSourceItemsOfChosenInstance}
+            dataSource={state.dataSourceItemsCustomizedOfChosenInstance}
             renderRow={renderRowNormal}
             enableEmptySections={true}
           />
-        </List>
+        </List> */}
+        <View style={{ height: 5 }}/>
+        {/* <Button
+          title='Save'
+          onPress={() => alert('save')}
+        /> */}
+        <View style={{ height: 5 }}/>
+        <Button
+          title='Undo'
+          onPress={() => alert('undo')}
+        />
       </View>
     )
   }

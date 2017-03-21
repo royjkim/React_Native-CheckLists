@@ -63,6 +63,17 @@ const modifyInstance = (state, action) => ({
 
 })
 
+const modifyItemsCustomized = (state, action) => ({
+  ...state,
+  itemsCustomized: {
+    ...state.itemsCustomized,
+    [action.targetData.itemCustomizedId]: {
+      ...action.targetData,
+      status: !action.targetData.status
+    }
+  }
+})
+
 const addItem = (state, action) => ({
 
 })
@@ -97,6 +108,7 @@ export default function resultReducer(state = initialState, action) {
     [types.ADD_INSTANCE]: addInstance,
     [types.DELETE_INSTANCE]: deleteInstance,
     [types.MODIFY_INSTANCE]: modifyInstance,
+    [types.MODIFY_ITEMS_CUSTOMIZED]: modifyItemsCustomized,
     [types.ADD_ITEM]: addItem,
     [types.MODIFY_ITEM]: modifyItem,
     [types.DEL_ITEM]: delItem,

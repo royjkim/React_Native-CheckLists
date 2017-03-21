@@ -10,186 +10,128 @@ import normalizeStore from './normalizeStore'
 
 const logger = createLogger()
 
-// const initialState = {
-//   templates: [
-//     { id: 1,
-//       title: 'GoingFishing',
-//       category: 'Hobby',
-//       items: [
-//         // { id: 1, desc: 'Wear life vest', orderNum: 5 },
-//         { id: 3, desc: 'Get on the boat', template: 'GoingFishing', orderNum: 1 },
-//         { id: 5, desc: 'Open Door', template: 'BeforeGoOutHome', orderNum: 8 }
-//       ]
-//     },
-//     { id: 2,
-//       title: 'BeforeGoOutHome',
-//       category: 'NormalDay',
-//       items: [
-//         { id: 2, desc: 'Wathing TV', template: 'StayHome', orderNum: 1  },
-//         { id: 4, desc: 'Close Door', template: 'BeforeGoOutHome', orderNum: 10 }
-//       ]
-//     },
-//     { id: 3,
-//       title: 'StayHome',
-//       category: 'Relax',
-//       items: [
-//         { id: 5, desc: 'Open Door', template: 'BeforeGoOutHome', orderNum: 8 },
-//         { id: 3, desc: 'Get on the boat', template: 'GoingFishing', orderNum: 1 },
-//       ]
-//     }
-//   ],
-//   instances: [
-//     { id: 1,
-//       name: 'Jack',
-//       template: 'GoingFishing',
-//       items: [
-//         { id: 1, desc: 'Wear life vest', orderNum: 5, status: false },
-//         { id: 2, desc: 'Wathing TV', orderNum: 1, status: true  },
-//         { id: 3, desc: 'Get on the boat', orderNum: 1, status: true },
-//       ]
-//     },
-//   ],
-//   items: [
-//     { id: 1, desc: 'Wear life vest', template: 'GoingFishing', orderNum: 5 },
-//     { id: 2, desc: 'Wathing TV', template: 'StayHome', orderNum: 1  },
-//     { id: 3, desc: 'Get on the boat', template: 'GoingFishing', orderNum: 1 },
-//     { id: 4, desc: 'Close Door', template: 'BeforeGoOutHome', orderNum: 10 },
-//     { id: 5, desc: 'Open Door', template: 'BeforeGoOutHome', orderNum: 8 },
-//   ],
-//   templateCategories: [
-//     { id: 1, title: 'Hobby' },
-//     { id: 2, title: 'NormalDay' },
-//     { id: 3, title: 'Relax' }
-//   ]
-// }
-
 export default function initializeStore() {
   const store = Reactotron.createStore(reducer, compose(applyMiddleware(thunk, logger)))
   let initialData = {
     templates: [],
-    instances: [],
     items: [],
+    instances: [],
+    itemsCustomized: [],
     templateCategories: []
   }
   initialData = normalizeStore.addOriginalTemplate(initialData,
     {
-      id: 1,
+      templateId: 1,
       title: 'GoingFishing',
       category: 'Hobby',
       items: [
-        { id: 3, desc: 'Get on the boat', template: 'GoingFishing', orderNum: 1 },
-        { id: 5, desc: 'Open Door', template: 'BeforeGoOutHome', orderNum: 8 }
+        { itemId: 3, desc: 'Get on the boat', template: 'GoingFishing', orderNum: 1 },
+        { itemId: 5, desc: 'Open Door', template: 'BeforeGoOutHome', orderNum: 8 }
       ]
-    }
-  )
-  initialData = normalizeStore.addOriginalTemplate(initialData,
-    { id: 2,
+    },
+    {
+      templateId: 2,
       title: 'BeforeGoOutHome',
       category: 'NormalDay',
       items: [
-        { id: 2, desc: 'Wathing TV', template: 'StayHome', orderNum: 1  },
-        { id: 4, desc: 'Close Door', template: 'BeforeGoOutHome', orderNum: 10 }
+        { itemId: 2, desc: 'Wathing TV', template: 'StayHome', orderNum: 1  },
+        { itemId: 4, desc: 'Close Door', template: 'BeforeGoOutHome', orderNum: 10 }
       ]
     },
-  )
-  initialData = normalizeStore.addOriginalTemplate(initialData,
-    { id: 3,
+    {
+      templateId: 3,
       title: 'StayHome',
       category: 'Relax',
       items: [
-        { id: 5, desc: 'Open Door', template: 'BeforeGoOutHome', orderNum: 8 },
-        { id: 3, desc: 'Get on the boat', template: 'GoingFishing', orderNum: 1 },
+        { itemId: 5, desc: 'Open Door', template: 'BeforeGoOutHome', orderNum: 8 },
+        { itemId: 3, desc: 'Get on the boat', template: 'GoingFishing', orderNum: 1 },
       ]
     }
   )
+
   initialData = normalizeStore.addOriginalInstance(initialData,
     {
-      id: 1,
+      instanceId: 1,
       name: 'Jack',
-      template: 'GoingFishing',
+      // template: 'GoingFishing',
+      // templateId: 1,
+      template: { templateId: 1, additionalInfo: 'addable' },
       items: [
-        { id: 1, desc: 'Wear life vest', orderNum: 5, status: false },
-        { id: 2, desc: 'Wathing TV', orderNum: 1, status: true  },
-        { id: 3, desc: 'Get on the boat', orderNum: 1, status: true },
+        { itemCustomizedId: 1, desc: 'Get on the boat' },
+        { itemCustomizedId: 2, desc: 'Wear life vest' },
+        { itemCustomizedId: 3, desc: 'Wathing TV'  }
       ]
-    }
-  )
-
-  initialData = normalizeStore.addOriginalInstance(initialData,
+    },
     {
-      id: 2,
+      instanceId: 2,
       name: 'Jack',
-      template: 'StayHome',
+      // template: 'StayHome',
+      // templateId: 3,
+      template: { templateId: 3, additionalInfo: 'addable' },
       items: [
-        { id: 4, desc: 'Close Door', orderNum: 10, status: false },
-        { id: 5, desc: 'Open Door', orderNum: 8, status: false },
-        { id: 2, desc: 'Wathing TV', orderNum: 1, status: true  }
+        { itemCustomizedId: 4, desc: 'Close Door' },
+        { itemCustomizedId: 5, desc: 'Open Door' },
+        { itemCustomizedId: 6, desc: 'Wathing TV'  }
       ]
-    }
-  )
-
-  initialData = normalizeStore.addOriginalInstance(initialData,
+    },
     {
-      id: 3,
+      instanceId: 3,
       name: 'Mike',
-      template: 'BeforeGoOutHome',
+      // template: 'BeforeGoOutHome',
+      // templateId: 2,
+      template: { templateId: 2, additionalInfo: 'addable' },
       items: [
-        { id: 4, desc: 'Close Door', orderNum: 10, status: false },
-        { id: 5, desc: 'Open Door', orderNum: 8, status: false }
+        { itemCustomizedId: 7, desc: 'Close Door' },
+        { itemCustomizedId: 8, desc: 'Open Door' }
       ]
-    }
-  )
-
-  initialData = normalizeStore.addOriginalInstance(initialData,
-    //     { id: 3, name: 'Mike', template: 'BeforeGoOutHome'},
+    },
     {
-      id: 3,
+      instanceId: 4,
       name: 'Mike',
-      template: 'StayHome',
+      // template: 'StayHome',
+      // templateId: 3,
+      template: { templateId: 3, additionalInfo: 'addable' },
       items: [
-        { id: 4, desc: 'Close Door', orderNum: 10, status: false },
-        { id: 2, desc: 'Wathing TV', orderNum: 1, status: true  },
-        { id: 5, desc: 'Open Door', orderNum: 8, status: false }
+        { itemCustomizedId: 9, desc: 'Close Door' },
+        { itemCustomizedId: 10, desc: 'Wathing TV'  },
+        { itemCustomizedId: 11, desc: 'Open Door' }
       ]
     }
   )
 
   initialData = normalizeStore.addItem(initialData,
-    { id: 1, desc: 'Wear life vest', template: 'GoingFishing', orderNum: 5 }
-  )
-
-  initialData = normalizeStore.addItem(initialData,
-    { id: 2, desc: 'Wathing TV', template: 'StayHome', orderNum: 1  }
-  )
-
-  initialData = normalizeStore.addItem(initialData,
-    { id: 3, desc: 'Get on the boat', template: 'GoingFishing', orderNum: 1 }
-  )
-
-  initialData = normalizeStore.addItem(initialData,
-    { id: 4, desc: 'Close Door', template: 'BeforeGoOutHome', orderNum: 10 }
-  )
-
-  initialData = normalizeStore.addItem(initialData,
-    { id: 5, desc: 'Open Door', template: 'BeforeGoOutHome', orderNum: 8 }
+    { itemId: 1, desc: 'Wear life vest', template: 'GoingFishing', orderNum: 5 },
+    { itemId: 2, desc: 'Wathing TV', template: 'StayHome', orderNum: 1  },
+    { itemId: 3, desc: 'Get on the boat', template: 'GoingFishing', orderNum: 1 },
+    { itemId: 4, desc: 'Close Door', template: 'BeforeGoOutHome', orderNum: 10 },
+    { itemId: 5, desc: 'Open Door', template: 'BeforeGoOutHome', orderNum: 8 }
   )
 
   initialData = normalizeStore.addCategory(initialData,
-    { id: 1, title: 'Hobby' }
-  )
-
-  initialData = normalizeStore.addCategory(initialData,
-    { id: 2, title: 'NormalDay' }
-  )
-
-  initialData = normalizeStore.addCategory(initialData,
+    { id: 1, title: 'Hobby' },
+    { id: 2, title: 'NormalDay' },
     { id: 3, title: 'Relax' }
   )
+
+  initialData = normalizeStore.addItemsCustomized(initialData,
+    { itemCustomizedId: 1, itemId: 3, instanceId: 1, desc: 'Get on the boat', orderNum: 3, status: false },
+    { itemCustomizedId: 2, itemId: 1, instanceId: 1, desc: 'Wear life vest', orderNum: 2, status: false },
+    { itemCustomizedId: 3, itemId: 2, instanceId: 1, desc: 'Wathing TV', orderNum: 1, status: false },
+    { itemCustomizedId: 4, itemId: 4, instanceId: 2, desc: 'Close Door', orderNum: 10, status: false },
+    { itemCustomizedId: 5, itemId: 5, instanceId: 2, desc: 'Open Door', orderNum: 8, status: true },
+    { itemCustomizedId: 6, itemId: 2, instanceId: 2, desc: 'Wathing TV', orderNum: 1, status: false },
+    { itemCustomizedId: 7, itemId: 4, instanceId: 3, desc: 'Close Door', orderNum: 4, status: true },
+    { itemCustomizedId: 8, itemId: 5, instanceId: 3, desc: 'Open Door', orderNum: 3, status: false },
+    { itemCustomizedId: 9, itemId: 4, instanceId: 4, desc: 'Close Door', orderNum: 3, status: true },
+    { itemCustomizedId: 10, itemId: 2, instanceId: 4, desc: 'Wathing TV', orderNum: 1, status: true },
+    { itemCustomizedId: 11, itemId: 5, instanceId: 4, desc: 'Open Door', orderNum: 2, status: false }
+  )
+
   // setTimeout(() => store.dispatch(my_normalize()), 4000)
 
   // console.log(`Before normalize - initialData : ${JSON.stringify(initialData, null, 1)}`)
   initialData = normalizeStore.my_normalize(initialData)
-  // console.log(`After normalize - initialData : ${JSON.stringify(initialData, null, 1)}`)
+  console.log(`After normalize - initialData : ${JSON.stringify(initialData, null, 1)}`)
 
   store.dispatch(dataActionCreators.normalizedDataInput(initialData))
   // console.log(`store.getState() : ${JSON.stringify(store.getState(), null, 1)}`)
@@ -224,45 +166,75 @@ export default function initializeStore() {
 //   sideMenuVisible: false
 //   }
 
-// const initialState = {
-//   templateList: [
-//     { id: 1, title: 'GoingFishing', category: 'Hobby' },
-//     { id: 2, title: 'BeforeGoOutHome', category: 'NormalDay' },
-//     { id: 3, title: 'StayHome', category: 'Relax'}
-//   ], -> need to be made by selector.
+// this.data = {
 //   templates: [
 //     { id: 1,
 //       title: 'GoingFishing',
 //       category: 'Hobby',
 //       items: [
-//         { id: 1, desc: 'Wear life vest', orderNum: 5 },
+//         { itemId: 3, desc: 'Get on the boat', template: 'GoingFishing', orderNum: 1 },
+//         { itemId: 5, desc: 'Open Door', template: 'BeforeGoOutHome', orderNum: 8 }
 //       ]
 //     },
-//   ],
-//   instanceList: [
-//     { id: 1, name: 'Jack', template: 'GoingFishing'},
-//     { id: 1, name: 'Jack', template: 'StayHome'},
-//     { id: 2, name: 'Jimmy', template: 'StayHome'},
-//     { id: 3, name: 'Mike', template: 'BeforeGoOutHome'},
-//     { id: 4, name: 'Sam', template: 'BeforeGoOutHome'},
-//   ], -> need to be made by selector.
-//   instances: [
-//     { id: 1,
-//       name: 'Jack',
-//       template: 'GoingFishing',
+//     { id: 2,
+//       title: 'BeforeGoOutHome',
+//       category: 'NormalDay',
 //       items: [
-//         { id: 1, desc: 'Wear life vest', orderNum: 5, status: false },
-//         { id: 2, desc: 'Wathing TV', orderNum: 1, status: true  },
-//         { id: 3, desc: 'Get on the boat', orderNum: 1, status: true },
+//         { itemId: 2, desc: 'Wathing TV', template: 'StayHome', orderNum: 1  },
+//         { itemId: 4, desc: 'Close Door', template: 'BeforeGoOutHome', orderNum: 10 }
 //       ]
 //     },
+//     { id: 3,
+//       title: 'StayHome',
+//       category: 'Relax',
+//       items: [
+//         { itemId: 5, desc: 'Open Door', template: 'BeforeGoOutHome', orderNum: 8 },
+//         { itemId: 3, desc: 'Get on the boat', template: 'GoingFishing', orderNum: 1 },
+//       ]
+//     }
 //   ],
-//   items: [
-//     { id: 1, desc: 'Wear life vest', template: 'GoingFishing', orderNum: 5 },
-//     { id: 2, desc: 'Wathing TV', template: 'StayHome', orderNum: 1  },
-//     { id: 3, desc: 'Get on the boat', template: 'GoingFishing', orderNum: 1 },
-//     { id: 4, desc: 'Close Door', template: 'BeforeGoOutHome', orderNum: 10 },
-//     { id: 5, desc: 'Open Door', template: 'BeforeGoOutHome', orderNum: 8 },
+  // items: [
+  //   { itemCustomizedId: 1, itemId: 3, instanceId: 1, desc: 'Get on the boat', orderNum: 3, status: false },
+  //   { itemCustomizedId: 2, itemId: 1, instanceId: 1, desc: 'Wear life vest', orderNum: 2, status: false },
+  //   { itemCustomizedId: 3, itemId: 2, instanceId: 1, desc: 'Wathing TV', orderNum: 1, status: false },
+  //   { itemCustomizedId: 4, itemId: 4, instanceId: 2, desc: 'Close Door', orderNum: 10, status: false },
+  //   { itemCustomizedId: 5, itemId: 5, instanceId: 2, desc: 'Open Door', orderNum: 8, status: true },
+  //   { itemCustomizedId: 6, itemId: 2, instanceId: 2, desc: 'Wathing TV', orderNum: 1, status: false },
+  //   { itemCustomizedId: 7, itemId: 4, instanceId: 3, desc: 'Close Door', orderNum: 4, status: true },
+  //   { itemCustomizedId: 8, itemId: 5, instanceId: 3, desc: 'Open Door', orderNum: 3, status: false },
+  //   { itemCustomizedId: 9, itemId: 4, instanceId: 4, desc: 'Close Door', orderNum: 3, status: true },
+  //   { itemCustomizedId: 10, itemId: 2, instanceId: 4, desc: 'Wathing TV', orderNum: 1, status: true },
+  //   { itemCustomizedId: 11, itemId: 5, instanceId: 4, desc: 'Open Door', orderNum: 2, status: false }
+  // ],
+  // instances: [
+  //   {
+  //     id: 1,
+  //     name: 'Jack',
+  //     template: 'GoingFishing',
+  //     items: [
+  //       { itemCustomizedId: 1, desc: 'Get on the boat' },
+  //       { itemCustomizedId: 2, desc: 'Wear life vest' },
+  //       { itemCustomizedId: 3, desc: 'Wathing TV'  }
+  //     ]
+  //   },
+  //   {
+  //     id: 2,
+  //     name: 'Jack',
+  //     template: 'StayHome',
+  //     items: [
+  //       { itemCustomizedId: 4, desc: 'Close Door' },
+  //       { itemCustomizedId: 5, desc: 'Open Door' },
+  //       { itemCustomizedId: 6, desc: 'Wathing TV'  }
+  //     ]
+  //   }
+  // ],
+//   itemsCustomized: [
+//     { id: 1, itemId: 3, instanceId: 1, desc: 'Get on the boat', orderNum: 3, status: false },
+//     { id: 2, itemId: 1, instanceId: 1, desc: 'Wear life vest', orderNum: 2, status: false },
+//     { id: 3, itemId: 2, instanceId: 1, desc: 'Wathing TV', orderNum: 1, status: false },
+//     { id: 4, itemId: 4, instanceId: 2, desc: 'Close Door', orderNum: 10, status: false },
+//     { id: 5, itemId: 5, instanceId: 2, desc: 'Open Door', orderNum: 8, status: true },
+//     { id: 6, itemId: 2, instanceId: 2, desc: 'Wathing TV', orderNum: 1, status: false }
 //   ],
 //   templateCategories: [
 //     { id: 1, title: 'Hobby' },
@@ -272,217 +244,252 @@ export default function initializeStore() {
 // }
 
 
-// result_templateList : {
-    //  "1": {
-    //   "id": 1,
-    //   "title": "GoingFishing",
-    //   "category": "Hobby"
-    //  },
-    //  "2": {
-    //   "id": 2,
-    //   "title": "BeforeGoOutHome",
-    //   "category": "NormalDay"
-    //  },
-    //  "3": {
-    //   "id": 3,
-    //   "title": "StayHome",
-    //   "category": "Relax"
-    //  }
-    // }
 
-    // result_instanceList : {
-    //  "1": {
-    //   "id": 1,
-    //   "name": "Jack",
-    //   "template": "GoingFishing"
-    //  },
-    //  "2": {
-    //   "id": 2,
-    //   "name": "Jack",
-    //   "template": "StayHome"
-    //  },
-    //  "3": {
-    //   "id": 3,
-    //   "name": "Jimmy",
-    //   "template": "StayHome"
-    //  },
-    //  "4": {
-    //   "id": 4,
-    //   "name": "Mike",
-    //   "template": "BeforeGoOutHome"
-    //  },
-    //  "5": {
-    //   "id": 5,
-    //   "name": "Sam",
-    //   "template": "BeforeGoOutHome"
-    //  }
-    // }
-
-    // result_items : {
-    //  "1": {
-    //   "id": 1,
-    //   "desc": "Wear life vest",
-    //   "template": "GoingFishing",
-    //   "orderNum": 5
-    //  },
-    //  "2": {
-    //   "id": 2,
-    //   "desc": "Wathing TV",
-    //   "template": "StayHome",
-    //   "orderNum": 1
-    //  },
-    //  "3": {
-    //   "id": 3,
-    //   "desc": "Get on the boat",
-    //   "template": "GoingFishing",
-    //   "orderNum": 1
-    //  },
-    //  "4": {
-    //   "id": 4,
-    //   "desc": "Close Door",
-    //   "template": "BeforeGoOutHome",
-    //   "orderNum": 10
-    //  },
-    //  "5": {
-    //   "id": 5,
-    //   "desc": "Open Door",
-    //   "template": "BeforeGoOutHome",
-    //   "orderNum": 8
-    //  }
-    // }
-
-    // result_templateCategoryList : {
-    //  "1": {
-    //   "id": 1,
-    //   "title": "Hobby"
-    //  },
-    //  "2": {
-    //   "id": 2,
-    //   "title": "NormalDay"
-    //  },
-    //  "3": {
-    //   "id": 3,
-    //   "title": "Relax"
-    //  }
-    // }
-
-    // this.normalizedData : {
-    //   "entities": {
-    //     "templateList": {
-    //       "1": {
-    //         "id": 1,
-    //         "title": "GoingFishing",
-    //         "category": "Hobby"
-    //       },
-    //       "2": {
-    //         "id": 2,
-    //         "title": "BeforeGoOutHome",
-    //         "category": "NormalDay"
-    //       },
-    //       "3": {
-    //         "id": 3,
-    //         "title": "StayHome",
-    //         "category": "Relax"
-    //       }
-    //     },
-    //     "instanceList": {
-    //       "1": {
-    //         "id": 1,
-    //         "name": "Jack",
-    //         "template": "GoingFishing"
-    //       },
-    //       "2": {
-    //         "id": 2,
-    //         "name": "Jack",
-    //         "template": "StayHome"
-    //       },
-    //       "3": {
-    //         "id": 3,
-    //         "name": "Jimmy",
-    //         "template": "StayHome"
-    //       },
-    //       "4": {
-    //         "id": 4,
-    //         "name": "Mike",
-    //         "template": "BeforeGoOutHome"
-    //       },
-    //       "5": {
-    //         "id": 5,
-    //         "name": "Sam",
-    //         "template": "BeforeGoOutHome"
-    //       }
-    //     },
-    //     "items": {
-    //       "1": {
-    //         "id": 1,
-    //         "desc": "Wear life vest",
-    //         "template": "GoingFishing",
-    //         "orderNum": 5
-    //       },
-    //       "2": {
-    //         "id": 2,
-    //         "desc": "Wathing TV",
-    //         "template": "StayHome",
-    //         "orderNum": 1
-    //       },
-    //       "3": {
-    //         "id": 3,
-    //         "desc": "Get on the boat",
-    //         "template": "GoingFishing",
-    //         "orderNum": 1
-    //       },
-    //       "4": {
-    //         "id": 4,
-    //         "desc": "Close Door",
-    //         "template": "BeforeGoOutHome",
-    //         "orderNum": 10
-    //       },
-    //       "5": {
-    //         "id": 5,
-    //         "desc": "Open Door",
-    //         "template": "BeforeGoOutHome",
-    //         "orderNum": 8
-    //       }
-    //     },
-    //     "templateCategoryList": {
-    //       "1": {
-    //         "id": 1,
-    //         "title": "Hobby"
-    //       },
-    //       "2": {
-    //         "id": 2,
-    //         "title": "NormalDay"
-    //       },
-    //       "3": {
-    //         "id": 3,
-    //         "title": "Relax"
-    //       }
-    //     }
-    //   },
-    //   "result": {
-    //     "templateList": [
-    //       1,
-    //       2,
-    //       3
-    //     ],
-    //     "instanceList": [
-    //       1,
-    //       2,
-    //       3,
-    //       4,
-    //       5
-    //     ],
-    //     "items": [
-    //       1,
-    //       2,
-    //       3,
-    //       4,
-    //       5
-    //     ],
-    //     "templateCategoryList": [
-    //       1,
-    //       2,
-    //       3
-    //     ]
-    //   }
-    // }
+// After normalize - initialData : {
+//  "entities": {
+//   "items": {
+//    "1": {
+//     "itemId": 1,
+//     "desc": "Wear life vest",
+//     "template": "GoingFishing",
+//     "orderNum": 5
+//    },
+//    "2": {
+//     "itemId": 2,
+//     "desc": "Wathing TV",
+//     "template": "StayHome",
+//     "orderNum": 1
+//    },
+//    "3": {
+//     "itemId": 3,
+//     "desc": "Get on the boat",
+//     "template": "GoingFishing",
+//     "orderNum": 1
+//    },
+//    "4": {
+//     "itemId": 4,
+//     "desc": "Close Door",
+//     "template": "BeforeGoOutHome",
+//     "orderNum": 10
+//    },
+//    "5": {
+//     "itemId": 5,
+//     "desc": "Open Door",
+//     "template": "BeforeGoOutHome",
+//     "orderNum": 8
+//    }
+//   },
+//   "templates": {
+//    "1": {
+//     "id": 1,
+//     "title": "GoingFishing",
+//     "category": "Hobby",
+//     "items": [
+//      3,
+//      5
+//     ]
+//    },
+//    "2": {
+//     "id": 2,
+//     "title": "BeforeGoOutHome",
+//     "category": "NormalDay",
+//     "items": [
+//      2,
+//      4
+//     ]
+//    },
+//    "3": {
+//     "id": 3,
+//     "title": "StayHome",
+//     "category": "Relax",
+//     "items": [
+//      5,
+//      3
+//     ]
+//    }
+//   },
+//   "itemsCustomized": {
+//    "1": {
+//     "itemCustomizedId": 1,
+//     "desc": "Get on the boat",
+//     "itemId": 3,
+//     "instanceId": 1,
+//     "orderNum": 3,
+//     "status": false
+//    },
+//    "2": {
+//     "itemCustomizedId": 2,
+//     "desc": "Wear life vest",
+//     "itemId": 1,
+//     "instanceId": 1,
+//     "orderNum": 2,
+//     "status": false
+//    },
+//    "3": {
+//     "itemCustomizedId": 3,
+//     "desc": "Wathing TV",
+//     "itemId": 2,
+//     "instanceId": 1,
+//     "orderNum": 1,
+//     "status": false
+//    },
+//    "4": {
+//     "itemCustomizedId": 4,
+//     "desc": "Close Door",
+//     "itemId": 4,
+//     "instanceId": 2,
+//     "orderNum": 10,
+//     "status": false
+//    },
+//    "5": {
+//     "itemCustomizedId": 5,
+//     "desc": "Open Door",
+//     "itemId": 5,
+//     "instanceId": 2,
+//     "orderNum": 8,
+//     "status": true
+//    },
+//    "6": {
+//     "itemCustomizedId": 6,
+//     "desc": "Wathing TV",
+//     "itemId": 2,
+//     "instanceId": 2,
+//     "orderNum": 1,
+//     "status": false
+//    },
+//    "7": {
+//     "itemCustomizedId": 7,
+//     "desc": "Close Door",
+//     "itemId": 4,
+//     "instanceId": 3,
+//     "orderNum": 4,
+//     "status": true
+//    },
+//    "8": {
+//     "itemCustomizedId": 8,
+//     "desc": "Open Door",
+//     "itemId": 5,
+//     "instanceId": 3,
+//     "orderNum": 3,
+//     "status": false
+//    },
+//    "9": {
+//     "itemCustomizedId": 9,
+//     "desc": "Close Door",
+//     "itemId": 4,
+//     "instanceId": 4,
+//     "orderNum": 3,
+//     "status": true
+//    },
+//    "10": {
+//     "itemCustomizedId": 10,
+//     "desc": "Wathing TV",
+//     "itemId": 2,
+//     "instanceId": 4,
+//     "orderNum": 1,
+//     "status": true
+//    },
+//    "11": {
+//     "itemCustomizedId": 11,
+//     "desc": "Open Door",
+//     "itemId": 5,
+//     "instanceId": 4,
+//     "orderNum": 2,
+//     "status": false
+//    }
+//   },
+//   "instances": {
+//    "1": {
+//     "id": 1,
+//     "name": "Jack",
+//     "template": "GoingFishing",
+//     "items": [
+//      1,
+//      2,
+//      3
+//     ]
+//    },
+//    "2": {
+//     "id": 2,
+//     "name": "Jack",
+//     "template": "StayHome",
+//     "items": [
+//      4,
+//      5,
+//      6
+//     ]
+//    },
+//    "3": {
+//     "id": 3,
+//     "name": "Mike",
+//     "template": "BeforeGoOutHome",
+//     "items": [
+//      7,
+//      8
+//     ]
+//    },
+//    "4": {
+//     "id": 4,
+//     "name": "Mike",
+//     "template": "StayHome",
+//     "items": [
+//      9,
+//      10,
+//      11
+//     ]
+//    }
+//   },
+//   "templateCategories": {
+//    "1": {
+//     "id": 1,
+//     "title": "Hobby"
+//    },
+//    "2": {
+//     "id": 2,
+//     "title": "NormalDay"
+//    },
+//    "3": {
+//     "id": 3,
+//     "title": "Relax"
+//    }
+//   }
+//  },
+//  "result": {
+//   "templates": [
+//    1,
+//    2,
+//    3
+//   ],
+//   "items": [
+//    1,
+//    2,
+//    3,
+//    4,
+//    5
+//   ],
+//   "instances": [
+//    1,
+//    2,
+//    3,
+//    4
+//   ],
+//   "itemsCustomized": [
+//    1,
+//    2,
+//    3,
+//    4,
+//    5,
+//    6,
+//    7,
+//    8,
+//    9,
+//    10,
+//    11
+//   ],
+//   "templateCategories": [
+//    1,
+//    2,
+//    3
+//   ]
+//  }
+// }

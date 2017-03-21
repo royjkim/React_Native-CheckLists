@@ -23,14 +23,18 @@ export default class TemplateListsComponent extends React.Component {
     const renderRow = (rowData, sectionID) => <ListItem
       key={sectionID}
       title={rowData.title}
-      subtitle={rowData.category}
+      subtitle={`${rowData.category}`}
       badge={{
-        value: (typeof state.badgeValueOfTemplates[rowData.title] !== 'number' ? 0 : state.badgeValueOfTemplates[rowData.title]),
+        // value: (typeof state.badgeValueOfTemplates[rowData.templateId] !== 'number' ? 0 : state.badgeValueOfTemplates[rowData.templateId]),
+        value: (state.badgeValueOfTemplates.hasOwnProperty(rowData.templateId) ? state.badgeValueOfTemplates[rowData.templateId] : 0),
         badgeTextStyle: { color: 'white'},
         badgeContainerStyle: { marginTop: 5 }
       }}
+      hideChevron={
+        ((state.badgeValueOfTemplates.hasOwnProperty(rowData.templateId) && state.badgeValueOfTemplates[rowData.templateId] > 0)
+         ? false : true)}
       onPress={() => {
-        if(typeof state.badgeValueOfTemplates[rowData.title] == 'number' && state.badgeValueOfTemplates[rowData.title] > 0) {
+        if(state.badgeValueOfTemplates.hasOwnProperty(rowData.templateId) && state.badgeValueOfTemplates[rowData.templateId] > 0) {
           navigator.push(
             {
               passProps: {
@@ -51,8 +55,6 @@ export default class TemplateListsComponent extends React.Component {
           )
         }
       }}
-      hideChevron={((typeof state.badgeValueOfTemplates[rowData.title] == 'number') && (state.badgeValueOfTemplates[rowData.title] > 0) ?
-      false : true)}
     />
     return(
       <View style={styles.bodyContainer}>

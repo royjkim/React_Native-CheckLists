@@ -3,15 +3,18 @@ import { connect } from 'react-redux'
 import mySelectors from '../../container/selectors'
 
 const make_mapStateToProps = () => {
-  const make_get_chosenTemplate_of_dataSourceInstances = mySelectors.make_get_chosenTemplate_of_dataSourceInstances()
-  const make_get_badgeValueOfItemsOfChosenInstance = mySelectors.make_get_badgeValueOfItemsOfChosenInstance()
+  const make_get_instancesOfChosenTemplate = mySelectors.make_get_instancesOfChosenTemplate();
   const mapStateToProps = (state, ownProps) => {
     // console.log(`instanceListContainer - mapStateToProps - state.normalizeReducer.entities : ${JSON.stringify(state.normalizeReducer.entities, null, 1)}`)
     // console.log(`instnaceListContainer - ownProps.route.passProps.chosenTemplate : ${JSON.stringify(ownProps.route.passProps.chosenTemplate, null, 1)}`)
     return {
       state: {
-        dataSourceInstances: make_get_chosenTemplate_of_dataSourceInstances(state.normalizeReducer.entities, ownProps.route.passProps.chosenTemplate),
-        badgeValueOfItemsOfChosenInstance: make_get_badgeValueOfItemsOfChosenInstance(state.normalizeReducer.entities, ownProps.route.passProps.chosenTemplate)
+        // dataSourceInstancesOfChosenTemplate: make_get_chosenTemplate_of_dataSourceInstancesOfChosenTemplate(state.normalizeReducer.entities, ownProps.route.passProps.chosenTemplate),
+        instancesOfChosenTemplate: make_get_instancesOfChosenTemplate(state.normalizeReducer.entities, ownProps.route.passProps.chosenTemplate),
+        itemsCustomized: {
+          ...state.normalizeReducer.entities.itemsCustomized
+        }
+        // badgeValueOfItemsOfEachInstanceOfChosenTemplate: make_get_badgeValueOfItemsOfEachInstanceOfChosenTemplate(state.normalizeReducer.entities, ownProps.route.passProps.chosenTemplate)
       },
       route: ownProps.route,
       navigator: ownProps.navigator
@@ -20,4 +23,20 @@ const make_mapStateToProps = () => {
   return mapStateToProps
 }
 
-export default connect(make_mapStateToProps)(InstanceListComponent)
+const mergeProps = (stateProps, dispatchProps, ownProps) => {
+  const make_get_chosenTemplate_of_dataSourceInstancesOfChosenTemplate = mySelectors.make_get_chosenTemplate_of_dataSourceInstancesOfChosenTemplate(),
+        make_get_badgeValueOfItemsOfEachInstanceOfChosenTemplate = mySelectors.make_get_badgeValueOfItemsOfEachInstanceOfChosenTemplate(),
+        make_get_itemsCustomizedOfChosenTemplate = mySelectors.make_get_itemsCustomizedOfChosenTemplate();
+  console.log('mergeProps - stateProps : ', stateProps)
+  return {
+    ...ownProps,
+    state: {
+      ...stateProps.state,
+      dataSourceInstancesOfChosenTemplate: make_get_chosenTemplate_of_dataSourceInstancesOfChosenTemplate(stateProps.state.instancesOfChosenTemplate),
+      itemsCustomizedOfChosenTemplate: make_get_itemsCustomizedOfChosenTemplate(stateProps.state.itemsCustomized, stateProps.state.instancesOfChosenTemplate),
+      badgeValueOfItemsOfEachInstanceOfChosenTemplate: make_get_badgeValueOfItemsOfEachInstanceOfChosenTemplate(stateProps.state.instancesOfChosenTemplate)
+    },
+    ...dispatchProps
+  }
+}
+export default connect(make_mapStateToProps, null, mergeProps)(InstanceListComponent)
