@@ -21,27 +21,54 @@ export default class HomeComponent extends React.Component {
 
   render() {
     const { route, navigator, state } = this.props
-    const renderRow = (rowData, sectionID) => <ListItem
-      key={sectionID}
-      title={rowData.title}
-      subtitle={rowData.category}
-      badge={{
-        // value: (typeof state.badgeValueOfTemplates[rowData.title] !== 'number' ? 0 : state.badgeValueOfTemplates[rowData.title]),
-        value: (state.badgeValueOfTemplates.hasOwnProperty(rowData.templateId) ? state.badgeValueOfTemplates[rowData.templateId] : 0),
-        badgeTextStyle: { color: 'white' },
-        badgeContainerStyle: { marginTop: 5 }
-      }}
-    />
+    const renderRow = (rowData, sectionId, rowId) => {
+      // console.log('rowData : ', rowData)
+      // console.log('sectionId : ', sectionId)
+      // console.log('rowId : ', rowId)
+      return <ListItem
+        key={rowId}
+        title={rowData.desc}
+        subtitle={`instanceId : ${rowData.instanceId}`}
+      />
+    }
+    const renderSectionHeader = (sectionData, sectionId) => {
+      // console.log('sectionData : ', sectionData)
+      // console.log('sectionId : ', sectionId)
+      // console.log('state.templates[state.instances[sectionId].instanceId] : ', state.templates[state.instances[sectionId].instanceId])
+      const temp = {
+        ...state.templates[state.instances[sectionId].instanceId]
+      }
+      // console.log('state.templates[state.instances[sectionId].instanceId].title : ', state.templates[state.instances[sectionId].instanceId].title)
+      return <View style={{ backgroundColor: 'lightgray', padding: 8 }}>
+        <Text
+          key={sectionId}
+          style={{ fontWeight: '500', color: '#161616' }}
+          // containerStyle={{ backgroundColor: 'lightgray' }}
+          >
+            {/* {state.instances[sectionId].name}, template: {state.templates[state.instances[sectionId].instanceId].title.toString()}, items : {state.instances[sectionId].items.length} */}
+            {state.instances[sectionId].name}, template: {temp.title}, items : {state.instances[sectionId].items.length}
+          </Text>
+      </View>
+      // return <FormLabel
+      //   key={sectionId}
+      //   // containerStyle={{ backgroundColor: 'lightgray' }}
+      //   >
+      //     {/* {state.instances[sectionId].name}, template: {state.templates[state.instances[sectionId].instanceId].title.toString()}, items : {state.instances[sectionId].items.length} */}
+      //     {state.instances[sectionId].name}, template: {temp.title}, items : {state.instances[sectionId].items.length}
+      //   </FormLabel>
+    }
     return(
       <View style={styles.bodyContainer}>
         <FormLabel>
-          Check List Template : {state.templatesLength}
+          {/* Check List Template : {state.templatesLength} */}
+          Instances : {Object.values(state.instances).length}
         </FormLabel>
         <List>
           <ListView
-            dataSource={state.dataSourceTemplates}
+            dataSource={state.dataSourceForHome_SortByInstances}
             renderRow={renderRow}
             enableEmptySections={true}
+            renderSectionHeader={renderSectionHeader}
           />
         </List>
         <View style={{ height: 5 }} />

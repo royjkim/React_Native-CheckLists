@@ -129,9 +129,9 @@ export default function initializeStore() {
 
   // setTimeout(() => store.dispatch(my_normalize()), 4000)
 
-  // console.log(`Before normalize - initialData : ${JSON.stringify(initialData, null, 1)}`)
+  console.log('Before normalize - initialData : ', initialData)
   initialData = normalizeStore.my_normalize(initialData)
-  console.log(`After normalize - initialData : ${JSON.stringify(initialData, null, 1)}`)
+  console.log('After normalize - initialData : ', initialData)
 
   store.dispatch(dataActionCreators.normalizedDataInput(initialData))
   // console.log(`store.getState() : ${JSON.stringify(store.getState(), null, 1)}`)

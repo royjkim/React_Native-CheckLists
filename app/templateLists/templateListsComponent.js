@@ -59,7 +59,7 @@ export default class TemplateListsComponent extends React.Component {
     return(
       <View style={styles.bodyContainer}>
         <FormLabel>
-          Check List Template : {state.templatesLength}
+          Check List Templates : {state.templatesLength}
         </FormLabel>
         <List>
           <ListView

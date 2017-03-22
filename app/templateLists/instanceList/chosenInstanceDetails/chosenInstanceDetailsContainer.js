@@ -54,10 +54,10 @@ const mapDispatchToProps = dispatch => {
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
   // console.log(`mergeProps - stateProps : ${JSON.stringify(stateProps, null, 1)}`)
-  console.log('mergeProps - stateProps : ', stateProps)
-  console.log('mergeProps - stateProps.state.chosenTemplate : ', stateProps.state.chosenTemplate)
-  console.log('mergeProps - dispatchProps : ', dispatchProps)
-  console.log('stateProps.state.get_ItemsCustomizedOfChosenInstance : ', stateProps.state.get_ItemsCustomizedOfChosenInstance)
+  // console.log('mergeProps - stateProps : ', stateProps)
+  // console.log('mergeProps - stateProps.state.chosenTemplate : ', stateProps.state.chosenTemplate)
+  // console.log('mergeProps - dispatchProps : ', dispatchProps)
+  // console.log('stateProps.state.get_ItemsCustomizedOfChosenInstance : ', stateProps.state.get_ItemsCustomizedOfChosenInstance)
   const make_get_dataSourceItemsOfChosenInstance = mySelectors.make_get_dataSourceItemsOfChosenInstance()
   const get_countsOfStatusCompleted = mySelectors.get_countsOfStatusCompleted()
   return {

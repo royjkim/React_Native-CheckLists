@@ -2,7 +2,13 @@ import { ListView } from 'react-native'
 import { createSelector, defaultMemoize } from 'reselect'
 import Reactotron from 'reactotron-react-native'
 
-const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
+const ds = new ListView.DataSource(
+  {
+    getSectionHeaderData: (dataBlob, sectionId) => dataBlob[sectionId],
+    rowHasChanged: (r1, r2) => r1 !== r2,
+    sectionHeaderHasChanged: (s1, s2) => s1 !== s2
+  }
+)
 
 const templates = state => state.templates
 const instances = state => state.instances
@@ -134,7 +140,8 @@ const make_get_ItemsCustomizedOfChosenInstance = () => createSelector(
   chosenInstance,
   (itemsCustomized, chosenInstance) => {
     console.log(`run - selector - make_get_ItemsCustomizedOfChosenInstance - ${Math.random()}`)
-    console.log('chosenInstance : ', chosenInstance)
+    // console.log('itemsCustomized : ', itemsCustomized)
+    // console.log('chosenInstance : ', chosenInstance)
     let temp_itemsCustomized = []
     chosenInstance.items.map(data => {
       temp_itemsCustomized = temp_itemsCustomized.concat({
@@ -194,16 +201,23 @@ const make_get_dataSourceItemsOfChosenInstance = () => createSelector(
 //   }
 // )
 const make_get_badgeValueOfItemsOfEachInstanceOfChosenTemplate = () => createSelector(
-  data => data,
-  instancesOfChosenTemplate => {
-    // console.log('selector - instancesOfChosenTemplate : ', instancesOfChosenTemplate)
-    console.log(`doing!!!`)
-    // Object.values(instancesOfChosenTemplate).filter(data => )
-    // return {
-    //   total: instancesOfChosenTemplate.length,
-    //   completed: instancesOfChosenTemplate.filter(value => value.status == true).length,
-    //   uncompleted: instancesOfChosenTemplate.filter(value => value.status == false).length
-    // }
+  itemsCustomized => itemsCustomized,
+  (itemsCustomized, instancesOfChosenTemplate) => instancesOfChosenTemplate,
+  (itemsCustomized, instancesOfChosenTemplate) => {
+  const tempResult_from_make_get_itemsCustomizedOfEachInstanceOfChosenTemplate = make_get_itemsCustomizedOfEachInstanceOfChosenTemplate()(itemsCustomized, instancesOfChosenTemplate)
+  console.log(`run - selector - make_get_itemsCustomizedOfEachInstanceOfChosenTemplate - ${Math.random()}`)
+  // console.log('tempResult_from_make_get_itemsCustomizedOfEachInstanceOfChosenTemplate : ', tempResult_from_make_get_itemsCustomizedOfEachInstanceOfChosenTemplate)
+  let temp_itemsCustomizedOfEachInstanceOfChosenTemplate_for_badgeValueOfCompletedOrNot = {}
+
+  for(let key in tempResult_from_make_get_itemsCustomizedOfEachInstanceOfChosenTemplate) {
+    temp_itemsCustomizedOfEachInstanceOfChosenTemplate_for_badgeValueOfCompletedOrNot[key] = {
+      total: Object.values(tempResult_from_make_get_itemsCustomizedOfEachInstanceOfChosenTemplate[key]).length,
+      completed: Object.values(tempResult_from_make_get_itemsCustomizedOfEachInstanceOfChosenTemplate[key]).filter(value => value.status == true).length,
+      uncompleted: Object.values(tempResult_from_make_get_itemsCustomizedOfEachInstanceOfChosenTemplate[key]).filter(value => value.status == false).length
+    }
+  }
+  // console.log('temp_itemsCustomizedOfEachInstanceOfChosenTemplate_for_badgeValueOfCompletedOrNot : ', temp_itemsCustomizedOfEachInstanceOfChosenTemplate_for_badgeValueOfCompletedOrNot)
+  return temp_itemsCustomizedOfEachInstanceOfChosenTemplate_for_badgeValueOfCompletedOrNot
   }
 )
 // const make_get_badgeValueOfItemsOfEachInstanceOfChosenTemplate = () => createSelector(
@@ -221,28 +235,33 @@ const make_get_badgeValueOfItemsOfEachInstanceOfChosenTemplate = () => createSel
 //   }
 // )
 
-// make_get_itemsCustomizedOfChosenTemplate(stateProps.state.itemsCustomized, stateProps.state.instancesOfChosenTemplate),
+// make_get_itemsCustomizedOfEachInstanceOfChosenTemplate(stateProps.state.itemsCustomized, stateProps.state.instancesOfChosenTemplate),
 
-const make_get_itemsCustomizedOfChosenTemplate = () => createSelector(
+const make_get_itemsCustomizedOfEachInstanceOfChosenTemplate = () => createSelector(
   itemsCustomized => itemsCustomized,
-  instancesOfChosenTemplate => instancesOfChosenTemplate,
+  (itemsCustomized, instancesOfChosenTemplate) => instancesOfChosenTemplate,
   (itemsCustomized, instancesOfChosenTemplate) => {
-    console.log('selector - itemsCustomized : ', itemsCustomized)
-    console.log('selector - instancesOfChosenTemplate : ', instancesOfChosenTemplate)
-    let temp_itemsCustomizedOfChosenTemplate = []
-    Object.values(instancesOfChosenTemplate).map(value => {
-      temp_itemsCustomizedOfChosenTemplate = temp_itemsCustomizedOfChosenTemplate.concat({
-        ...itemsCustomized[value.itemCustomizedId]
+    // console.log('selector - itemsCustomized : ', itemsCustomized)
+    // console.log('selector - instancesOfChosenTemplate : ', instancesOfChosenTemplate)
+    console.log(`run - selector - make_get_itemsCustomizedOfEachInstanceOfChosenTemplate - ${Math.random()}`)
+    let temp_itemsCustomizedOfEachInstanceOfChosenTemplate = {}
+    instancesOfChosenTemplate.map(value1 => {
+      value1.items.map(value2 => {
+        (temp_itemsCustomizedOfEachInstanceOfChosenTemplate.hasOwnProperty(value1.instanceId) ? null : temp_itemsCustomizedOfEachInstanceOfChosenTemplate[value1.instanceId] = [])
+        temp_itemsCustomizedOfEachInstanceOfChosenTemplate[value1.instanceId] = temp_itemsCustomizedOfEachInstanceOfChosenTemplate[value1.instanceId].concat({
+          ...itemsCustomized[value2]
+        })
       })
     })
-    console.log('temp_itemsCustomizedOfChosenTemplate : ', temp_itemsCustomizedOfChosenTemplate)
+    // console.log('temp_itemsCustomizedOfEachInstanceOfChosenTemplate : ', temp_itemsCustomizedOfEachInstanceOfChosenTemplate)
+    return temp_itemsCustomizedOfEachInstanceOfChosenTemplate
   }
 )
 
 const get_countsOfStatusCompleted = () => createSelector(
   data => data,
   itemsCustomizedOfChosenInstance => {
-    console.log('selector - itemsCustomizedOfChosenInstance', itemsCustomizedOfChosenInstance)
+    // console.log('selector - itemsCustomizedOfChosenInstance', itemsCustomizedOfChosenInstance)
     return {
       total: itemsCustomizedOfChosenInstance.length,
       completed: itemsCustomizedOfChosenInstance.filter(value => value.status == true).length,
@@ -255,6 +274,22 @@ const get_countsOfStatusCompleted = () => createSelector(
     // }
     // console.log('temp_countsOfcompleted : ', temp_countsOfcompleted)
     // return temp_countsOfcompleted
+  }
+)
+
+const make_get_dataSourceForHome_SortByInstances = () => createSelector(
+  instances,
+  state => state,
+  (instances, state) => {
+    let temp_itemsCustomizedOfTotalInstances = {}
+    Object.values(instances).map(value => {
+      temp_itemsCustomizedOfTotalInstances[value.instanceId] = make_get_ItemsCustomizedOfChosenInstance()(state, value)
+      // console.log('temp_itemsCustomizedOfTotalInstances[value.instanceId] : ', temp_itemsCustomizedOfTotalInstances[value.instanceId])
+    })
+    // console.log('temp_itemsCustomizedOfTotalInstances : ', temp_itemsCustomizedOfTotalInstances)
+    const temp_dataSourceForHome_SortByInstances = ds.cloneWithRowsAndSections(temp_itemsCustomizedOfTotalInstances, Object.keys(temp_itemsCustomizedOfTotalInstances))
+    // console.log('temp_dataSourceForHome_SortByInstances : ', temp_dataSourceForHome_SortByInstances)
+    return temp_dataSourceForHome_SortByInstances
   }
 )
 
@@ -271,6 +306,7 @@ const mySelectors = {
   make_get_ItemsCustomizedOfChosenInstance,
   get_countsOfStatusCompleted,
   make_get_instancesOfChosenTemplate,
-  make_get_itemsCustomizedOfChosenTemplate
+  make_get_itemsCustomizedOfEachInstanceOfChosenTemplate,
+  make_get_dataSourceForHome_SortByInstances
 }
 export default mySelectors

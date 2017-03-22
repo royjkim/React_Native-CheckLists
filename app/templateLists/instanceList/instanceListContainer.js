@@ -25,16 +25,16 @@ const make_mapStateToProps = () => {
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
   const make_get_chosenTemplate_of_dataSourceInstancesOfChosenTemplate = mySelectors.make_get_chosenTemplate_of_dataSourceInstancesOfChosenTemplate(),
-        make_get_badgeValueOfItemsOfEachInstanceOfChosenTemplate = mySelectors.make_get_badgeValueOfItemsOfEachInstanceOfChosenTemplate(),
-        make_get_itemsCustomizedOfChosenTemplate = mySelectors.make_get_itemsCustomizedOfChosenTemplate();
-  console.log('mergeProps - stateProps : ', stateProps)
+        // make_get_itemsCustomizedOfEachInstanceOfChosenTemplate = mySelectors.make_get_itemsCustomizedOfEachInstanceOfChosenTemplate();
+        make_get_badgeValueOfItemsOfEachInstanceOfChosenTemplate = mySelectors.make_get_badgeValueOfItemsOfEachInstanceOfChosenTemplate();
+  // console.log('mergeProps - stateProps : ', stateProps)
   return {
     ...ownProps,
     state: {
       ...stateProps.state,
       dataSourceInstancesOfChosenTemplate: make_get_chosenTemplate_of_dataSourceInstancesOfChosenTemplate(stateProps.state.instancesOfChosenTemplate),
-      itemsCustomizedOfChosenTemplate: make_get_itemsCustomizedOfChosenTemplate(stateProps.state.itemsCustomized, stateProps.state.instancesOfChosenTemplate),
-      badgeValueOfItemsOfEachInstanceOfChosenTemplate: make_get_badgeValueOfItemsOfEachInstanceOfChosenTemplate(stateProps.state.instancesOfChosenTemplate)
+      // itemsCustomizedOfChosenTemplate: make_get_itemsCustomizedOfEachInstanceOfChosenTemplate(stateProps.state.itemsCustomized, stateProps.state.instancesOfChosenTemplate),
+      badgeValueOfItemsOfEachInstanceOfChosenTemplate: make_get_badgeValueOfItemsOfEachInstanceOfChosenTemplate(stateProps.state.itemsCustomized, stateProps.state.instancesOfChosenTemplate)
     },
     ...dispatchProps
   }

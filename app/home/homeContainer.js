@@ -38,13 +38,17 @@ import Reactotron from 'reactotron-react-native'
 //   },
 
 const make_mapStateToProps = () => {
-  const make_get_dataSourceTemplates = mySelectors.make_get_dataSourceTemplates()
-  const make_get_badgeValueOfTemplates = mySelectors.make_get_badgeValueOfTemplates()
+  const make_get_dataSourceTemplates = mySelectors.make_get_dataSourceTemplates(),
+        make_get_badgeValueOfTemplates = mySelectors.make_get_badgeValueOfTemplates(),
+        make_get_dataSourceForHome_SortByInstances = mySelectors.make_get_dataSourceForHome_SortByInstances();
   const mapStateToProps = (state, ownProps) => ({
     state: {
       templatesLength: state.normalizeReducer.result.templates.length,
-      dataSourceTemplates: make_get_dataSourceTemplates(state.normalizeReducer.entities),
-      badgeValueOfTemplates: make_get_badgeValueOfTemplates(state.normalizeReducer.entities)
+      // dataSourceTemplates: make_get_dataSourceTemplates(state.normalizeReducer.entities),
+      dataSourceForHome_SortByInstances: make_get_dataSourceForHome_SortByInstances(state.normalizeReducer.entities),
+      badgeValueOfTemplates: make_get_badgeValueOfTemplates(state.normalizeReducer.entities),
+      instances: state.normalizeReducer.entities.instances,
+      templates: state.normalizeReducer.entities.templates
     },
     route: ownProps.route,
     navigator: ownProps.navigator

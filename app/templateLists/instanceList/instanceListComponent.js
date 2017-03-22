@@ -24,10 +24,11 @@ export default class InstanceListComponent extends React.Component {
       title={rowData.name}
       // subtitle={`templateId(FK)${rowData.template.toString()}`}
       badge={{
-        value: state.badgeValueOfItemsOfEachInstanceOfChosenTemplate[rowData.instanceId],
+        value: state.badgeValueOfItemsOfEachInstanceOfChosenTemplate[rowData.instanceId].uncompleted,
         badgeTextStyle: { color: 'white' },
-        badgeContainerStyle: { marginTop: 2 }
+        badgeContainerStyle: { marginTop: 5 }
       }}
+      subtitle={`total : ${state.badgeValueOfItemsOfEachInstanceOfChosenTemplate[rowData.instanceId].total}, completed : ${state.badgeValueOfItemsOfEachInstanceOfChosenTemplate[rowData.instanceId].completed}`}
       onPress={() => navigator.push(
         {
           passProps: {

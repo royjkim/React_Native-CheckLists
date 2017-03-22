@@ -23,7 +23,7 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
   render() {
     const { route, navigator, state, modifyItemsCustomized } = this.props
     const { chosenInstance } = route.passProps
-    console.log('ChosenInstanceDetailsComponent - state : ', state)
+    // console.log('ChosenInstanceDetailsComponent - state : ', state)
     const renderRow = (rowData, sectionId) => {
       return (
         <View>
