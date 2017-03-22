@@ -13,6 +13,7 @@ import {
 import HomeContainer from '../home/homeContainer'
 import TemplateAdd from '../templateLists/templateAdd'
 import TemplateListsContainer from '../templateLists/templateListsContainer'
+import InstanceListsAllContainer from '../instanceListsAll/instanceListsAllContainer'
 import SettingsContainer from '../settings/settingsContainer'
 import NavBar from '../container/navBarContainer'
 import styles from './styles'
@@ -75,6 +76,37 @@ export default class MyTabs extends React.Component {
               title: 'Template List',
               sideMenuVisible: false,
               component: TemplateListsContainer
+            }}
+          />
+        </Tab>
+        <Tab
+          selected={this.state.selectedTab == 'instanceList'}
+          title={this.state.selectedTab == 'instanceList' ? 'Instance' : null}
+          titleStyle={styles.tabTitleStyle}
+          renderIcon={() => <Icon
+            name='list'
+          />}
+          onPress={() => this.setState({ selectedTab: 'instanceList' })}
+          // Below is for double click makes navigator.popToTop().
+          // But this 'myTabs.js' is not a child of 'Navigator' page.
+          // onPress={() => (this.state.selectedTab == 'templateList' ? navigator.popToTop() : this.setState({ selectedTab: 'templateList' }))}
+          >
+          {/* <TemplateListsContainer state={state} actions={actions} /> */}
+          <NavBar
+            initialRoute={{
+              passProps: {
+                leftButton: {
+                  title: '',
+                  component: ''
+                },
+                rightButton: {
+                  title: '',
+                  component: ''
+                }
+              },
+              title: 'Instance List',
+              sideMenuVisible: false,
+              component: InstanceListsAllContainer
             }}
           />
         </Tab>

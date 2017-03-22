@@ -49,13 +49,6 @@ export default class HomeComponent extends React.Component {
             {state.instances[sectionId].name}, template: {temp.title}, items : {state.instances[sectionId].items.length}
           </Text>
       </View>
-      // return <FormLabel
-      //   key={sectionId}
-      //   // containerStyle={{ backgroundColor: 'lightgray' }}
-      //   >
-      //     {/* {state.instances[sectionId].name}, template: {state.templates[state.instances[sectionId].instanceId].title.toString()}, items : {state.instances[sectionId].items.length} */}
-      //     {state.instances[sectionId].name}, template: {temp.title}, items : {state.instances[sectionId].items.length}
-      //   </FormLabel>
     }
     return(
       <View style={styles.bodyContainer}>
@@ -65,7 +58,7 @@ export default class HomeComponent extends React.Component {
         </FormLabel>
         <List>
           <ListView
-            dataSource={state.dataSourceForHome_SortByInstances}
+            dataSource={state.dataSourceForAllInstances}
             renderRow={renderRow}
             enableEmptySections={true}
             renderSectionHeader={renderSectionHeader}
@@ -91,26 +84,9 @@ export default class HomeComponent extends React.Component {
               title: 'Template Add',
               component: TemplateAdd,
             })
-            // navigator.push({
-            //   passProps: {
-            //     firstPageTitleMakeBackDisabled: '',
-            //     nextRightButtonPageTitle: '',
-            //     nextRightButtonPageComponent: ''
-            //   },
-            //   title: 'Add',
-            //   component: templateAdd
-            // })
           }}
         />
       </View>
     )
   }
 }
-
-// passProps: {
-//   firstPageTitleMakeBackDisabled: 'Template Lists',
-//   nextRightButtonPageTitle: 'Add',
-//   nextRightButtonPageComponent: { templateAdd }
-// },
-// title: 'Template Lists',
-// component: TemplateListsComponent,

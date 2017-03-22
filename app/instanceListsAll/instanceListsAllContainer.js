@@ -1,52 +1,23 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import HomeComponent from './homeComponent'
+import InstanceListsAllComponent from './instanceListsAllComponent'
 import { bindActionCreators } from 'redux'
-
+import { modifyItemsCustomized } from '../actions/dataActionCreators'
 import mySelectors from '../container/selectors'
 import Reactotron from 'reactotron-react-native'
-
-// this.normalizedData : {
-//   "entities": {
-//     "templateList": {
-//       "1": {
-//         "id": 1,
-//         "title": "GoingFishing",
-//         "category": "Hobby"
-//       },
-//     },
-//     "instanceList": {
-//       "1": {
-//         "id": 1,
-//         "name": "Jack",
-//         "template": "GoingFishing"
-//       },
-//     },
-//     "items": {
-//       "1": {
-//         "id": 1,
-//         "desc": "Wear life vest",
-//         "template": "GoingFishing",
-//         "orderNum": 5
-//       },
-//     },
-//     "templateCategoryList": {
-//       "1": {
-//         "id": 1,
-//         "title": "Hobby"
-//       },
-//   },
 
 const make_mapStateToProps = () => {
   const make_get_dataSourceTemplates = mySelectors.make_get_dataSourceTemplates(),
         make_get_badgeValueOfTemplates = mySelectors.make_get_badgeValueOfTemplates(),
-        make_get_dataSourceForAllInstances = mySelectors.make_get_dataSourceForAllInstances();
+        make_get_dataSourceForAllInstances = mySelectors.make_get_dataSourceForAllInstances(),
+        make_get_badgeValueOfStatusOfAllInstances = mySelectors.make_get_badgeValueOfStatusOfAllInstances();
   const mapStateToProps = (state, ownProps) => ({
     state: {
       templatesLength: state.normalizeReducer.result.templates.length,
       // dataSourceTemplates: make_get_dataSourceTemplates(state.normalizeReducer.entities),
       dataSourceForAllInstances: make_get_dataSourceForAllInstances(state.normalizeReducer.entities),
       badgeValueOfTemplates: make_get_badgeValueOfTemplates(state.normalizeReducer.entities),
+      badgeValueOfStatusOfAllInstances: make_get_badgeValueOfStatusOfAllInstances(state.normalizeReducer.entities),
       instances: state.normalizeReducer.entities.instances,
       templates: state.normalizeReducer.entities.templates
     },
@@ -56,4 +27,8 @@ const make_mapStateToProps = () => {
   return mapStateToProps
 }
 
-export default connect(make_mapStateToProps)(HomeComponent)
+const mapDispatchToProps = dispatch => ({
+  modifyItemsCustomized: targetData => dispatch(modifyItemsCustomized(targetData))
+})
+
+export default connect(make_mapStateToProps, mapDispatchToProps)(InstanceListsAllComponent)

@@ -9,12 +9,12 @@ const make_mapStateToProps = () => {
     // console.log(`instnaceListContainer - ownProps.route.passProps.chosenTemplate : ${JSON.stringify(ownProps.route.passProps.chosenTemplate, null, 1)}`)
     return {
       state: {
-        // dataSourceInstancesOfChosenTemplate: make_get_chosenTemplate_of_dataSourceInstancesOfChosenTemplate(state.normalizeReducer.entities, ownProps.route.passProps.chosenTemplate),
+        // dataSourceInstancesOfChosenTemplate: make_get_dataSourceInstancesOfChosenTemplate(state.normalizeReducer.entities, ownProps.route.passProps.chosenTemplate),
         instancesOfChosenTemplate: make_get_instancesOfChosenTemplate(state.normalizeReducer.entities, ownProps.route.passProps.chosenTemplate),
         itemsCustomized: {
           ...state.normalizeReducer.entities.itemsCustomized
         }
-        // badgeValueOfItemsOfEachInstanceOfChosenTemplate: make_get_badgeValueOfItemsOfEachInstanceOfChosenTemplate(state.normalizeReducer.entities, ownProps.route.passProps.chosenTemplate)
+        // badgeValueOfStatusOfEachInstanceOfChosenTemplate: make_get_badgeValueOfStatusOfEachInstanceOfChosenTemplate(state.normalizeReducer.entities, ownProps.route.passProps.chosenTemplate)
       },
       route: ownProps.route,
       navigator: ownProps.navigator
@@ -24,17 +24,17 @@ const make_mapStateToProps = () => {
 }
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
-  const make_get_chosenTemplate_of_dataSourceInstancesOfChosenTemplate = mySelectors.make_get_chosenTemplate_of_dataSourceInstancesOfChosenTemplate(),
+  const make_get_dataSourceInstancesOfChosenTemplate = mySelectors.make_get_dataSourceInstancesOfChosenTemplate(),
         // make_get_itemsCustomizedOfEachInstanceOfChosenTemplate = mySelectors.make_get_itemsCustomizedOfEachInstanceOfChosenTemplate();
-        make_get_badgeValueOfItemsOfEachInstanceOfChosenTemplate = mySelectors.make_get_badgeValueOfItemsOfEachInstanceOfChosenTemplate();
+        make_get_badgeValueOfStatusOfEachInstanceOfChosenTemplate = mySelectors.make_get_badgeValueOfStatusOfEachInstanceOfChosenTemplate();
   // console.log('mergeProps - stateProps : ', stateProps)
   return {
     ...ownProps,
     state: {
       ...stateProps.state,
-      dataSourceInstancesOfChosenTemplate: make_get_chosenTemplate_of_dataSourceInstancesOfChosenTemplate(stateProps.state.instancesOfChosenTemplate),
+      dataSourceInstancesOfChosenTemplate: make_get_dataSourceInstancesOfChosenTemplate(stateProps.state.instancesOfChosenTemplate),
       // itemsCustomizedOfChosenTemplate: make_get_itemsCustomizedOfEachInstanceOfChosenTemplate(stateProps.state.itemsCustomized, stateProps.state.instancesOfChosenTemplate),
-      badgeValueOfItemsOfEachInstanceOfChosenTemplate: make_get_badgeValueOfItemsOfEachInstanceOfChosenTemplate(stateProps.state.itemsCustomized, stateProps.state.instancesOfChosenTemplate)
+      badgeValueOfStatusOfEachInstanceOfChosenTemplate: make_get_badgeValueOfStatusOfEachInstanceOfChosenTemplate(stateProps.state.itemsCustomized, stateProps.state.instancesOfChosenTemplate)
     },
     ...dispatchProps
   }

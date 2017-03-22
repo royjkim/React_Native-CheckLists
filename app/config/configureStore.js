@@ -127,10 +127,17 @@ export default function initializeStore() {
     { itemCustomizedId: 11, itemId: 5, instanceId: 4, desc: 'Open Door', orderNum: 2, status: false }
   )
 
+  // for(let i = 1; i < 5000 ; i++) {
+  //   initialData = normalizeStore.addItemsCustomized(initialData,
+  //     { itemCustomizedId: i+11, itemId: 3, instanceId: 1, desc: 'force input', orderNum: 3, status: false },
+  //   )
+  // }
+
   // setTimeout(() => store.dispatch(my_normalize()), 4000)
 
-  console.log('Before normalize - initialData : ', initialData)
+  // console.log('Before normalize - initialData : ', initialData)
   initialData = normalizeStore.my_normalize(initialData)
+  // console.log(`After normalize - initialData : ', ${JSON.stringify(initialData, null, 1)}`)
   console.log('After normalize - initialData : ', initialData)
 
   store.dispatch(dataActionCreators.normalizedDataInput(initialData))
