@@ -1,5 +1,6 @@
 import { ListView } from 'react-native'
-import { createSelector, defaultMemoize } from 'reselect'
+import { createSelector } from 'reselect'
+import { isEqual } from 'lodash'
 import Reactotron from 'reactotron-react-native'
 
 const ds = new ListView.DataSource(
@@ -10,10 +11,149 @@ const ds = new ListView.DataSource(
   }
 )
 
-const make_dataSource_cloneWithRows = data => {
+const countTest = {
+  make_get_dataSourceTemplates: 0,
+  make_get_dataSourceInstancesOfChosenTemplate: 0,
+  make_get_dataSourceItemsOfChosenInstance: 0,
+  make_get_dataSourceForAllInstances: 0,
+  make_get_badgeValueOfTemplates: 0,
+  make_get_badgeValueOfStatusOfEachInstanceOfChosenTemplate: 0,
+  make_get_badgeValueOfStatusOfChosenInstance: 0,
+  make_get_badgeValueOfStatusOfAllInstances: 0,
+  make_get_instancesOfChosenTemplate: 0,
+  make_get_ItemsCustomizedOfChosenInstance: 0,
+  make_get_itemsCustomizedOfEachInstanceOfChosenTemplate: 0
+}
+
+const addCount = attr => ++countTest[attr]
+
+const make_dataSource_cloneWithRows = (attr, data) => {
   const temp_dataSource = ds.cloneWithRows(data)
+  addResultHistory(attr, temp_dataSource)
   return temp_dataSource
 }
+
+let dataInputHistory = {
+  make_get_dataSourceTemplates: {
+    past: [],
+    // present: [], future: []
+  },
+  make_get_dataSourceInstancesOfChosenTemplate: {
+    past: [],
+    // present: [], future: []
+  },
+  make_get_dataSourceItemsOfChosenInstance: {
+    past: [],
+    // present: [], future: []
+  },
+  make_get_dataSourceForAllInstances: {
+    past: [],
+    // present: [], future: []
+  },
+  make_get_badgeValueOfTemplates: {
+    past: [],
+    // present: [], future: []
+  },
+  make_get_badgeValueOfStatusOfEachInstanceOfChosenTemplate: {
+    past: [],
+    // present: [], future: []
+  },
+  make_get_badgeValueOfStatusOfChosenInstance: {
+    past: [],
+    // present: [], future: []
+  },
+  make_get_badgeValueOfStatusOfAllInstances: {
+    past: [],
+    // present: [], future: []
+  },
+  make_get_instancesOfChosenTemplate: {
+    past: [],
+    // present: [], future: []
+  },
+  make_get_instancesOfChosenTemplate: {
+    past: [],
+    // present: [], future: []
+  },
+  make_get_ItemsCustomizedOfChosenInstance: {
+    past: [],
+    // present: [], future: []
+  },
+  make_get_itemsCustomizedOfEachInstanceOfChosenTemplate: {
+    past: [],
+    // present: [], future: []
+  }
+}
+
+let dataResultHistory = {
+  make_get_dataSourceTemplates: {
+    past: [],
+    // present: [], future: []
+  },
+  make_get_dataSourceInstancesOfChosenTemplate: {
+    past: [],
+    // present: [], future: []
+  },
+  make_get_dataSourceItemsOfChosenInstance: {
+    past: [],
+    // present: [], future: []
+  },
+  make_get_dataSourceForAllInstances: {
+    past: [],
+    // present: [], future: []
+  },
+  make_get_badgeValueOfTemplates: {
+    past: [],
+    // present: [], future: []
+  },
+  make_get_badgeValueOfStatusOfEachInstanceOfChosenTemplate: {
+    past: [],
+    // present: [], future: []
+  },
+  make_get_badgeValueOfStatusOfChosenInstance: {
+    past: [],
+    // present: [], future: []
+  },
+  make_get_badgeValueOfStatusOfAllInstances: {
+    past: [],
+    // present: [], future: []
+  },
+  make_get_instancesOfChosenTemplate: {
+    past: [],
+    // present: [], future: []
+  },
+  make_get_instancesOfChosenTemplate: {
+    past: [],
+    // present: [], future: []
+  },
+  make_get_ItemsCustomizedOfChosenInstance: {
+    past: [],
+    // present: [], future: []
+  },
+  make_get_itemsCustomizedOfEachInstanceOfChosenTemplate: {
+    past: [],
+    // present: [], future: []
+  }
+};
+const compareInputHistory = (attr, ...args) => {
+  // const lastIndex = dataInputHistory[attr].past.length - 1;
+  // const tempResult_compareInputHistory = isEqual(args, dataInputHistory[attr].past[lastIndex]);
+  const tempResult_compareInputHistory = isEqual(args, dataInputHistory[attr].past[dataInputHistory[attr].past.length - 1]);
+  // const tempResult_compareInputHistory = args === dataInputHistory[attr].past[dataInputHistory[attr].past.length - 1]);
+  console.log(`args : ${JSON.stringify(args, null, 1)}`);
+  console.log(`arguments : `, arguments);
+  if(dataInputHistory[attr].past[dataInputHistory[attr].past.length - 1] == undefined){
+    console.log(`dataInputHistory[attr].past : ${JSON.stringify(dataInputHistory[attr].past, null, 1)}`);
+  } else {
+    console.log(`dataInputHistory[${attr}].past[dataInputHistory[attr].past.length - 1] \n ${JSON.stringify(dataInputHistory[attr].past[dataInputHistory[attr].past.length - 1], null, 1)}`);
+  }
+  (tempResult_compareInputHistory ? null : addInputHistory(attr, args));
+  // (tempResult_compareInputHistory ? null : dataInputHistory[attr].past.push(args));
+  console.log(`isEqual - ${attr} : ${tempResult_compareInputHistory}`);
+  return tempResult_compareInputHistory;
+}
+const addInputHistory = (attr, ...args) => dataInputHistory[attr].past.push(args)
+const addResultHistory = (attr, ...args) => dataResultHistory[attr].past.push(args)
+const loadResultHistory = attr => dataResultHistory[attr].past[dataResultHistory[attr].past.length - 1]
 
 const templates = state => state.templates
 const instances = state => state.instances
@@ -28,31 +168,47 @@ const templateCategories = state => state.templateCategories
 const make_get_dataSourceTemplates = () => createSelector(
   templates,
   templates => {
-    console.log(`run - make_get_dataSourceTemplates - ${Math.random()}`)
+    const currentAttr = 'make_get_dataSourceTemplates'
+    if(compareInputHistory(currentAttr, templates)) {
+      return loadResultHistory(currentAttr)
+    }
+
+    console.log(`run - ${currentAttr} - ${addCount(currentAttr)}`)
     // const temp_convertToArray = Object.values(templates)
     // const temp_dataSource_templates = ds.cloneWithRows(temp_convertToArray)
     // return temp_dataSource_templates
-    return make_dataSource_cloneWithRows(Object.values(templates))
+    return make_dataSource_cloneWithRows(currentAttr, Object.values(templates))
   }
 )
 
 const make_get_dataSourceInstancesOfChosenTemplate = () => createSelector(
   data => data,
   instancesOfChosenTemplate => {
-    console.log(`run - make_get_dataSourceInstancesOfChosenTemplate - ${Math.random()}`)
+    const currentAttr = 'make_get_dataSourceInstancesOfChosenTemplate'
+    if(compareInputHistory(currentAttr, instancesOfChosenTemplate)) {
+      return loadResultHistory(currentAttr)
+    }
+
+    console.log(`run - ${currentAttr} - ${addCount(currentAttr)}`)
+    // console.log(`parameter - instancesOfChosenTemplate : ${JSON.stringify(instancesOfChosenTemplate, null, 1)}`)
     // const temp_dataSource_instances = ds.cloneWithRows(instancesOfChosenTemplate)
     // return temp_dataSource_instances
-    return make_dataSource_cloneWithRows(instancesOfChosenTemplate)
+    return make_dataSource_cloneWithRows(currentAttr, instancesOfChosenTemplate)
   }
 )
 
 const make_get_dataSourceItemsOfChosenInstance = () => createSelector(
   data => data,
   itemsCustomizedOfChosenInstance => {
-    console.log(`run - make_get_dataSourceItemsOfChosenInstance - ${Math.random()}`)
+    const currentAttr = 'make_get_dataSourceItemsOfChosenInstance';
+    if(compareInputHistory(currentAttr, itemsCustomizedOfChosenInstance)) {
+      return loadResultHistory(currentAttr)
+    }
+
+    console.log(`run - ${currentAttr} - ${addCount(currentAttr)}`)
     // const temp_dataSource_itemsCustomized_of_chosenInstance = ds.cloneWithRows(itemsCustomizedOfChosenInstance)
     // return temp_dataSource_itemsCustomized_of_chosenInstance
-    return make_dataSource_cloneWithRows(itemsCustomizedOfChosenInstance)
+    return make_dataSource_cloneWithRows(currentAttr, itemsCustomizedOfChosenInstance)
   }
 )
 
@@ -60,7 +216,12 @@ const make_get_dataSourceForAllInstances = () => createSelector(
   instances,
   state => state,
   (instances, state) => {
-    console.log(`run - make_get_dataSourceForAllInstances - ${Math.random()}`)
+    const currentAttr = 'make_get_dataSourceForAllInstances';
+    if(compareInputHistory(currentAttr, instances, state)) {
+      return loadResultHistory(currentAttr)
+    }
+
+    console.log(`run - ${currentAttr} - ${addCount(currentAttr)}`)
     let temp_itemsCustomizedOfTotalInstances = {}
     Object.values(instances).map(value => {
       temp_itemsCustomizedOfTotalInstances[value.instanceId] = make_get_ItemsCustomizedOfChosenInstance()(state, value)
@@ -68,6 +229,7 @@ const make_get_dataSourceForAllInstances = () => createSelector(
     })
     // console.log('temp_itemsCustomizedOfTotalInstances : ', temp_itemsCustomizedOfTotalInstances)
     const temp_dataSourceForAllInstances = ds.cloneWithRowsAndSections(temp_itemsCustomizedOfTotalInstances, Object.keys(temp_itemsCustomizedOfTotalInstances))
+    addResultHistory(currentAttr, temp_dataSourceForAllInstances)
     // console.log('temp_dataSourceForAllInstances : ', temp_dataSourceForAllInstances)
     return temp_dataSourceForAllInstances
   }
@@ -76,65 +238,111 @@ const make_get_dataSourceForAllInstances = () => createSelector(
 const make_get_badgeValueOfTemplates = () => createSelector(
   templates,
   instances,
-  (templates = [], instances = []) => {
-    let tempResult = {}
-    console.log(`run - make_get_badgeValueOfTemplates - ${Math.random()}`)
+  (templates, instances) => {
+    const currentAttr = 'make_get_badgeValueOfTemplates'
+    if(compareInputHistory(currentAttr, templates, instances)) {
+      return loadResultHistory(currentAttr)
+    }
+
+    let tempResult_badgeValueOfTemplates = {}
+    console.log(`run - ${currentAttr} - ${addCount(currentAttr)}`)
     Object.values(instances).map(value => {
       // console.log(`value.template ${value.template}`);
-      (tempResult.hasOwnProperty(templates[value.template].templateId) ? tempResult[templates[value.template].templateId] = tempResult[templates[value.template].templateId] + 1 : tempResult[templates[value.template].templateId] = 1)
+      (tempResult_badgeValueOfTemplates.hasOwnProperty(templates[value.template].templateId) ? tempResult_badgeValueOfTemplates[templates[value.template].templateId] = tempResult_badgeValueOfTemplates[templates[value.template].templateId] + 1 : tempResult_badgeValueOfTemplates[templates[value.template].templateId] = 1)
     })
-    // console.log(`selector - get_Badge - tempResult : ${JSON.stringify(tempResult, null, 2)}`)
-    return tempResult
+    addResultHistory(currentAttr, tempResult_badgeValueOfTemplates)
+    return tempResult_badgeValueOfTemplates
   }
 )
-
 
 const make_get_instancesOfChosenTemplate = () => createSelector(
   instances,
   chosenTemplate,
   (instances, chosenTemplate) => {
+    const currentAttr = 'make_get_instancesOfChosenTemplate'
+    if(compareInputHistory(currentAttr, instances, chosenTemplate)) {
+      return loadResultHistory(currentAttr)
+    }
     // console.log(`chosenTemplate : ${JSON.stringify(chosenTemplate, null, 1)}`)
-    console.log(`run - make_get_dataSourceInstancesOfChosenTemplate - ${Math.random()}`)
-    return Object.values(instances).filter(value => value.template == chosenTemplate.templateId)
+    console.log(`run - ${currentAttr} - ${addCount(currentAttr)}`)
+    const temp_instancesOfChosenTemplate = Object.values(instances).filter(value => value.template == chosenTemplate.templateId)
+    addResultHistory(currentAttr, temp_instancesOfChosenTemplate)
+    return temp_instancesOfChosenTemplate
+    // return Object.values(instances).filter(value => value.template == chosenTemplate.templateId)
   }
 )
+
+
+// const make_get_instancesOfChosenTemplate = () => createSelector(
+//   instances,
+//   chosenTemplate,
+//   (instances, chosenTemplate) => {
+//     // console.log(`chosenTemplate : ${JSON.stringify(chosenTemplate, null, 1)}`)
+//     console.log(`run - make_get_dataSourceInstancesOfChosenTemplate - ${addCount('make_get_dataSourceInstancesOfChosenTemplate')}`)
+//     return Object.values(instances).filter(value => value.template == chosenTemplate.templateId)
+//   }
+// )
 
 const make_get_badgeValueOfStatusOfEachInstanceOfChosenTemplate = () => createSelector(
   data => data,
   (itemsCustomized, instancesOfChosenTemplate) => instancesOfChosenTemplate,
   (itemsCustomized, instancesOfChosenTemplate) => {
-  const tempResult_from_make_get_itemsCustomizedOfEachInstanceOfChosenTemplate = make_get_itemsCustomizedOfEachInstanceOfChosenTemplate()(itemsCustomized, instancesOfChosenTemplate)
-  console.log(`run - make_get_itemsCustomizedOfEachInstanceOfChosenTemplate - ${Math.random()}`)
-  // console.log('tempResult_from_make_get_itemsCustomizedOfEachInstanceOfChosenTemplate : ', tempResult_from_make_get_itemsCustomizedOfEachInstanceOfChosenTemplate)
-  let temp_itemsCustomizedOfEachInstanceOfChosenTemplate_for_badgeValueOfCompletedOrNot = {}
-
-  for(let key in tempResult_from_make_get_itemsCustomizedOfEachInstanceOfChosenTemplate) {
-    temp_itemsCustomizedOfEachInstanceOfChosenTemplate_for_badgeValueOfCompletedOrNot[key] = {
-      total: Object.values(tempResult_from_make_get_itemsCustomizedOfEachInstanceOfChosenTemplate[key]).length,
-      completed: Object.values(tempResult_from_make_get_itemsCustomizedOfEachInstanceOfChosenTemplate[key]).filter(value => value.status == true).length,
-      uncompleted: Object.values(tempResult_from_make_get_itemsCustomizedOfEachInstanceOfChosenTemplate[key]).filter(value => value.status == false).length
+    const currentAttr = 'make_get_badgeValueOfStatusOfEachInstanceOfChosenTemplate'
+    if(compareInputHistory(currentAttr, itemsCustomized, instancesOfChosenTemplate)) {
+      return loadResultHistory(currentAttr)
     }
-  }
-  // console.log('temp_itemsCustomizedOfEachInstanceOfChosenTemplate_for_badgeValueOfCompletedOrNot : ', temp_itemsCustomizedOfEachInstanceOfChosenTemplate_for_badgeValueOfCompletedOrNot)
-  return temp_itemsCustomizedOfEachInstanceOfChosenTemplate_for_badgeValueOfCompletedOrNot
+
+    const tempResult_from_make_get_itemsCustomizedOfEachInstanceOfChosenTemplate = make_get_itemsCustomizedOfEachInstanceOfChosenTemplate()(itemsCustomized, instancesOfChosenTemplate)
+    console.log(`run - ${currentAttr} - ${addCount(currentAttr)}`)
+    // console.log('tempResult_from_make_get_itemsCustomizedOfEachInstanceOfChosenTemplate : ', tempResult_from_make_get_itemsCustomizedOfEachInstanceOfChosenTemplate)
+    let temp_itemsCustomizedOfEachInstanceOfChosenTemplate_for_badgeValueOfCompletedOrNot = {}
+
+    for(let key in tempResult_from_make_get_itemsCustomizedOfEachInstanceOfChosenTemplate) {
+      temp_itemsCustomizedOfEachInstanceOfChosenTemplate_for_badgeValueOfCompletedOrNot[key] = {
+        total: Object.values(tempResult_from_make_get_itemsCustomizedOfEachInstanceOfChosenTemplate[key]).length,
+        completed: Object.values(tempResult_from_make_get_itemsCustomizedOfEachInstanceOfChosenTemplate[key]).filter(value => value.status == true).length,
+        uncompleted: Object.values(tempResult_from_make_get_itemsCustomizedOfEachInstanceOfChosenTemplate[key]).filter(value => value.status == false).length
+      }
+    }
+    addResultHistory(currentAttr, temp_itemsCustomizedOfEachInstanceOfChosenTemplate_for_badgeValueOfCompletedOrNot)
+    // console.log('temp_itemsCustomizedOfEachInstanceOfChosenTemplate_for_badgeValueOfCompletedOrNot : ', temp_itemsCustomizedOfEachInstanceOfChosenTemplate_for_badgeValueOfCompletedOrNot)
+    return temp_itemsCustomizedOfEachInstanceOfChosenTemplate_for_badgeValueOfCompletedOrNot
   }
 )
 
 const make_get_badgeValueOfStatusOfChosenInstance = () => createSelector(
   data => data,
   itemsCustomizedOfChosenInstance => {
-    // console.log('selector - itemsCustomizedOfChosenInstance', itemsCustomizedOfChosenInstance)
-    return {
+    const currentAttr = 'make_get_badgeValueOfStatusOfChosenInstance'
+    if(compareInputHistory(currentAttr, itemsCustomizedOfChosenInstance)) {
+      return loadResultHistory(currentAttr)
+    }
+
+    console.log(`run - ${currentAttr} - ${addCount(currentAttr)}`)
+    const tempResult_badgeValueOfStatusOfChosenInstance = {
       total: itemsCustomizedOfChosenInstance.length,
       completed: itemsCustomizedOfChosenInstance.filter(value => value.status == true).length,
       uncompleted: itemsCustomizedOfChosenInstance.filter(value => value.status == false).length
     }
+    addResultHistory(currentAttr, tempResult_badgeValueOfStatusOfChosenInstance)
+    return tempResult_badgeValueOfStatusOfChosenInstance
+    // return {
+    //   total: itemsCustomizedOfChosenInstance.length,
+    //   completed: itemsCustomizedOfChosenInstance.filter(value => value.status == true).length,
+    //   uncompleted: itemsCustomizedOfChosenInstance.filter(value => value.status == false).length
+    // }
   }
 )
 
 const make_get_badgeValueOfStatusOfAllInstances = () => createSelector(
   itemsCustomized,
   itemsCustomized => {
+    const currentAttr = 'make_get_badgeValueOfStatusOfAllInstances'
+    if(compareInputHistory(currentAttr, itemsCustomized)) {
+      return loadResultHistory(currentAttr)
+    }
+    console.log(`run - ${currentAttr} - ${addCount(currentAttr)}`)
+
     let temp_object_ListOfitemsCustomizedOfChosenInstance = {}
 
     const addFn = (targetData, attr, statusValue) => {
@@ -191,6 +399,7 @@ const make_get_badgeValueOfStatusOfAllInstances = () => createSelector(
 
     // console.log('temp_object_ListOfitemsCustomizedOfChosenInstance : ', temp_object_ListOfitemsCustomizedOfChosenInstance)
     console.log(`temp_object_ListOfitemsCustomizedOfChosenInstance : ${JSON.stringify(temp_object_ListOfitemsCustomizedOfChosenInstance, null, 1)}`)
+    addResultHistory(currentAttr, temp_object_ListOfitemsCustomizedOfChosenInstance)
     return temp_object_ListOfitemsCustomizedOfChosenInstance
   }
 )
@@ -200,7 +409,12 @@ const make_get_ItemsCustomizedOfChosenInstance = () => createSelector(
   itemsCustomized,
   chosenInstance,
   (itemsCustomized, chosenInstance) => {
-    console.log(`run - make_get_ItemsCustomizedOfChosenInstance - ${Math.random()}`)
+    const currentAttr = 'make_get_ItemsCustomizedOfChosenInstance'
+    if(compareInputHistory(currentAttr, itemsCustomized, chosenInstance)) {
+      return loadResultHistory(currentAttr)
+    }
+
+    console.log(`run - ${currentAttr} - ${addCount(currentAttr)}`)
     // console.log('itemsCustomized : ', itemsCustomized)
     // console.log('chosenInstance : ', chosenInstance)
     let temp_itemsCustomized = []
@@ -210,6 +424,7 @@ const make_get_ItemsCustomizedOfChosenInstance = () => createSelector(
       })
       temp_itemsCustomized.sort((data1, data2) => data1.orderNum - data2.orderNum);
     })
+    addResultHistory(currentAttr, temp_itemsCustomized)
     return temp_itemsCustomized
   }
 )
@@ -218,9 +433,13 @@ const make_get_itemsCustomizedOfEachInstanceOfChosenTemplate = () => createSelec
   itemsCustomized => itemsCustomized,
   (itemsCustomized, instancesOfChosenTemplate) => instancesOfChosenTemplate,
   (itemsCustomized, instancesOfChosenTemplate) => {
+    const currentAttr = 'make_get_itemsCustomizedOfEachInstanceOfChosenTemplate'
+    if(compareInputHistory(currentAttr, itemsCustomized, instancesOfChosenTemplate)) {
+      return loadResultHistory(currentAttr)
+    }
     // console.log('selector - itemsCustomized : ', itemsCustomized)
     // console.log('selector - instancesOfChosenTemplate : ', instancesOfChosenTemplate)
-    console.log(`run - make_get_itemsCustomizedOfEachInstanceOfChosenTemplate - ${Math.random()}`)
+    console.log(`run - ${currentAttr} - ${addCount(currentAttr)}`)
     let temp_itemsCustomizedOfEachInstanceOfChosenTemplate = {}
     instancesOfChosenTemplate.map(value1 => {
       let temp_array_itemsCustomizedOfEachInstanceOfChosenTemplate = []
@@ -240,6 +459,7 @@ const make_get_itemsCustomizedOfEachInstanceOfChosenTemplate = () => createSelec
       temp_itemsCustomizedOfEachInstanceOfChosenTemplate[value1.instanceId] = temp_array_itemsCustomizedOfEachInstanceOfChosenTemplate
     })
     // console.log('temp_itemsCustomizedOfEachInstanceOfChosenTemplate : ', temp_itemsCustomizedOfEachInstanceOfChosenTemplate)
+    addResultHistory(currentAttr, temp_itemsCustomizedOfEachInstanceOfChosenTemplate)
     return temp_itemsCustomizedOfEachInstanceOfChosenTemplate
   }
 )
