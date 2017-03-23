@@ -14,46 +14,53 @@ import {
 } from 'react-native-elements'
 
 import TemplateAdd from '../templateLists/templateAdd'
+import ChosenInstanceDetailsContainer from '../templateLists/instanceList/chosenInstanceDetails/chosenInstanceDetailsContainer'
 
 import Reactotron from 'reactotron-react-native'
 
+let temp_count = 1
 export default class HomeComponent extends React.Component {
 
   render() {
+    console.log(`homeComponent - render count : ${temp_count}`)
+    temp_count++
     const { route, navigator, state } = this.props
-    const renderRow = (rowData, sectionId, rowId) => {
+    const renderRow = (rowData, sectionId) => {
       // console.log('rowData : ', rowData)
       // console.log('sectionId : ', sectionId)
       // console.log('rowId : ', rowId)
       return <ListItem
-        key={rowId}
-        title={rowData.desc}
-        subtitle={`instanceId : ${rowData.instanceId}`}
+        key={sectionId}
+        title={rowData.name}
+        subtitle={`template : ${state.templates[rowData.template].title} ${state.badgeValueOfStatusOfAllInstances[rowData.instanceId].completed} / ${state.badgeValueOfStatusOfAllInstances[rowData.instanceId].uncompleted}`}
+        badge={{
+          // value: state.badgeValueOfStatusOfAllInstances[rowData.instanceId].uncompleted,
+          value: `${state.badgeValueOfStatusOfAllInstances[rowData.instanceId].completed} / ${state.badgeValueOfStatusOfAllInstances[rowData.instanceId].uncompleted}`,
+          badgeTextStyle: { color: 'white' },
+          badgeContainerStyle: { marginTop: 5 }
+        }}
+        onPress={() => navigator.push(
+          {
+            passProps: {
+              leftButton: {
+                title: 'back',
+                component: ''
+              },
+              rightButton: {
+                title: '',
+                component: ''
+              },
+              chosenInstance: rowData
+            },
+            title: `${rowData.name}`,
+            component: ChosenInstanceDetailsContainer,
+          }
+        )}
       />
-    }
-    const renderSectionHeader = (sectionData, sectionId) => {
-      // console.log('sectionData : ', sectionData)
-      // console.log('sectionId : ', sectionId)
-      // console.log('state.templates[state.instances[sectionId].instanceId] : ', state.templates[state.instances[sectionId].instanceId])
-      const temp = {
-        ...state.templates[state.instances[sectionId].instanceId]
-      }
-      // console.log('state.templates[state.instances[sectionId].instanceId].title : ', state.templates[state.instances[sectionId].instanceId].title)
-      return <View style={{ backgroundColor: 'lightgray', padding: 8 }}>
-        <Text
-          key={sectionId}
-          style={{ fontWeight: '500', color: '#161616' }}
-          // containerStyle={{ backgroundColor: 'lightgray' }}
-          >
-            {/* {state.instances[sectionId].name}, template: {state.templates[state.instances[sectionId].instanceId].title.toString()}, items : {state.instances[sectionId].items.length} */}
-            {state.instances[sectionId].name}, template: {temp.title}, items : {state.instances[sectionId].items.length}
-          </Text>
-      </View>
     }
     return(
       <View style={styles.bodyContainer}>
         <FormLabel>
-          {/* Check List Template : {state.templatesLength} */}
           Instances : {Object.values(state.instances).length}
         </FormLabel>
         <List>
@@ -61,14 +68,12 @@ export default class HomeComponent extends React.Component {
             dataSource={state.dataSourceForAllInstances}
             renderRow={renderRow}
             enableEmptySections={true}
-            renderSectionHeader={renderSectionHeader}
           />
         </List>
         <View style={{ height: 5 }} />
         <Button
           icon={{ name: 'note-add' }}
           title='Add Template'
-          // onPress={() => alert(`needed props to move Tab.add`)}
           onPress={() => {
             navigator.push({
               passProps: {

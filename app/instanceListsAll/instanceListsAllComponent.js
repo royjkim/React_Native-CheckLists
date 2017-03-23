@@ -50,7 +50,7 @@ export default class InstanceListsAllComponent extends React.Component {
       // const temp = state.templates[state.instances[sectionId].instanceId].title
       // const temp = Object.assign({}, state.templates[state.instances[sectionId].instanceId])
       const temp = {
-        ...state.templates[state.instances[sectionId].instanceId]
+        ...state.templates[state.instances[sectionId].template]
       }
       return <TouchableOpacity
         onPress={() => {

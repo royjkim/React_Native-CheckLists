@@ -13,6 +13,7 @@ const ds = new ListView.DataSource(
 
 const countTest = {
   make_get_dataSourceTemplates: 0,
+  make_get_dataSourceInstances: 0,
   make_get_dataSourceInstancesOfChosenTemplate: 0,
   make_get_dataSourceItemsOfChosenInstance: 0,
   make_get_dataSourceForAllInstances: 0,
@@ -35,6 +36,10 @@ const make_dataSource_cloneWithRows = (attr, data) => {
 
 let dataInputHistory = {
   make_get_dataSourceTemplates: {
+    past: [],
+    // present: [], future: []
+  },
+  make_get_dataSourceInstances: {
     past: [],
     // present: [], future: []
   },
@@ -89,6 +94,10 @@ let dataResultHistory = {
     past: [],
     // present: [], future: []
   },
+  make_get_dataSourceInstances: {
+    past: [],
+    // present: [], future: []
+  },
   make_get_dataSourceInstancesOfChosenTemplate: {
     past: [],
     // present: [], future: []
@@ -135,24 +144,13 @@ let dataResultHistory = {
   }
 };
 const compareInputHistory = (attr, ...args) => {
-  // const lastIndex = dataInputHistory[attr].past.length - 1;
-  // const tempResult_compareInputHistory = isEqual(args, dataInputHistory[attr].past[lastIndex]);
   const tempResult_compareInputHistory = isEqual(args, dataInputHistory[attr].past[dataInputHistory[attr].past.length - 1]);
-  // const tempResult_compareInputHistory = args === dataInputHistory[attr].past[dataInputHistory[attr].past.length - 1]);
-  console.log(`args : ${JSON.stringify(args, null, 1)}`);
-  console.log(`arguments : `, arguments);
-  if(dataInputHistory[attr].past[dataInputHistory[attr].past.length - 1] == undefined){
-    console.log(`dataInputHistory[attr].past : ${JSON.stringify(dataInputHistory[attr].past, null, 1)}`);
-  } else {
-    console.log(`dataInputHistory[${attr}].past[dataInputHistory[attr].past.length - 1] \n ${JSON.stringify(dataInputHistory[attr].past[dataInputHistory[attr].past.length - 1], null, 1)}`);
-  }
   (tempResult_compareInputHistory ? null : addInputHistory(attr, args));
-  // (tempResult_compareInputHistory ? null : dataInputHistory[attr].past.push(args));
-  console.log(`isEqual - ${attr} : ${tempResult_compareInputHistory}`);
+  // console.log(`isEqual - ${attr} : ${tempResult_compareInputHistory}`);
   return tempResult_compareInputHistory;
 }
-const addInputHistory = (attr, ...args) => dataInputHistory[attr].past.push(args)
-const addResultHistory = (attr, ...args) => dataResultHistory[attr].past.push(args)
+const addInputHistory = (attr, args) => dataInputHistory[attr].past.push(args)
+const addResultHistory = (attr, args) => dataResultHistory[attr].past.push(args)
 const loadResultHistory = attr => dataResultHistory[attr].past[dataResultHistory[attr].past.length - 1]
 
 const templates = state => state.templates
@@ -178,6 +176,19 @@ const make_get_dataSourceTemplates = () => createSelector(
     // const temp_dataSource_templates = ds.cloneWithRows(temp_convertToArray)
     // return temp_dataSource_templates
     return make_dataSource_cloneWithRows(currentAttr, Object.values(templates))
+  }
+)
+
+const make_get_dataSourceInstances = () => createSelector(
+  instances,
+  instances => {
+    const currentAttr = 'make_get_dataSourceInstances'
+    if(compareInputHistory(currentAttr, instances)) {
+      return loadResultHistory(currentAttr)
+    }
+
+    console.log(`run - ${currentAttr} - ${addCount(currentAttr)}`)
+    return make_dataSource_cloneWithRows(currentAttr, Object.values(instances))
   }
 )
 
@@ -398,7 +409,7 @@ const make_get_badgeValueOfStatusOfAllInstances = () => createSelector(
     }
 
     // console.log('temp_object_ListOfitemsCustomizedOfChosenInstance : ', temp_object_ListOfitemsCustomizedOfChosenInstance)
-    console.log(`temp_object_ListOfitemsCustomizedOfChosenInstance : ${JSON.stringify(temp_object_ListOfitemsCustomizedOfChosenInstance, null, 1)}`)
+    // console.log(`temp_object_ListOfitemsCustomizedOfChosenInstance : ${JSON.stringify(temp_object_ListOfitemsCustomizedOfChosenInstance, null, 1)}`)
     addResultHistory(currentAttr, temp_object_ListOfitemsCustomizedOfChosenInstance)
     return temp_object_ListOfitemsCustomizedOfChosenInstance
   }
@@ -466,6 +477,7 @@ const make_get_itemsCustomizedOfEachInstanceOfChosenTemplate = () => createSelec
 
 const mySelectors = {
   make_get_dataSourceTemplates,
+  make_get_dataSourceInstances,
   make_get_dataSourceInstancesOfChosenTemplate,
   make_get_dataSourceItemsOfChosenInstance,
   make_get_dataSourceForAllInstances,
