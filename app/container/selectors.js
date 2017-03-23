@@ -181,9 +181,10 @@ const make_get_dataSourceTemplates = () => createSelector(
 
 const make_get_dataSourceInstances = () => createSelector(
   instances,
-  instances => {
+  itemsCustomized,
+  (instances, itemsCustomized) => {
     const currentAttr = 'make_get_dataSourceInstances'
-    if(compareInputHistory(currentAttr, instances)) {
+    if(compareInputHistory(currentAttr, instances, itemsCustomized)) {
       return loadResultHistory(currentAttr)
     }
 
@@ -353,6 +354,7 @@ const make_get_badgeValueOfStatusOfAllInstances = () => createSelector(
       return loadResultHistory(currentAttr)
     }
     console.log(`run - ${currentAttr} - ${addCount(currentAttr)}`)
+    // console.log(`itemsCustomized : ${JSON.stringify(itemsCustomized, null, 1)}`)
 
     let temp_object_ListOfitemsCustomizedOfChosenInstance = {}
 
@@ -409,7 +411,7 @@ const make_get_badgeValueOfStatusOfAllInstances = () => createSelector(
     }
 
     // console.log('temp_object_ListOfitemsCustomizedOfChosenInstance : ', temp_object_ListOfitemsCustomizedOfChosenInstance)
-    // console.log(`temp_object_ListOfitemsCustomizedOfChosenInstance : ${JSON.stringify(temp_object_ListOfitemsCustomizedOfChosenInstance, null, 1)}`)
+    console.log(`temp_object_ListOfitemsCustomizedOfChosenInstance : ${JSON.stringify(temp_object_ListOfitemsCustomizedOfChosenInstance, null, 1)}`)
     addResultHistory(currentAttr, temp_object_ListOfitemsCustomizedOfChosenInstance)
     return temp_object_ListOfitemsCustomizedOfChosenInstance
   }

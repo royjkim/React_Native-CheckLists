@@ -18,12 +18,9 @@ import ChosenInstanceDetailsContainer from '../templateLists/instanceList/chosen
 
 import Reactotron from 'reactotron-react-native'
 
-let temp_count = 1
 export default class HomeComponent extends React.Component {
 
   render() {
-    console.log(`homeComponent - render count : ${temp_count}`)
-    temp_count++
     const { route, navigator, state } = this.props
     const renderRow = (rowData, sectionId) => {
       // console.log('rowData : ', rowData)
@@ -91,6 +88,9 @@ export default class HomeComponent extends React.Component {
             })
           }}
         />
+        <Text>
+          {JSON.stringify(state.badgeValueOfStatusOfAllInstances, null, 1)}
+        </Text>
       </View>
     )
   }
