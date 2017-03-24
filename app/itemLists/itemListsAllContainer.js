@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import InstanceListsAllComponent from './instanceListsAllComponent'
+import ItemsListsAllComponent from './itemListsAllComponent'
 import { bindActionCreators } from 'redux'
 import { modifyItemsCustomized } from '../actions/dataActionCreators'
 import mySelectors from '../container/selectors'
@@ -23,4 +23,4 @@ const mapDispatchToProps = dispatch => ({
   modifyItemsCustomized: targetData => dispatch(modifyItemsCustomized(targetData))
 })
 
-export default connect(make_mapStateToProps, mapDispatchToProps)(InstanceListsAllComponent)
+export default connect(make_mapStateToProps, mapDispatchToProps)(ItemsListsAllComponent)

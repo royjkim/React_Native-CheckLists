@@ -14,8 +14,6 @@ import {
 
 import ChosenInstanceDetailsContainer from './chosenInstanceDetails/chosenInstanceDetailsContainer'
 
-import Reactotron from 'reactotron-react-native'
-
 export default class InstanceListComponent extends React.Component {
 
   render() {

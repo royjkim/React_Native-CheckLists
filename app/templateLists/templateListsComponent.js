@@ -15,8 +15,6 @@ import {
 import InstanceListContainer from './instanceList/instanceListContainer'
 import MySideMenu from '../components/mySideMenu'
 
-import Reactotron from 'reactotron-react-native'
-
 export default class TemplateListsComponent extends React.Component {
   render() {
     const { route, navigator, state } = this.props

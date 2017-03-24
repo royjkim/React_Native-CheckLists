@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import InstanceListsAllComponent from './instanceListsAllComponent'
+import ItemsListsAllComponent from './itemListsAllComponent'
 import { bindActionCreators } from 'redux'
 import { modifyItemsCustomized } from '../actions/dataActionCreators'
 import mySelectors from '../container/selectors'
@@ -13,7 +13,8 @@ const make_mapStateToProps = () => (state, ownProps) => ({
     badgeValueOfInstancesOfChosenTemplates: mySelectors.make_get_badgeValueOfInstancesOfChosenTemplates()(state.normalizeReducer.entities),
     badgeValueOfStatusOfAllInstances: mySelectors.make_get_badgeValueOfStatusOfAllInstances()(state.normalizeReducer.entities),
     instances: state.normalizeReducer.entities.instances,
-    templates: state.normalizeReducer.entities.templates
+    templates: state.normalizeReducer.entities.templates,
+    items: state.normalizeReducer.entities.items
   },
   route: ownProps.route,
   navigator: ownProps.navigator
@@ -23,4 +24,4 @@ const mapDispatchToProps = dispatch => ({
   modifyItemsCustomized: targetData => dispatch(modifyItemsCustomized(targetData))
 })
 
-export default connect(make_mapStateToProps, mapDispatchToProps)(InstanceListsAllComponent)
+export default connect(make_mapStateToProps, mapDispatchToProps)(ItemsListsAllComponent)

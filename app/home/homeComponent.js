@@ -15,8 +15,7 @@ import {
 
 // import TemplateAdd from '../templateLists/templateAdd'
 import ChosenInstanceDetailsContainer from '../templateLists/instanceList/chosenInstanceDetails/chosenInstanceDetailsContainer'
-
-import Reactotron from 'reactotron-react-native'
+import InstanceListsAllContainer from '../instanceListsAll/instanceListsAllContainer'
 
 export default class HomeComponent extends React.Component {
 
@@ -68,6 +67,26 @@ export default class HomeComponent extends React.Component {
           />
         </List>
         <View style={{ height: 5 }} />
+        <Button
+          icon={{ name: 'format-list-bulleted' }}
+          title='Show instances with all items'
+          onPress={() => {
+            navigator.push({
+              passProps: {
+                leftButton: {
+                  title: 'Back',
+                  component: '',
+                },
+                rightButton: {
+                  title: '',
+                  component: '',
+                },
+              },
+              title: 'Instance List with all items',
+              component: InstanceListsAllContainer,
+            })
+          }}
+        />
         {/* <Button
           icon={{ name: 'note-add' }}
           title='Add Template'

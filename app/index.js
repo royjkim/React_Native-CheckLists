@@ -8,7 +8,6 @@ import { Provider } from 'react-redux'
 import initializeStore from './config/configureStore'
 
 import RootContainer from './container/rootContainer'
-import Reactotron from 'reactotron-react-native'
 
 const store = initializeStore()
 

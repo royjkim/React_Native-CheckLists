@@ -11,7 +11,6 @@ import {
 } from 'react-native-elements'
 
 import TemplateAdd from '../templateLists/templateAdd'
-import Reactotron from 'reactotron-react-native'
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'

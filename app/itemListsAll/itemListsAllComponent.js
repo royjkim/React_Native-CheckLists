@@ -18,7 +18,7 @@ import {
 
 import ChosenInstanceDetailsContainer from '../templateLists/instanceList/chosenInstanceDetails/chosenInstanceDetailsContainer'
 
-export default class InstanceListsAllComponent extends React.Component {
+export default class ItemsListsAllComponent extends React.Component {
 
   render() {
     const { route, navigator, state, modifyItemsCustomized } = this.props
@@ -95,7 +95,7 @@ export default class InstanceListsAllComponent extends React.Component {
     return(
       <View style={styles.bodyContainer}>
         <FormLabel>
-          Total Instances : {Object.values(state.instances).length}
+          Total Items : {Object.values(state.items).length}
         </FormLabel>
         <List>
           <ListView
