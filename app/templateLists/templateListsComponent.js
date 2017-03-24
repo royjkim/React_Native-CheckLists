@@ -48,7 +48,6 @@ export default class TemplateListsComponent extends React.Component {
                 },
                 chosenTemplate: rowData
               },
-              // title: `Customer List of ${rowData.title}`,
               title: `${rowData.title}`,
               component: InstanceListContainer,
             }

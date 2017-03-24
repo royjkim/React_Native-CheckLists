@@ -8,7 +8,8 @@ const make_mapStateToProps = () => (state, ownProps) => ({
     instancesOfChosenTemplate: mySelectors.make_get_instancesOfChosenTemplate()(state.normalizeReducer.entities, ownProps.route.passProps.chosenTemplate),
     itemsCustomized: {
       ...state.normalizeReducer.entities.itemsCustomized
-    }
+    },
+    itemsOfChosenTemplate: mySelectors.make_get_itemsOfChosenTemplate()(state.normalizeReducer.entities, ownProps.route.passProps.chosenTemplate)
     // badgeValueOfStatusOfEachInstanceOfChosenTemplate: make_get_badgeValueOfStatusOfEachInstanceOfChosenTemplate(state.normalizeReducer.entities, ownProps.route.passProps.chosenTemplate)
   },
   route: ownProps.route,
@@ -20,6 +21,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
   state: {
     ...stateProps.state,
     dataSourceInstancesOfChosenTemplate: mySelectors.make_get_dataSourceInstancesOfChosenTemplate()(stateProps.state.instancesOfChosenTemplate),
+    dataSourceOfItemsOfChosenTemplate: mySelectors.make_get_dataSourceOfItemsOfChosenTemplate()(stateProps.state.itemsOfChosenTemplate),
     // itemsCustomizedOfChosenTemplate: mySelectors.make_get_itemsCustomizedOfEachInstanceOfChosenTemplate()(stateProps.state.itemsCustomized, stateProps.state.instancesOfChosenTemplate),
     badgeValueOfStatusOfEachInstanceOfChosenTemplate: mySelectors.make_get_badgeValueOfStatusOfEachInstanceOfChosenTemplate()(stateProps.state.itemsCustomized, stateProps.state.instancesOfChosenTemplate)
   },

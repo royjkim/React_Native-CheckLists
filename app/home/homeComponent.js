@@ -88,9 +88,6 @@ export default class HomeComponent extends React.Component {
             })
           }}
         />
-        <Text>
-          {JSON.stringify(state.badgeValueOfStatusOfAllInstances, null, 1)}
-        </Text>
       </View>
     )
   }

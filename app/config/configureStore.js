@@ -100,11 +100,12 @@ export default function initializeStore() {
   )
 
   initialData = normalizeStore.addItem(initialData,
-    { itemId: 1, desc: 'Wear life vest', template: 'GoingFishing', orderNum: 5 },
-    { itemId: 2, desc: 'Wathing TV', template: 'StayHome', orderNum: 1  },
-    { itemId: 3, desc: 'Get on the boat', template: 'GoingFishing', orderNum: 1 },
-    { itemId: 4, desc: 'Close Door', template: 'BeforeGoOutHome', orderNum: 10 },
-    { itemId: 5, desc: 'Open Door', template: 'BeforeGoOutHome', orderNum: 8 }
+    // { itemId: 1, desc: 'Wear life vest', template: 'GoingFishing', orderNum: 5 },
+    { itemId: 1, desc: 'Wear life vest', templateId: 1, orderNum: 5 },
+    { itemId: 2, desc: 'Wathing TV', templateId: 3, orderNum: 1  },
+    { itemId: 3, desc: 'Get on the boat', templateId: 1, orderNum: 1 },
+    { itemId: 4, desc: 'Close Door', templateId: 2, orderNum: 10 },
+    { itemId: 5, desc: 'Open Door', templateId: 2, orderNum: 8 }
   )
 
   initialData = normalizeStore.addCategory(initialData,

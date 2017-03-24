@@ -9,6 +9,7 @@ import {
   Button,
   List,
   ListItem,
+  FormLabel,
 } from 'react-native-elements'
 
 import ChosenInstanceDetailsContainer from './chosenInstanceDetails/chosenInstanceDetailsContainer'
@@ -19,7 +20,7 @@ export default class InstanceListComponent extends React.Component {
 
   render() {
     const { route, navigator, state } = this.props
-    renderRow = (rowData, sectionID) => <ListItem
+    renderRowInstances = (rowData, sectionID) => <ListItem
       key={sectionID}
       title={rowData.name}
       // subtitle={`templateId(FK)${rowData.template.toString()}`}
@@ -28,7 +29,7 @@ export default class InstanceListComponent extends React.Component {
         badgeTextStyle: { color: 'white' },
         badgeContainerStyle: { marginTop: 5 }
       }}
-      subtitle={`total : ${state.badgeValueOfStatusOfEachInstanceOfChosenTemplate[rowData.instanceId].total}, completed : ${state.badgeValueOfStatusOfEachInstanceOfChosenTemplate[rowData.instanceId].completed}`}
+      subtitle={`Items : total(${state.badgeValueOfStatusOfEachInstanceOfChosenTemplate[rowData.instanceId].total}), complete(${state.badgeValueOfStatusOfEachInstanceOfChosenTemplate[rowData.instanceId].completed})`}
       onPress={() => navigator.push(
         {
           passProps: {
@@ -47,12 +48,30 @@ export default class InstanceListComponent extends React.Component {
         }
       )}
     />
+    renderRowItems = (rowData, sectionId) => <ListItem
+      key={sectionId}
+      title={rowData.desc}
+    />
     return(
       <View style={styles.bodyContainerOnSideMenu}>
+        <FormLabel>
+          Template : {route.passProps.chosenTemplate.title} / Items : {route.passProps.chosenTemplate.items.length}
+        </FormLabel>
+        <List>
+          <ListView
+            dataSource={state.dataSourceOfItemsOfChosenTemplate}
+            enableEmptySections={true}
+            renderRow={renderRowItems}
+          />
+        </List>
+        {/* <View style={{ marginVertical: 10, backgroundColor: '#9E9E9E', height: 2 }}/> */}
+        <FormLabel>
+          ▼ Instance List of {route.title}
+        </FormLabel>
         <List>
           <ListView
             dataSource={state.dataSourceInstancesOfChosenTemplate}
-            renderRow={renderRow}
+            renderRow={renderRowInstances}
             enableEmptySections={true}
           />
         </List>

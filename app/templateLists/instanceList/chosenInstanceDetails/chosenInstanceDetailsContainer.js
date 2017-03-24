@@ -8,7 +8,7 @@ const make_mapStateToProps = () => (state, ownProps) => ({
     chosenTemplate: {
       ...state.normalizeReducer.entities.templates[ownProps.route.passProps.chosenInstance.template]
     },
-    get_ItemsCustomizedOfChosenInstance: mySelectors.make_get_ItemsCustomizedOfChosenInstance()(state.normalizeReducer.entities, ownProps.route.passProps.chosenInstance)
+    get_ItemsCustomizedOfChosenInstance: mySelectors.make_get_itemsCustomizedOfChosenInstance()(state.normalizeReducer.entities, ownProps.route.passProps.chosenInstance)
     // dataSourceItemsCustomizedOfChosenInstance: make_get_dataSourceItemsOfChosenInstance(state.normalizeReducer.entities, ownProps.route.passProps.chosenInstance)
   },
   route: ownProps.route,

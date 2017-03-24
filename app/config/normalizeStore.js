@@ -41,7 +41,9 @@ const addItemsCustomized = (prevData, ...newData) => ({
 })
 
 const my_normalize = prevData => {
-  const itemsEntity = new schema.Entity('items', {}, { idAttribute: 'itemId' })
+  const itemsEntity = new schema.Entity('items', {
+    templateId: templatesEntity
+  }, { idAttribute: 'itemId' })
   const itemsCustomizedEntity = new schema.Entity('itemsCustomized', {}, { idAttribute: 'itemCustomizedId' })
   const templatesEntity = new schema.Entity('templates', {
     items: [ itemsEntity ],
