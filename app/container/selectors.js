@@ -172,7 +172,7 @@ let dataResultHistory = {
 const compareInputHistory = (attr, ...args) => {
   const lastIndex = (dataInputHistory[attr].past.length < 1 ? 0 : dataInputHistory[attr].past.length - 1 )
   let prevData = [];
-  (args.length > 1 ? prevData = flatten(dataInputHistory[attr].past.slice(lastIndex, lastIndex + args.length)) : prevData = flatten(dataInputHistory[attr].past[lastIndex] || []))
+  (args.length > 1 ? prevData = flatten(dataInputHistory[attr].past.slice(lastIndex, lastIndex + args.length)) : prevData = dataInputHistory[attr].past[lastIndex] || [])
   // if(args.length > 1) {
   //   prevData = flatten(dataInputHistory[attr].past.slice(lastIndex, lastIndex + args.length))
   // } else {
