@@ -222,7 +222,18 @@ const make_get_dataSourceItems = () => createSelector(
   items => {
     const currentAttr = 'make_get_dataSourceItems'
     compareInputHistory(currentAttr, items)
-    return make_dataSource_cloneWithRows(currentAttr, Object.values(items))
+    let tempResult_itemsSortByTemplates = {}
+    Object.values(items).map(value => {
+      (tempResult_itemsSortByTemplates.hasOwnProperty(value.templateId) ? null : tempResult_itemsSortByTemplates[value.templateId] = [])
+      tempResult_itemsSortByTemplates[value.templateId].push(value)
+    })
+    for(let key in tempResult_itemsSortByTemplates) {
+      tempResult_itemsSortByTemplates[key].sort((data1, data2) => data1.orderNum - data2.orderNum)
+    }
+    // console.log(`tempResult_itemsSortByTemplates : ${JSON.stringify(tempResult_itemsSortByTemplates, null, 1)}`)
+    const tempResult_dataSourceItems = ds.cloneWithRowsAndSections(tempResult_itemsSortByTemplates, Object.keys(tempResult_itemsSortByTemplates))
+    addResultHistory(currentAttr, tempResult_dataSourceItems)
+    return tempResult_dataSourceItems
   }
 )
 

@@ -16,70 +16,47 @@ import {
   Icon,
 } from 'react-native-elements'
 
+import InstancesListContainer from '../templateLists/instanceList/instanceListContainer'
 import ChosenInstanceDetailsContainer from '../templateLists/instanceList/chosenInstanceDetails/chosenInstanceDetailsContainer'
 
 export default class ItemsListsAllComponent extends React.Component {
 
   render() {
-    const { route, navigator, state, modifyItemsCustomized } = this.props
-    const renderRow = (rowData, sectionId, rowId) => {
-      // console.log('rowData : ', rowData)
-      // console.log('sectionId : ', sectionId)
-      // console.log('rowId : ', rowId)
-      return <ListItem
-        key={rowId}
-        // title={rowData.desc}
-        title={<CheckBox
-          title={rowData.desc}
-          checked={rowData.status}
-          onPress={() => modifyItemsCustomized(rowData)}
-          />
-        }
-        // subtitle={`instanceId : ${rowData.instanceId}`}
-        hideChevron
-      />
-    }
-    const renderSectionHeader = (sectionData, sectionId) => {
-      // console.log('sectionData : ', sectionData)
-      // console.log('sectionId : ', sectionId)
-      // sectionId is 'instanceId'.
-      // console.log('state.templates[state.instances[sectionId].instanceId] : ', state.templates[state.instances[sectionId].instanceId])
-
-      // const temp = state.templates[state.instances[sectionId].instanceId].title
-      // const temp = Object.assign({}, state.templates[state.instances[sectionId].instanceId])
-      const temp = {
-        ...state.templates[state.instances[sectionId].template]
-      }
-      return <TouchableOpacity
-        onPress={() => {
-          console.log('clicked')
-          console.log('state.instances[sectionId] : ', state.instances[sectionId])
-          return navigator.push(
-            {
-              passProps: {
-                leftButton: {
-                  title: 'back',
-                  component: ''
-                },
-                rightButton: {
-                  title: '',
-                  component: ''
-                },
-                chosenInstance: state.instances[sectionId]
+    const { route, navigator, state } = this.props
+    const renderRow = (rowData, sectionId) => <ListItem
+      key={sectionId}
+      title={rowData.desc}
+      subtitle={`orderNum : ${rowData.orderNum}`}
+      hideChevron
+    />
+    const renderSectionHeader = (sectionData, sectionId) => <TouchableOpacity
+      onPress={() => {
+        return navigator.push(
+          {
+            passProps: {
+              leftButton: {
+                title: 'back',
+                component: ''
               },
-              // title: `Customer List of ${rowData.title}`,
-              title: `${state.instances[sectionId].name}`,
-              component: ChosenInstanceDetailsContainer,
-            }
-          )
-        }}
-        >
+              rightButton: {
+                title: '',
+                component: ''
+              },
+              chosenTemplate: state.templates[sectionId]
+            },
+            // title: `Customer List of ${rowData.title}`,
+            title: `${state.templates[sectionId].title}`,
+            component: InstancesListContainer,
+          }
+        )
+      }}
+      >
         <View style={{ flexDirection: 'row', backgroundColor: 'lightgray', padding: 8 }}>
           <Text
             key={sectionId}
             style={{ fontWeight: '500', color: '#161616' }}
             >
-            {state.instances[sectionId].name}, template: {temp.title}, items : {state.instances[sectionId].items.length} ({state.badgeValueOfStatusOfAllInstances[sectionId].completed} / {state.badgeValueOfStatusOfAllInstances[sectionId].uncompleted})
+            Template : {state.templates[sectionId].title}, Items : {sectionData.length}
           </Text>
           <View style={{ flex: 1 }}>
             <Icon
@@ -88,10 +65,8 @@ export default class ItemsListsAllComponent extends React.Component {
               containerStyle={{ alignSelf: 'flex-end' }}
             />
           </View>
-
         </View>
       </TouchableOpacity>
-    }
     return(
       <View style={styles.bodyContainer}>
         <FormLabel>
@@ -99,33 +74,16 @@ export default class ItemsListsAllComponent extends React.Component {
         </FormLabel>
         <List>
           <ListView
-            dataSource={state.dataSourceForAllInstances}
-            renderRow={renderRow}
+            dataSource={state.dataSourceAllItems}
             enableEmptySections={true}
+            renderRow={renderRow}
             renderSectionHeader={renderSectionHeader}
           />
         </List>
         <View style={{ height: 5 }} />
         <Button
-          icon={{ name: 'note-add' }}
-          title='Add Template'
-          // onPress={() => alert(`needed props to move Tab.add`)}
-          onPress={() => {
-            navigator.push({
-              passProps: {
-                leftButton: {
-                  title: 'Back',
-                  component: '',
-                },
-                rightButton: {
-                  title: '',
-                  component: '',
-                },
-              },
-              title: 'Template Add',
-              component: TemplateAdd,
-            })
-          }}
+          title='Add Item'
+          onPress={() => alert('add Item')}
         />
       </View>
     )

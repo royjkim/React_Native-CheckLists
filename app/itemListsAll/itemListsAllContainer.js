@@ -7,14 +7,10 @@ import mySelectors from '../container/selectors'
 
 const make_mapStateToProps = () => (state, ownProps) => ({
   state: {
-    templatesLength: state.normalizeReducer.result.templates.length,
-    // dataSourceTemplates: mySelectors.make_get_dataSourceTemplates()(state.normalizeReducer.entities),
-    dataSourceForAllInstances: mySelectors.make_get_dataSourceForAllInstances()(state.normalizeReducer.entities),
-    badgeValueOfInstancesOfChosenTemplates: mySelectors.make_get_badgeValueOfInstancesOfChosenTemplates()(state.normalizeReducer.entities),
-    badgeValueOfStatusOfAllInstances: mySelectors.make_get_badgeValueOfStatusOfAllInstances()(state.normalizeReducer.entities),
     instances: state.normalizeReducer.entities.instances,
     templates: state.normalizeReducer.entities.templates,
-    items: state.normalizeReducer.entities.items
+    items: state.normalizeReducer.entities.items,
+    dataSourceAllItems: mySelectors.make_get_dataSourceItems()(state.normalizeReducer.entities)
   },
   route: ownProps.route,
   navigator: ownProps.navigator

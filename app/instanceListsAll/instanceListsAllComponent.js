@@ -22,31 +22,19 @@ export default class InstanceListsAllComponent extends React.Component {
 
   render() {
     const { route, navigator, state, modifyItemsCustomized } = this.props
-    const renderRow = (rowData, sectionId, rowId) => {
-      // console.log('rowData : ', rowData)
-      // console.log('sectionId : ', sectionId)
-      // console.log('rowId : ', rowId)
-      return <ListItem
-        key={rowId}
-        // title={rowData.desc}
-        title={<CheckBox
-          title={rowData.desc}
-          checked={rowData.status}
-          onPress={() => modifyItemsCustomized(rowData)}
-          />
-        }
-        // subtitle={`instanceId : ${rowData.instanceId}`}
-        hideChevron
-      />
-    }
+    const renderRow = (rowData, sectionId, rowId) => <ListItem
+      key={rowId}
+      // title={rowData.desc}
+      title={<CheckBox
+        title={rowData.desc}
+        checked={rowData.status}
+        onPress={() => modifyItemsCustomized(rowData)}
+        />
+      }
+      // subtitle={`instanceId : ${rowData.instanceId}`}
+      hideChevron
+    />
     const renderSectionHeader = (sectionData, sectionId) => {
-      // console.log('sectionData : ', sectionData)
-      // console.log('sectionId : ', sectionId)
-      // sectionId is 'instanceId'.
-      // console.log('state.templates[state.instances[sectionId].instanceId] : ', state.templates[state.instances[sectionId].instanceId])
-
-      // const temp = state.templates[state.instances[sectionId].instanceId].title
-      // const temp = Object.assign({}, state.templates[state.instances[sectionId].instanceId])
       const temp = {
         ...state.templates[state.instances[sectionId].template]
       }

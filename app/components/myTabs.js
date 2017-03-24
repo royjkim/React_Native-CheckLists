@@ -97,7 +97,7 @@ export default class MyTabs extends React.Component {
             initialRoute={{
               passProps: {
                 leftButton: {
-                  title: 'Back',
+                  title: '',
                   component: ''
                 },
                 rightButton: {
