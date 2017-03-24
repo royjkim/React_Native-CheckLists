@@ -16,7 +16,7 @@ const make_mapStateToProps = () => (state, ownProps) => {
       // dataSourceForAllInstances: mySelectors.make_get_dataSourceForAllInstances()(state.normalizeReducer.entities),
       dataSourceForAllInstances: mySelectors.make_get_dataSourceInstances()(state.normalizeReducer.entities),
       badgeValueOfStatusOfAllInstances: mySelectors.make_get_badgeValueOfStatusOfAllInstances()(state.normalizeReducer.entities),
-      // badgeValueOfTemplates: mySelectors.make_get_badgeValueOfTemplates()(state.normalizeReducer.entities),
+      // badgeValueOfInstancesOfChosenTemplates: mySelectors.make_get_badgeValueOfInstancesOfChosenTemplates()(state.normalizeReducer.entities),
       instances: state.normalizeReducer.entities.instances,
       templates: state.normalizeReducer.entities.templates
     },

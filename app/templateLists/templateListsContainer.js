@@ -4,9 +4,10 @@ import mySelectors from '../container/selectors'
 
 const make_mapStateToProps = () => (state, ownProps) => ({
   state: {
+    templates: state.normalizeReducer.entities.templates,
     templatesLength: state.normalizeReducer.result.templates.length,
     dataSourceTemplates: mySelectors.make_get_dataSourceTemplates()(state.normalizeReducer.entities),
-    badgeValueOfTemplates: mySelectors.make_get_badgeValueOfTemplates()(state.normalizeReducer.entities)
+    badgeValueOfInstancesOfChosenTemplates: mySelectors.make_get_badgeValueOfInstancesOfChosenTemplates()(state.normalizeReducer.entities)
   },
   route: ownProps.routes,
   navigator: ownProps.navigator

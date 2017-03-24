@@ -18,7 +18,7 @@ const countTest = {
   make_get_dataSourceOfItemsOfChosenTemplate: 0,
   make_get_dataSourceItemsOfChosenInstance: 0,
   make_get_dataSourceForAllInstances: 0,
-  make_get_badgeValueOfTemplates: 0,
+  make_get_badgeValueOfInstancesOfChosenTemplates: 0,
   make_get_badgeValueOfStatusOfEachInstanceOfChosenTemplate: 0,
   make_get_badgeValueOfStatusOfChosenInstance: 0,
   make_get_badgeValueOfStatusOfAllInstances: 0,
@@ -61,7 +61,7 @@ let dataInputHistory = {
     past: [],
     // present: [], future: []
   },
-  make_get_badgeValueOfTemplates: {
+  make_get_badgeValueOfInstancesOfChosenTemplates: {
     past: [],
     // present: [], future: []
   },
@@ -124,7 +124,7 @@ let dataResultHistory = {
     past: [],
     // present: [], future: []
   },
-  make_get_badgeValueOfTemplates: {
+  make_get_badgeValueOfInstancesOfChosenTemplates: {
     past: [],
     // present: [], future: []
   },
@@ -246,18 +246,18 @@ const make_get_dataSourceForAllInstances = () => createSelector(
   }
 )
 
-const make_get_badgeValueOfTemplates = () => createSelector(
+const make_get_badgeValueOfInstancesOfChosenTemplates = () => createSelector(
   templates,
   instances,
   (templates, instances) => {
-    const currentAttr = 'make_get_badgeValueOfTemplates'
+    const currentAttr = 'make_get_badgeValueOfInstancesOfChosenTemplates'
     compareInputHistory(currentAttr, values(arguments))
-    let tempResult_badgeValueOfTemplates = {}
+    let tempResult_badgeValueOfInstancesOfChosenTemplates = {}
     Object.values(instances).map(value => {
-      (tempResult_badgeValueOfTemplates.hasOwnProperty(templates[value.template].templateId) ? tempResult_badgeValueOfTemplates[templates[value.template].templateId] = tempResult_badgeValueOfTemplates[templates[value.template].templateId] + 1 : tempResult_badgeValueOfTemplates[templates[value.template].templateId] = 1)
+      (tempResult_badgeValueOfInstancesOfChosenTemplates.hasOwnProperty(templates[value.template].templateId) ? tempResult_badgeValueOfInstancesOfChosenTemplates[templates[value.template].templateId] = tempResult_badgeValueOfInstancesOfChosenTemplates[templates[value.template].templateId] + 1 : tempResult_badgeValueOfInstancesOfChosenTemplates[templates[value.template].templateId] = 1)
     })
-    addResultHistory(currentAttr, tempResult_badgeValueOfTemplates)
-    return tempResult_badgeValueOfTemplates
+    addResultHistory(currentAttr, tempResult_badgeValueOfInstancesOfChosenTemplates)
+    return tempResult_badgeValueOfInstancesOfChosenTemplates
   }
 )
 
@@ -408,7 +408,7 @@ const mySelectors = {
   make_get_dataSourceOfItemsOfChosenTemplate,
   make_get_dataSourceItemsOfChosenInstance,
   make_get_dataSourceForAllInstances,
-  make_get_badgeValueOfTemplates,
+  make_get_badgeValueOfInstancesOfChosenTemplates,
   make_get_badgeValueOfStatusOfEachInstanceOfChosenTemplate,
   make_get_badgeValueOfStatusOfChosenInstance,
   make_get_badgeValueOfStatusOfAllInstances,

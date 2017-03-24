@@ -23,7 +23,6 @@ export default class InstanceListComponent extends React.Component {
     renderRowInstances = (rowData, sectionID) => <ListItem
       key={sectionID}
       title={rowData.name}
-      // subtitle={`templateId(FK)${rowData.template.toString()}`}
       badge={{
         value: state.badgeValueOfStatusOfEachInstanceOfChosenTemplate[rowData.instanceId].uncompleted,
         badgeTextStyle: { color: 'white' },
@@ -51,6 +50,7 @@ export default class InstanceListComponent extends React.Component {
     renderRowItems = (rowData, sectionId) => <ListItem
       key={sectionId}
       title={rowData.desc}
+      subtitle={`orderNum : ${rowData.orderNum}`}
     />
     return(
       <View style={styles.bodyContainerOnSideMenu}>

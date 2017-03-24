@@ -23,18 +23,18 @@ export default class TemplateListsComponent extends React.Component {
     const renderRow = (rowData, sectionID) => <ListItem
       key={sectionID}
       title={rowData.title}
-      subtitle={`${rowData.category}`}
-      badge={{
-        // value: (typeof state.badgeValueOfTemplates[rowData.templateId] !== 'number' ? 0 : state.badgeValueOfTemplates[rowData.templateId]),
-        value: (state.badgeValueOfTemplates.hasOwnProperty(rowData.templateId) ? state.badgeValueOfTemplates[rowData.templateId] : 0),
-        badgeTextStyle: { color: 'white'},
-        badgeContainerStyle: { marginTop: 5 }
-      }}
+      subtitle={`Category : ${rowData.category}, Instances : ${(state.badgeValueOfInstancesOfChosenTemplates.hasOwnProperty(rowData.templateId) ? state.badgeValueOfInstancesOfChosenTemplates[rowData.templateId] : 0)}, Items: ${state.templates[rowData.templateId].items.length} `}
+      // badge={{
+      //   // value: `instances : ${(state.badgeValueOfInstancesOfChosenTemplates.hasOwnProperty(rowData.templateId) ? state.badgeValueOfInstancesOfChosenTemplates[rowData.templateId] : 0)}`,
+      //   value: `items(${(state.badgeValueOfInstancesOfChosenTemplates.hasOwnProperty(rowData.templateId) ? state.badgeValueOfInstancesOfChosenTemplates[rowData.templateId] : 0)})`,
+      //   badgeTextStyle: { color: 'white'},
+      //   badgeContainerStyle: { marginTop: 5 }
+      // }}
       hideChevron={
-        ((state.badgeValueOfTemplates.hasOwnProperty(rowData.templateId) && state.badgeValueOfTemplates[rowData.templateId] > 0)
+        ((state.badgeValueOfInstancesOfChosenTemplates.hasOwnProperty(rowData.templateId) && state.badgeValueOfInstancesOfChosenTemplates[rowData.templateId] > 0)
          ? false : true)}
       onPress={() => {
-        if(state.badgeValueOfTemplates.hasOwnProperty(rowData.templateId) && state.badgeValueOfTemplates[rowData.templateId] > 0) {
+        if(state.badgeValueOfInstancesOfChosenTemplates.hasOwnProperty(rowData.templateId) && state.badgeValueOfInstancesOfChosenTemplates[rowData.templateId] > 0) {
           navigator.push(
             {
               passProps: {

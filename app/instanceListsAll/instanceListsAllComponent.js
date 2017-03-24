@@ -93,19 +93,11 @@ export default class InstanceListsAllComponent extends React.Component {
 
         </View>
       </TouchableOpacity>
-      // return <FormLabel
-      //   key={sectionId}
-      //   // containerStyle={{ backgroundColor: 'lightgray' }}
-      //   >
-      //     {/* {state.instances[sectionId].name}, template: {state.templates[state.instances[sectionId].instanceId].title.toString()}, items : {state.instances[sectionId].items.length} */}
-      //     {state.instances[sectionId].name}, template: {temp.title}, items : {state.instances[sectionId].items.length}
-      //   </FormLabel>
     }
     return(
       <View style={styles.bodyContainer}>
         <FormLabel>
-          {/* Check List Template : {state.templatesLength} */}
-          Instances : {Object.values(state.instances).length}
+          Total Instances : {Object.values(state.instances).length}
         </FormLabel>
         <List>
           <ListView

@@ -13,7 +13,7 @@ import {
   FormLabel,
 } from 'react-native-elements'
 
-import TemplateAdd from '../templateLists/templateAdd'
+// import TemplateAdd from '../templateLists/templateAdd'
 import ChosenInstanceDetailsContainer from '../templateLists/instanceList/chosenInstanceDetails/chosenInstanceDetailsContainer'
 
 import Reactotron from 'reactotron-react-native'
@@ -29,12 +29,12 @@ export default class HomeComponent extends React.Component {
       return <ListItem
         key={sectionId}
         title={rowData.name}
-        subtitle={`template : ${state.templates[rowData.template].title} ${state.badgeValueOfStatusOfAllInstances[rowData.instanceId].completed} / ${state.badgeValueOfStatusOfAllInstances[rowData.instanceId].uncompleted}`}
+        subtitle={`Template : ${state.templates[rowData.template].title}\nItems : total(${state.badgeValueOfStatusOfAllInstances[rowData.instanceId].total}), complete(${state.badgeValueOfStatusOfAllInstances[rowData.instanceId].completed})`}
         badge={{
-          // value: state.badgeValueOfStatusOfAllInstances[rowData.instanceId].uncompleted,
-          value: `${state.badgeValueOfStatusOfAllInstances[rowData.instanceId].completed} / ${state.badgeValueOfStatusOfAllInstances[rowData.instanceId].uncompleted}`,
+          value: state.badgeValueOfStatusOfAllInstances[rowData.instanceId].uncompleted,
+          // value: `${state.badgeValueOfStatusOfAllInstances[rowData.instanceId].completed} / ${state.badgeValueOfStatusOfAllInstances[rowData.instanceId].uncompleted}`,
           badgeTextStyle: { color: 'white' },
-          badgeContainerStyle: { marginTop: 5 }
+          badgeContainerStyle: { marginTop: 15 }
         }}
         onPress={() => navigator.push(
           {
@@ -58,7 +58,7 @@ export default class HomeComponent extends React.Component {
     return(
       <View style={styles.bodyContainer}>
         <FormLabel>
-          Instances : {Object.values(state.instances).length}
+          Total Instances : {Object.values(state.instances).length}
         </FormLabel>
         <List>
           <ListView
@@ -68,7 +68,7 @@ export default class HomeComponent extends React.Component {
           />
         </List>
         <View style={{ height: 5 }} />
-        <Button
+        {/* <Button
           icon={{ name: 'note-add' }}
           title='Add Template'
           onPress={() => {
@@ -87,7 +87,7 @@ export default class HomeComponent extends React.Component {
               component: TemplateAdd,
             })
           }}
-        />
+        /> */}
       </View>
     )
   }

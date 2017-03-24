@@ -55,7 +55,7 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
           Template : {state.chosenTemplate.title}
         </FormLabel>
         <FormLabel>
-          Items : {state.countsOfStatusCompleted.total} (Completed : {state.countsOfStatusCompleted.completed}, Uncompleted : {state.countsOfStatusCompleted.uncompleted})
+          Items : total({state.countsOfStatusCompleted.total}), complete({state.countsOfStatusCompleted.completed}), uncomplete({state.countsOfStatusCompleted.uncompleted})
         </FormLabel>
         <List>
           <ListView
