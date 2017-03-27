@@ -11,6 +11,7 @@ import {
   List,
   ListItem,
   FormLabel,
+  SearchBar,
 } from 'react-native-elements'
 
 // import TemplateAdd from '../templateLists/templateAdd'

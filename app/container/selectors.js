@@ -169,17 +169,11 @@ let dataResultHistory = {
     // present: [], future: []
   }
 };
-const compareInputHistory = (attr, ...args) => {
+const compareInputHistory = (attr, args) => {
   const lastIndex = (dataInputHistory[attr].past.length < 1 ? 0 : dataInputHistory[attr].past.length - 1 )
-  let prevData = [];
-  (args.length > 1 ? prevData = flatten(dataInputHistory[attr].past.slice(lastIndex, lastIndex + args.length)) : prevData = dataInputHistory[attr].past[lastIndex] || [])
-  // if(args.length > 1) {
-  //   prevData = flatten(dataInputHistory[attr].past.slice(lastIndex, lastIndex + args.length))
-  // } else {
-  //   prevData = flatten(dataInputHistory[attr].past[lastIndex] || [])
-  // }
+  const prevData = dataInputHistory[attr].past[lastIndex]
   const tempResult_compareInputHistory = isEqual(args, prevData);
-  (tempResult_compareInputHistory ? null : addInputHistory(attr, args));
+  tempResult_compareInputHistory || addInputHistory(attr, args)
   // console.log(`isEqual - ${attr} : ${tempResult_compareInputHistory}`);
   const loadResultHistoryOrNot = (resultOfcompareInputHistory, currentAttr) => (resultOfcompareInputHistory ? () => loadResultHistory(attr) : console.log(`run - ${currentAttr} - ${addCount(currentAttr)}`))
   return loadResultHistoryOrNot(tempResult_compareInputHistory, attr)
@@ -212,7 +206,7 @@ const make_get_dataSourceInstances = () => createSelector(
   itemsCustomized,
   (instances, itemsCustomized) => {
     const currentAttr = 'make_get_dataSourceInstances'
-    compareInputHistory(currentAttr, [ instances, itemsCustomized ])
+    compareInputHistory(currentAttr, instances, itemsCustomized)
     return make_dataSource_cloneWithRows(currentAttr, Object.values(instances))
   }
 )
