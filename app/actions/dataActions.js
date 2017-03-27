@@ -18,7 +18,8 @@ const ADD_TEMPLATE = 'addNewTemplate',
       SEARCHBAR_TEXT_INSTANCES_OF_CHOSEN_TEMPLATE = 'searchBarTextInstancesOfChosenTemplate',
       SEARCHBAR_TEXT_ITEMS_CUSTOMIZED_ALL_INSTANCES = 'searchBarTextItemsCustomizedAllInstances',
       SEARCHBAR_TEXT_TEMPLATE_LIST = 'searchBarTextTemplateList',
-      SEARCHBAR_TEXT_ITEM_LIST = 'searchBarTextItemList';
+      SEARCHBAR_TEXT_ITEM_LIST = 'searchBarTextItemList',
+      CHOOSE_CATEGORY = 'chooseCategory';
 
 const types = {
   ADD_TEMPLATE,
@@ -41,7 +42,8 @@ const types = {
   SEARCHBAR_TEXT_INSTANCES_OF_CHOSEN_TEMPLATE,
   SEARCHBAR_TEXT_ITEMS_CUSTOMIZED_ALL_INSTANCES,
   SEARCHBAR_TEXT_TEMPLATE_LIST,
-  SEARCHBAR_TEXT_ITEM_LIST
+  SEARCHBAR_TEXT_ITEM_LIST,
+  CHOOSE_CATEGORY
 }
 
 export default types

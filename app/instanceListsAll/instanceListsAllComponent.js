@@ -56,7 +56,6 @@ export default class InstanceListsAllComponent extends React.Component {
                 },
                 chosenInstance: state.instances[sectionId]
               },
-              // title: `Customer List of ${rowData.title}`,
               title: `${state.instances[sectionId].name}`,
               component: ChosenInstanceDetailsContainer,
             }
@@ -104,7 +103,6 @@ export default class InstanceListsAllComponent extends React.Component {
         <Button
           icon={{ name: 'note-add' }}
           title='Add Template'
-          // onPress={() => alert(`needed props to move Tab.add`)}
           onPress={() => {
             navigator.push({
               passProps: {

@@ -209,6 +209,8 @@ const searchBarTextItemsCustomizedAllInstances = state => state.searchBarText.se
 const searchBarTextTemplateList = state => state.searchBarText.searchBarTextTemplateList.toLowerCase()
 const searchBarTextItemList = state => state.searchBarText.searchBarTextItemList.toLowerCase()
 
+const statusPicker = state => state.configValue.picker
+
 const make_get_dataSourceTemplates = () => createSelector(
   templates,
   searchBarTextTemplateList,
@@ -278,10 +280,19 @@ const make_get_dataSourceInstancesOfChosenTemplate = () => createSelector(
 
 const make_get_dataSourceItemsOfChosenInstance = () => createSelector(
   data => data,
-  itemsCustomizedOfChosenInstance => {
+  (data, statusPicker) => statusPicker,
+  (itemsCustomizedOfChosenInstance, statusPicker) => {
     const currentAttr = 'make_get_dataSourceItemsOfChosenInstance';
-    compareInputHistory(currentAttr, itemsCustomizedOfChosenInstance)
-    return make_dataSource_cloneWithRows(currentAttr, itemsCustomizedOfChosenInstance)
+    compareInputHistory(currentAttr, itemsCustomizedOfChosenInstance, statusPicker,)
+
+    // let tempResult = []
+    const statusPickerMapper = {
+      'all': () => Object.values(itemsCustomizedOfChosenInstance),
+      'completed': () => Object.values(itemsCustomizedOfChosenInstance).filter(value => value.status == true),
+      'uncompleted': () => Object.values(itemsCustomizedOfChosenInstance).filter(value => value.status == false)
+    }
+    const tempResult = statusPickerMapper[statusPicker]()
+    return make_dataSource_cloneWithRows(currentAttr, tempResult)
   }
 )
 
@@ -318,9 +329,6 @@ const make_get_instancesOfChosenTemplate = () => createSelector(
   searchBarTextInstancesOfChosenTemplate,
   (instances, chosenTemplate, searchBarText) => {
     const currentAttr = 'make_get_instancesOfChosenTemplate'
-    // console.log(`arguments : `, arguments)
-    // console.log(`values(arguments) : `, values(arguments))
-    // compareInputHistory(currentAttr, values(arguments))
     compareInputHistory(currentAttr, instances, chosenTemplate, searchBarText)
     const tempResult = Object.values(instances).filter(value => value.template == chosenTemplate.templateId && value.name.toLowerCase().includes(searchBarText))
     addResultHistory(currentAttr, tempResult)
@@ -404,15 +412,15 @@ const make_get_itemsCustomizedOfChosenInstance = () => createSelector(
   (itemsCustomized, chosenInstance) => {
     const currentAttr = 'make_get_itemsCustomizedOfChosenInstance'
     compareInputHistory(currentAttr, itemsCustomized, chosenInstance)
-    let temp_itemsCustomized = []
+    let tempResult = []
     chosenInstance.items.map(data => {
-      temp_itemsCustomized = temp_itemsCustomized.concat({
+      tempResult.push({
         ...itemsCustomized[data]
       })
-      temp_itemsCustomized.sort((data1, data2) => data1.orderNum - data2.orderNum);
+      tempResult.sort((data1, data2) => data1.orderNum - data2.orderNum);
     })
-    addResultHistory(currentAttr, temp_itemsCustomized)
-    return temp_itemsCustomized
+    addResultHistory(currentAttr, tempResult)
+    return tempResult
   }
 )
 
@@ -423,12 +431,11 @@ const make_get_itemsOfChosenTemplate = () => createSelector(
   (items, chosenTemplate, searchBarText) => {
     const currentAttr = 'make_get_itemsOfChosenTemplate'
     compareInputHistory(currentAttr, items, chosenTemplate, searchBarText)
-    let testReult_itemsOfChosenTemplate = []
-    console.log(`selector - chosenTemplate : `, chosenTemplate)
-    chosenTemplate.items.map(value => items[value].desc.toLowerCase().includes(searchBarText) ? testReult_itemsOfChosenTemplate.push(items[value]) : null)
-    testReult_itemsOfChosenTemplate.sort((data1, data2) => data1.orderNum - data2.orderNum)
-    addResultHistory(currentAttr, testReult_itemsOfChosenTemplate)
-    return testReult_itemsOfChosenTemplate
+    let tempResult = []
+    chosenTemplate.items.map(value => items[value].desc.toLowerCase().includes(searchBarText) ? tempResult.push(items[value]) : null)
+    tempResult.sort((data1, data2) => data1.orderNum - data2.orderNum)
+    addResultHistory(currentAttr, tempResult)
+    return tempResult
   }
 )
 

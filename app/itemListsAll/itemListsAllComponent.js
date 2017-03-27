@@ -30,44 +30,45 @@ export default class ItemsListsAllComponent extends React.Component {
       subtitle={`orderNum : ${rowData.orderNum}`}
       hideChevron
     />
-    const renderSectionHeader = (sectionData, sectionId) => <TouchableOpacity
-      onPress={() => {
-        return navigator.push(
-          {
-            passProps: {
-              leftButton: {
-                title: 'back',
-                component: ''
+    const renderSectionHeader = (sectionData, sectionId) => (
+      <TouchableOpacity
+        onPress={() => {
+          return navigator.push(
+            {
+              passProps: {
+                leftButton: {
+                  title: 'back',
+                  component: ''
+                },
+                rightButton: {
+                  title: '',
+                  component: ''
+                },
+                chosenTemplate: state.templates[sectionId]
               },
-              rightButton: {
-                title: '',
-                component: ''
-              },
-              chosenTemplate: state.templates[sectionId]
-            },
-            // title: `Customer List of ${rowData.title}`,
-            title: `${state.templates[sectionId].title}`,
-            component: InstancesListContainer,
-          }
-        )
-      }}
-      >
-        <View style={{ flexDirection: 'row', backgroundColor: 'lightgray', padding: 8 }}>
-          <Text
-            key={sectionId}
-            style={{ fontWeight: '500', color: '#161616' }}
-            >
-            Template : {state.templates[sectionId].title}, Items : {sectionData.length}
-          </Text>
-          <View style={{ flex: 1 }}>
-            <Icon
-              name='chevron-right'
-              size={20}
-              containerStyle={{ alignSelf: 'flex-end' }}
-            />
+              title: `${state.templates[sectionId].title}`,
+              component: InstancesListContainer,
+            }
+          )
+        }}
+        >
+          <View style={{ flexDirection: 'row', backgroundColor: 'lightgray', padding: 8 }}>
+            <Text
+              key={sectionId}
+              style={{ fontWeight: '500', color: '#161616' }}
+              >
+              Template : {state.templates[sectionId].title}, Items : {sectionData.length}
+            </Text>
+            <View style={{ flex: 1 }}>
+              <Icon
+                name='chevron-right'
+                size={20}
+                containerStyle={{ alignSelf: 'flex-end' }}
+              />
+            </View>
           </View>
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+    )
     return(
       <View style={styles.bodyContainer}>
         <SearchBar

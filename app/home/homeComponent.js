@@ -14,7 +14,6 @@ import {
   SearchBar,
 } from 'react-native-elements'
 
-// import TemplateAdd from '../templateLists/templateAdd'
 import ChosenInstanceDetailsContainer from '../templateLists/instanceList/chosenInstanceDetails/chosenInstanceDetailsContainer'
 import InstanceListsAllContainer from '../instanceListsAll/instanceListsAllContainer'
 
@@ -22,39 +21,34 @@ export default class HomeComponent extends React.Component {
 
   render() {
     const { route, navigator, state, searchBarTextInstanceList } = this.props
-    const renderRow = (rowData, sectionId) => {
-      // console.log('rowData : ', rowData)
-      // console.log('sectionId : ', sectionId)
-      // console.log('rowId : ', rowId)
-      return <ListItem
-        key={sectionId}
-        title={rowData.name}
-        subtitle={`Template : ${state.templates[rowData.template].title}\nItems : total(${state.badgeValueOfStatusOfAllInstances[rowData.instanceId].total}), complete(${state.badgeValueOfStatusOfAllInstances[rowData.instanceId].completed})`}
-        badge={{
-          value: state.badgeValueOfStatusOfAllInstances[rowData.instanceId].uncompleted,
-          // value: `${state.badgeValueOfStatusOfAllInstances[rowData.instanceId].completed} / ${state.badgeValueOfStatusOfAllInstances[rowData.instanceId].uncompleted}`,
-          badgeTextStyle: { color: 'white' },
-          badgeContainerStyle: { marginTop: 15 }
-        }}
-        onPress={() => navigator.push(
-          {
-            passProps: {
-              leftButton: {
-                title: 'back',
-                component: ''
-              },
-              rightButton: {
-                title: '',
-                component: ''
-              },
-              chosenInstance: rowData
+    const renderRow = (rowData, sectionId) => <ListItem
+      key={sectionId}
+      title={rowData.name}
+      subtitle={`Template : ${state.templates[rowData.template].title}\nItems : total(${state.badgeValueOfStatusOfAllInstances[rowData.instanceId].total}), complete(${state.badgeValueOfStatusOfAllInstances[rowData.instanceId].completed})`}
+      badge={{
+        value: state.badgeValueOfStatusOfAllInstances[rowData.instanceId].uncompleted,
+        // value: `${state.badgeValueOfStatusOfAllInstances[rowData.instanceId].completed} / ${state.badgeValueOfStatusOfAllInstances[rowData.instanceId].uncompleted}`,
+        badgeTextStyle: { color: 'white' },
+        badgeContainerStyle: { marginTop: 15 }
+      }}
+      onPress={() => navigator.push(
+        {
+          passProps: {
+            leftButton: {
+              title: 'back',
+              component: ''
             },
-            title: `${rowData.name}`,
-            component: ChosenInstanceDetailsContainer,
-          }
-        )}
-      />
-    }
+            rightButton: {
+              title: '',
+              component: ''
+            },
+            chosenInstance: rowData
+          },
+          title: `${rowData.name}`,
+          component: ChosenInstanceDetailsContainer,
+        }
+      )}
+    />
     return(
       <View style={styles.bodyContainer}>
         <SearchBar

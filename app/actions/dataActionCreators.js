@@ -133,3 +133,10 @@ export function searchBarTextItemList(searchBarText) {
     searchBarText
   }
 }
+
+export function chooseCategory(chosenCategory) {
+  return {
+    type: types.CHOOSE_CATEGORY,
+    chosenCategory
+  }
+}

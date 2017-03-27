@@ -1,14 +1,5 @@
 import types from '../actions/dataActions'
 
-const initialState = {
-  searchBarTextInstanceList: '',
-  searchBarTextItemsOfChosenTemplate: '',
-  searchBarTextInstancesOfChosenTemplate: '',
-  searchBarTextItemsCustomizedAllInstances: '',
-  searchBarTextTemplateList: '',
-  searchBarTextItemList: ''
-}
-
 const searchBarTextInstanceList = (state, action) => ({
   ...state,
   searchBarTextInstanceList: action.searchBarText
@@ -39,7 +30,7 @@ const searchBarTextItemList = (state, action) => ({
   searchBarTextItemList: action.searchBarText
 })
 
-export default function searchBarReducer(state = initialState, action) {
+export default function searchBarReducer(state, action) {
   const reducerMap = {
     [types.SEARCHBAR_TEXT_INSTANCE_LIST]: searchBarTextInstanceList,
     [types.SEARCHBAR_TEXT_ITEMS_OF_CHOSEN_TEMPLATE]: searchBarTextItemsOfChosenTemplate,
