@@ -10,6 +10,7 @@ import {
   Button,
   FormLabel,
   CheckBox,
+  SearchBar,
 } from 'react-native-elements'
 import styles from '../../../components/styles'
 
@@ -39,13 +40,6 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
         </View>
       )
     }
-    // const renderRowNormal = (rowData, sectionId) => {
-    //   return <ListItem
-    //     title={rowData.desc}
-    //     subtitle={`orderNum : ${rowData.orderNum.toString()} / item_id : ${rowData.itemCustomizedId} / status : ${rowData.status.toString()}`}
-    //     // { id: 4, desc: 'Close Door', template: 'BeforeGoOutHome', orderNum: 10 }
-    //   />
-    // }
     return(
       <View style={styles.bodyContainer}>
         <FormLabel>
@@ -64,23 +58,11 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
             enableEmptySections={true}
           />
         </List>
-        {/* <List>
-          <ListView
-            dataSource={state.dataSourceItemsCustomizedOfChosenInstance}
-            renderRow={renderRowNormal}
-            enableEmptySections={true}
-          />
-        </List> */}
-        <View style={{ height: 5 }}/>
-        {/* <Button
-          title='Save'
-          onPress={() => alert('save')}
-        /> */}
-        <View style={{ height: 5 }}/>
+        {/* <View style={{ height: 10 }} />
         <Button
           title='Undo'
           onPress={() => alert('undo')}
-        />
+        /> */}
       </View>
     )
   }

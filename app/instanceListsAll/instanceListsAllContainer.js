@@ -2,16 +2,14 @@ import React from 'react'
 import { connect } from 'react-redux'
 import InstanceListsAllComponent from './instanceListsAllComponent'
 import { bindActionCreators } from 'redux'
-import { modifyItemsCustomized } from '../actions/dataActionCreators'
+import { modifyItemsCustomized, searchBarTextItemsCustomizedAllInstances } from '../actions/dataActionCreators'
 import mySelectors from '../container/selectors'
 
 const make_mapStateToProps = () => (state, ownProps) => ({
   state: {
-    templatesLength: state.normalizeReducer.result.templates.length,
-    // dataSourceTemplates: mySelectors.make_get_dataSourceTemplates()(state.normalizeReducer.entities),
-    dataSourceForAllInstances: mySelectors.make_get_dataSourceForAllInstances()(state.normalizeReducer.entities),
-    badgeValueOfInstancesOfChosenTemplates: mySelectors.make_get_badgeValueOfInstancesOfChosenTemplates()(state.normalizeReducer.entities),
-    badgeValueOfStatusOfAllInstances: mySelectors.make_get_badgeValueOfStatusOfAllInstances()(state.normalizeReducer.entities),
+    itemsCustomizedOfAllItems: mySelectors.make_get_itemsCustomizedOfAllItems()(state.normalizeReducer),
+    badgeValueOfInstancesOfChosenTemplates: mySelectors.make_get_badgeValueOfInstancesOfChosenTemplates()(state.normalizeReducer),
+    badgeValueOfStatusOfAllInstances: mySelectors.make_get_badgeValueOfStatusOfAllInstances()(state.normalizeReducer),
     instances: state.normalizeReducer.entities.instances,
     templates: state.normalizeReducer.entities.templates
   },
@@ -20,7 +18,18 @@ const make_mapStateToProps = () => (state, ownProps) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  modifyItemsCustomized: targetData => dispatch(modifyItemsCustomized(targetData))
+  modifyItemsCustomized: targetData => dispatch(modifyItemsCustomized(targetData)),
+  searchBarTextItemsCustomizedAllInstances: searchBarText => dispatch(searchBarTextItemsCustomizedAllInstances(searchBarText))
 })
 
-export default connect(make_mapStateToProps, mapDispatchToProps)(InstanceListsAllComponent)
+const mergeProps = (stateProps, dispatchProps, ownProps) => ({
+  state: {
+    ...stateProps.state,
+    dataSourceForAllInstances: mySelectors.make_get_dataSourceForAllInstances()(stateProps.state.itemsCustomizedOfAllItems),
+    // instacesLength: stateProps.state.dataSourceForAllInstances.sectionIdentities.length
+  },
+  ...dispatchProps,
+  ...ownProps
+})
+
+export default connect(make_mapStateToProps, mapDispatchToProps, mergeProps)(InstanceListsAllComponent)

@@ -10,6 +10,7 @@ import {
   List,
   ListItem,
   FormLabel,
+  SearchBar,
 } from 'react-native-elements'
 
 import InstanceListContainer from './instanceList/instanceListContainer'
@@ -17,20 +18,15 @@ import MySideMenu from '../components/mySideMenu'
 
 export default class TemplateListsComponent extends React.Component {
   render() {
-    const { route, navigator, state } = this.props
+    const { route, navigator, state, searchBarTextTemplateList } = this.props
     const renderRow = (rowData, sectionID) => <ListItem
       key={sectionID}
       title={rowData.title}
-      subtitle={`Category : ${rowData.category}, Instances : ${(state.badgeValueOfInstancesOfChosenTemplates.hasOwnProperty(rowData.templateId) ? state.badgeValueOfInstancesOfChosenTemplates[rowData.templateId] : 0)}, Items: ${state.templates[rowData.templateId].items.length} `}
-      // badge={{
-      //   // value: `instances : ${(state.badgeValueOfInstancesOfChosenTemplates.hasOwnProperty(rowData.templateId) ? state.badgeValueOfInstancesOfChosenTemplates[rowData.templateId] : 0)}`,
-      //   value: `items(${(state.badgeValueOfInstancesOfChosenTemplates.hasOwnProperty(rowData.templateId) ? state.badgeValueOfInstancesOfChosenTemplates[rowData.templateId] : 0)})`,
-      //   badgeTextStyle: { color: 'white'},
-      //   badgeContainerStyle: { marginTop: 5 }
-      // }}
+      subtitle={`Category(${rowData.category}), Instances(${(state.badgeValueOfInstancesOfChosenTemplates.hasOwnProperty(rowData.templateId) ? state.badgeValueOfInstancesOfChosenTemplates[rowData.templateId] : 0)}), Items(${state.templates[rowData.templateId].items.length})`}
       hideChevron={
         ((state.badgeValueOfInstancesOfChosenTemplates.hasOwnProperty(rowData.templateId) && state.badgeValueOfInstancesOfChosenTemplates[rowData.templateId] > 0)
-         ? false : true)}
+         ? false : true)
+      }
       onPress={() => {
         if(state.badgeValueOfInstancesOfChosenTemplates.hasOwnProperty(rowData.templateId) && state.badgeValueOfInstancesOfChosenTemplates[rowData.templateId] > 0) {
           navigator.push(
@@ -55,6 +51,12 @@ export default class TemplateListsComponent extends React.Component {
     />
     return(
       <View style={styles.bodyContainer}>
+        <SearchBar
+          lightTheme
+          round={true}
+          onChangeText={searchBarText => searchBarTextTemplateList(searchBarText)}
+          placeholder='Search Templates'
+        />
         <FormLabel>
           Check List Templates : {state.templatesLength}
         </FormLabel>

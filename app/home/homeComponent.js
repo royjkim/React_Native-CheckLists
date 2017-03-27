@@ -21,7 +21,7 @@ import InstanceListsAllContainer from '../instanceListsAll/instanceListsAllConta
 export default class HomeComponent extends React.Component {
 
   render() {
-    const { route, navigator, state } = this.props
+    const { route, navigator, state, searchBarTextInstanceList } = this.props
     const renderRow = (rowData, sectionId) => {
       // console.log('rowData : ', rowData)
       // console.log('sectionId : ', sectionId)
@@ -57,8 +57,14 @@ export default class HomeComponent extends React.Component {
     }
     return(
       <View style={styles.bodyContainer}>
+        <SearchBar
+          lightTheme
+          round={true}
+          onChangeText={searchBarText => searchBarTextInstanceList(searchBarText.trim())}
+          placeholder='Search Instances'
+        />
         <FormLabel>
-          Total Instances : {Object.values(state.instances).length}
+          Total Instances : {state.templateLength}
         </FormLabel>
         <List>
           <ListView

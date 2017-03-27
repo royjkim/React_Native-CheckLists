@@ -10,6 +10,7 @@ import {
   List,
   ListItem,
   FormLabel,
+  SearchBar,
 } from 'react-native-elements'
 
 import ChosenInstanceDetailsContainer from './chosenInstanceDetails/chosenInstanceDetailsContainer'
@@ -17,7 +18,7 @@ import ChosenInstanceDetailsContainer from './chosenInstanceDetails/chosenInstan
 export default class InstanceListComponent extends React.Component {
 
   render() {
-    const { route, navigator, state } = this.props
+    const { route, navigator, state, searchBarTextInstancesOfChosenTemplate, searchBarTextItemsOfChosenTemplate } = this.props
     renderRowInstances = (rowData, sectionID) => <ListItem
       key={sectionID}
       title={rowData.name}
@@ -52,8 +53,15 @@ export default class InstanceListComponent extends React.Component {
     />
     return(
       <View style={styles.bodyContainerOnSideMenu}>
+        <SearchBar
+          lightTheme
+          round={true}
+          onChangeText={searchBarText => searchBarTextItemsOfChosenTemplate(searchBarText)}
+          placeholder='Search Items'
+        />
         <FormLabel>
-          Template : {route.passProps.chosenTemplate.title} / Items : {route.passProps.chosenTemplate.items.length}
+          {/* Template : {route.passProps.chosenTemplate.title}, Items({route.passProps.chosenTemplate.items.length}) */}
+          Template : {route.passProps.chosenTemplate.title}, Items({state.itemsLengthOfChosenTemplate})
         </FormLabel>
         <List>
           <ListView
@@ -62,9 +70,15 @@ export default class InstanceListComponent extends React.Component {
             renderRow={renderRowItems}
           />
         </List>
-        {/* <View style={{ marginVertical: 10, backgroundColor: '#9E9E9E', height: 2 }}/> */}
+        <View style={{ marginVertical: 15, height: 2 }} />
+        <SearchBar
+          lightTheme
+          round={true}
+          onChangeText={searchBarText => searchBarTextInstancesOfChosenTemplate(searchBarText)}
+          placeholder='Search Instances'
+        />
         <FormLabel>
-          ▼ Instance List of {route.title}
+          ▼ Instance List of {route.title} : {state.dataSourceInstancesOfChosenTemplate._dataBlob.s1.length}
         </FormLabel>
         <List>
           <ListView

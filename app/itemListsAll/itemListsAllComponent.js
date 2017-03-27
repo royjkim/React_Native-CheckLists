@@ -14,6 +14,7 @@ import {
   FormLabel,
   CheckBox,
   Icon,
+  SearchBar,
 } from 'react-native-elements'
 
 import InstancesListContainer from '../templateLists/instanceList/instanceListContainer'
@@ -22,7 +23,7 @@ import ChosenInstanceDetailsContainer from '../templateLists/instanceList/chosen
 export default class ItemsListsAllComponent extends React.Component {
 
   render() {
-    const { route, navigator, state } = this.props
+    const { route, navigator, state, searchBarTextItemList } = this.props
     const renderRow = (rowData, sectionId) => <ListItem
       key={sectionId}
       title={rowData.desc}
@@ -69,8 +70,14 @@ export default class ItemsListsAllComponent extends React.Component {
       </TouchableOpacity>
     return(
       <View style={styles.bodyContainer}>
+        <SearchBar
+          lightTheme
+          round={true}
+          onChangeText={searchBarText => searchBarTextItemList(searchBarText)}
+          placeholder='Search Items'
+        />
         <FormLabel>
-          Total Items : {Object.values(state.items).length}
+          Total Items : {state.dataSourceAllItems._cachedRowCount}
         </FormLabel>
         <List>
           <ListView

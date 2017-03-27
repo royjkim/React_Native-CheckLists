@@ -117,7 +117,5 @@ export default function resultReducer(state = initialState, action) {
     [types.DEL_TEMPLATE_CATEGORY]: delTemplateCategory,
     [types.INITIATE_NORMALIZED_DATA_INPUT]: normalizedDataInput
   }
-  const handler = reducerMap[action.type]
-  // return (typeof handler == 'function' ? handler(state.entities, action) : state)
-  return (reducerMap.hasOwnProperty(action.type) ? handler(state, action) : state)
+  return reducerMap.hasOwnProperty(action.type) ? reducerMap[action.type](state, action) : state
 }

@@ -70,12 +70,6 @@ export function modifyItemsCustomized(targetData) {
   }
 }
 
-// export function my_normalize() {
-//   return {
-//     type: types.MY_NORMALIZE
-//   }
-// }
-
 export function addOriginalTemplate(newData) {
   return {
     type: types.ORIGINAL_DATA_ADD_TEMPLATE,
@@ -94,5 +88,48 @@ export function normalizedDataInput(data) {
   return {
     type: types.INITIATE_NORMALIZED_DATA_INPUT,
     data
+  }
+}
+
+export function searchBarTextInstanceList(searchBarText) {
+  return {
+    type: types.SEARCHBAR_TEXT_INSTANCE_LIST,
+    searchBarText
+  }
+}
+
+export function searchBarTextItemsOfChosenTemplate(searchBarText) {
+  return {
+    type: types.SEARCHBAR_TEXT_ITEMS_OF_CHOSEN_TEMPLATE,
+    searchBarText
+  }
+}
+
+export function searchBarTextInstancesOfChosenTemplate(searchBarText) {
+  return {
+    type: types.SEARCHBAR_TEXT_INSTANCES_OF_CHOSEN_TEMPLATE,
+    searchBarText
+  }
+}
+
+
+export function searchBarTextItemsCustomizedAllInstances(searchBarText) {
+  return {
+    type: types.SEARCHBAR_TEXT_ITEMS_CUSTOMIZED_ALL_INSTANCES,
+    searchBarText
+  }
+}
+
+export function searchBarTextTemplateList(searchBarText) {
+  return {
+    type: types.SEARCHBAR_TEXT_TEMPLATE_LIST,
+    searchBarText
+  }
+}
+
+export function searchBarTextItemList(searchBarText) {
+  return {
+    type: types.SEARCHBAR_TEXT_ITEM_LIST,
+    searchBarText
   }
 }

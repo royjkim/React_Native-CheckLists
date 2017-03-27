@@ -34,7 +34,7 @@ export default function initializeStore() {
       title: 'BeforeGoOutHome',
       category: 'NormalDay',
       items: [
-        { itemId: 2, desc: 'Wathing TV', template: 'StayHome', orderNum: 1  },
+        { itemId: 2, desc: 'Watching TV', template: 'StayHome', orderNum: 1  },
         { itemId: 4, desc: 'Close Door', template: 'BeforeGoOutHome', orderNum: 10 }
       ]
     },
@@ -59,7 +59,7 @@ export default function initializeStore() {
       items: [
         { itemCustomizedId: 1, desc: 'Get on the boat' },
         { itemCustomizedId: 2, desc: 'Wear life vest' },
-        { itemCustomizedId: 3, desc: 'Wathing TV'  }
+        { itemCustomizedId: 3, desc: 'Watching TV'  }
       ]
     },
     {
@@ -71,7 +71,7 @@ export default function initializeStore() {
       items: [
         { itemCustomizedId: 4, desc: 'Close Door' },
         { itemCustomizedId: 5, desc: 'Open Door' },
-        { itemCustomizedId: 6, desc: 'Wathing TV'  }
+        { itemCustomizedId: 6, desc: 'Watching TV'  }
       ]
     },
     {
@@ -93,7 +93,7 @@ export default function initializeStore() {
       template: { templateId: 3, additionalInfo: 'addable' },
       items: [
         { itemCustomizedId: 9, desc: 'Close Door' },
-        { itemCustomizedId: 10, desc: 'Wathing TV'  },
+        { itemCustomizedId: 10, desc: 'Watching TV'  },
         { itemCustomizedId: 11, desc: 'Open Door' }
       ]
     }
@@ -102,7 +102,7 @@ export default function initializeStore() {
   initialData = normalizeStore.addItem(initialData,
     // { itemId: 1, desc: 'Wear life vest', template: 'GoingFishing', orderNum: 5 },
     { itemId: 1, desc: 'Wear life vest', templateId: 1, orderNum: 5 },
-    { itemId: 2, desc: 'Wathing TV', templateId: 3, orderNum: 1  },
+    { itemId: 2, desc: 'Watching TV', templateId: 3, orderNum: 1  },
     { itemId: 3, desc: 'Get on the boat', templateId: 1, orderNum: 1 },
     { itemId: 4, desc: 'Close Door', templateId: 2, orderNum: 10 },
     { itemId: 5, desc: 'Open Door', templateId: 2, orderNum: 8 }
@@ -117,14 +117,14 @@ export default function initializeStore() {
   initialData = normalizeStore.addItemsCustomized(initialData,
     { itemCustomizedId: 1, itemId: 3, instanceId: 1, desc: 'Get on the boat', orderNum: 3, status: false },
     { itemCustomizedId: 2, itemId: 1, instanceId: 1, desc: 'Wear life vest', orderNum: 2, status: false },
-    { itemCustomizedId: 3, itemId: 2, instanceId: 1, desc: 'Wathing TV', orderNum: 1, status: false },
+    { itemCustomizedId: 3, itemId: 2, instanceId: 1, desc: 'Watching TV', orderNum: 1, status: false },
     { itemCustomizedId: 4, itemId: 4, instanceId: 2, desc: 'Close Door', orderNum: 10, status: false },
     { itemCustomizedId: 5, itemId: 5, instanceId: 2, desc: 'Open Door', orderNum: 8, status: true },
-    { itemCustomizedId: 6, itemId: 2, instanceId: 2, desc: 'Wathing TV', orderNum: 1, status: false },
+    { itemCustomizedId: 6, itemId: 2, instanceId: 2, desc: 'Watching TV', orderNum: 1, status: false },
     { itemCustomizedId: 7, itemId: 4, instanceId: 3, desc: 'Close Door', orderNum: 4, status: true },
     { itemCustomizedId: 8, itemId: 5, instanceId: 3, desc: 'Open Door', orderNum: 3, status: false },
     { itemCustomizedId: 9, itemId: 4, instanceId: 4, desc: 'Close Door', orderNum: 3, status: true },
-    { itemCustomizedId: 10, itemId: 2, instanceId: 4, desc: 'Wathing TV', orderNum: 1, status: true },
+    { itemCustomizedId: 10, itemId: 2, instanceId: 4, desc: 'Watching TV', orderNum: 1, status: true },
     { itemCustomizedId: 11, itemId: 5, instanceId: 4, desc: 'Open Door', orderNum: 2, status: false }
   )
 
@@ -188,7 +188,7 @@ export default function initializeStore() {
 //       title: 'BeforeGoOutHome',
 //       category: 'NormalDay',
 //       items: [
-//         { itemId: 2, desc: 'Wathing TV', template: 'StayHome', orderNum: 1  },
+//         { itemId: 2, desc: 'Watching TV', template: 'StayHome', orderNum: 1  },
 //         { itemId: 4, desc: 'Close Door', template: 'BeforeGoOutHome', orderNum: 10 }
 //       ]
 //     },
@@ -204,14 +204,14 @@ export default function initializeStore() {
   // items: [
   //   { itemCustomizedId: 1, itemId: 3, instanceId: 1, desc: 'Get on the boat', orderNum: 3, status: false },
   //   { itemCustomizedId: 2, itemId: 1, instanceId: 1, desc: 'Wear life vest', orderNum: 2, status: false },
-  //   { itemCustomizedId: 3, itemId: 2, instanceId: 1, desc: 'Wathing TV', orderNum: 1, status: false },
+  //   { itemCustomizedId: 3, itemId: 2, instanceId: 1, desc: 'Watching TV', orderNum: 1, status: false },
   //   { itemCustomizedId: 4, itemId: 4, instanceId: 2, desc: 'Close Door', orderNum: 10, status: false },
   //   { itemCustomizedId: 5, itemId: 5, instanceId: 2, desc: 'Open Door', orderNum: 8, status: true },
-  //   { itemCustomizedId: 6, itemId: 2, instanceId: 2, desc: 'Wathing TV', orderNum: 1, status: false },
+  //   { itemCustomizedId: 6, itemId: 2, instanceId: 2, desc: 'Watching TV', orderNum: 1, status: false },
   //   { itemCustomizedId: 7, itemId: 4, instanceId: 3, desc: 'Close Door', orderNum: 4, status: true },
   //   { itemCustomizedId: 8, itemId: 5, instanceId: 3, desc: 'Open Door', orderNum: 3, status: false },
   //   { itemCustomizedId: 9, itemId: 4, instanceId: 4, desc: 'Close Door', orderNum: 3, status: true },
-  //   { itemCustomizedId: 10, itemId: 2, instanceId: 4, desc: 'Wathing TV', orderNum: 1, status: true },
+  //   { itemCustomizedId: 10, itemId: 2, instanceId: 4, desc: 'Watching TV', orderNum: 1, status: true },
   //   { itemCustomizedId: 11, itemId: 5, instanceId: 4, desc: 'Open Door', orderNum: 2, status: false }
   // ],
   // instances: [
@@ -222,7 +222,7 @@ export default function initializeStore() {
   //     items: [
   //       { itemCustomizedId: 1, desc: 'Get on the boat' },
   //       { itemCustomizedId: 2, desc: 'Wear life vest' },
-  //       { itemCustomizedId: 3, desc: 'Wathing TV'  }
+  //       { itemCustomizedId: 3, desc: 'Watching TV'  }
   //     ]
   //   },
   //   {
@@ -232,17 +232,17 @@ export default function initializeStore() {
   //     items: [
   //       { itemCustomizedId: 4, desc: 'Close Door' },
   //       { itemCustomizedId: 5, desc: 'Open Door' },
-  //       { itemCustomizedId: 6, desc: 'Wathing TV'  }
+  //       { itemCustomizedId: 6, desc: 'Watching TV'  }
   //     ]
   //   }
   // ],
 //   itemsCustomized: [
 //     { id: 1, itemId: 3, instanceId: 1, desc: 'Get on the boat', orderNum: 3, status: false },
 //     { id: 2, itemId: 1, instanceId: 1, desc: 'Wear life vest', orderNum: 2, status: false },
-//     { id: 3, itemId: 2, instanceId: 1, desc: 'Wathing TV', orderNum: 1, status: false },
+//     { id: 3, itemId: 2, instanceId: 1, desc: 'Watching TV', orderNum: 1, status: false },
 //     { id: 4, itemId: 4, instanceId: 2, desc: 'Close Door', orderNum: 10, status: false },
 //     { id: 5, itemId: 5, instanceId: 2, desc: 'Open Door', orderNum: 8, status: true },
-//     { id: 6, itemId: 2, instanceId: 2, desc: 'Wathing TV', orderNum: 1, status: false }
+//     { id: 6, itemId: 2, instanceId: 2, desc: 'Watching TV', orderNum: 1, status: false }
 //   ],
 //   templateCategories: [
 //     { id: 1, title: 'Hobby' },
@@ -264,7 +264,7 @@ export default function initializeStore() {
 //    },
 //    "2": {
 //     "itemId": 2,
-//     "desc": "Wathing TV",
+//     "desc": "Watching TV",
 //     "template": "StayHome",
 //     "orderNum": 1
 //    },
@@ -335,7 +335,7 @@ export default function initializeStore() {
 //    },
 //    "3": {
 //     "itemCustomizedId": 3,
-//     "desc": "Wathing TV",
+//     "desc": "Watching TV",
 //     "itemId": 2,
 //     "instanceId": 1,
 //     "orderNum": 1,
@@ -359,7 +359,7 @@ export default function initializeStore() {
 //    },
 //    "6": {
 //     "itemCustomizedId": 6,
-//     "desc": "Wathing TV",
+//     "desc": "Watching TV",
 //     "itemId": 2,
 //     "instanceId": 2,
 //     "orderNum": 1,
@@ -391,7 +391,7 @@ export default function initializeStore() {
 //    },
 //    "10": {
 //     "itemCustomizedId": 10,
-//     "desc": "Wathing TV",
+//     "desc": "Watching TV",
 //     "itemId": 2,
 //     "instanceId": 4,
 //     "orderNum": 1,

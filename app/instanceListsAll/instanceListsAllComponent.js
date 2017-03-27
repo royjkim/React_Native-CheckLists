@@ -14,6 +14,7 @@ import {
   FormLabel,
   CheckBox,
   Icon,
+  SearchBar,
 } from 'react-native-elements'
 
 import ChosenInstanceDetailsContainer from '../templateLists/instanceList/chosenInstanceDetails/chosenInstanceDetailsContainer'
@@ -21,7 +22,7 @@ import ChosenInstanceDetailsContainer from '../templateLists/instanceList/chosen
 export default class InstanceListsAllComponent extends React.Component {
 
   render() {
-    const { route, navigator, state, modifyItemsCustomized } = this.props
+    const { route, navigator, state, modifyItemsCustomized, searchBarTextItemsCustomizedAllInstances } = this.props
     const renderRow = (rowData, sectionId, rowId) => <ListItem
       key={rowId}
       // title={rowData.desc}
@@ -82,8 +83,14 @@ export default class InstanceListsAllComponent extends React.Component {
     }
     return(
       <View style={styles.bodyContainer}>
+        <SearchBar
+          lightTheme
+          round={true}
+          onChangeText={searchBarText => searchBarTextItemsCustomizedAllInstances(searchBarText.trim())}
+          placeholder='Search Items'
+        />
         <FormLabel>
-          Total Instances : {Object.values(state.instances).length}
+          Total Instances : {state.dataSourceForAllInstances.sectionIdentities.length}
         </FormLabel>
         <List>
           <ListView
