@@ -35,13 +35,15 @@ export default class TemplateAddNewComponent extends React.Component {
         desc: '',
         itemId: this.props.state.lastId.items + 1,
         orderNum: 1,
-        templateId: 0,
+        templateId: this.props.state.lastId.templates + 1
       },
       newItems: [],
-      dataSourceNewAddedItems: []
+      dataSourceNewAddedItems: [],
+      // ds: new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
     }
     this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
-    // this.dataSourceNewAddedItems = this.ds.cloneWithRows([])
+    this.dataSourceNewAddedItems = this.ds.cloneWithRows([])
+    // this.tempNewItemDesc = ''
   }
 
   componentWillMount() {
@@ -74,14 +76,16 @@ export default class TemplateAddNewComponent extends React.Component {
         })
       })
       this.setState({
-        dataSource: this.state.ds.cloneWithRows(this.state.categoryList)
+        dataSource: this.ds.cloneWithRows(this.state.categoryList)
       })
     }
     const itemsInputedListModalToggle = () => this.setState({ itemsInputedListModalVisible: !this.state.itemsInputedListModalVisible })
     const renderRowNewItem = (rowData, sectionId) => <ListItem
       key={sectionId}
-      title={rowData.desc}
-      subtitle={`orderNum : ${rowData.ordrNum}`}
+      // title={rowData.desc.toString()}
+      title={String(rowData.desc || 'none')}
+      // subtitle={rowData.orderNum.toString()}
+      subtitle={`orderNum : ${String(rowData.orderNum)}`}
     />
     return (
       <View style={styles.bodyContainer}>
@@ -91,9 +95,9 @@ export default class TemplateAddNewComponent extends React.Component {
         <FormInput
           onChangeText={templateName => this.setState({ templateName })}
         />
-        {this.state.templateName.length < 3 ? <FormValidationMessage>
+        {/* {this.state.templateName.length < 3 ? <FormValidationMessage>
           Name is required. At least 3 characters.
-        </FormValidationMessage> : null}
+        </FormValidationMessage> : null} */}
         <FormLabel>
           Template Category
         </FormLabel>
@@ -123,66 +127,124 @@ export default class TemplateAddNewComponent extends React.Component {
           /> */}
         </TouchableOpacity>
         <View style={{ height: 10 }}/>
-        {/* <Button
-          title='Category Show'
-          onPress={() => this.setState({ categoryListModalVisible: true })}
-        /> */}
         <View style={{ height: 10 }}/>
-        <Button
+        {/* <Button
           title='Show Items Inputed'
           onPress={() => this.setState({ itemsInputedListModalVisible: !this.state.itemsInputedListModalVisible })}
-        />
+        /> */}
         <FormLabel>
           New Item
         </FormLabel>
-        <FormInput
-          value={this.state.tempNewItemDesc}
-          // placeholder='input item'
-          onChangeText={tempNewItemDesc => this.setState({ tempNewItemDesc })}
-        />
+        <View
+          style={{ flexDirection: 'row' }}
+          >
+          <View
+            style={{
+              flex: 1,
+              // borderWidth: 1
+            }}
+            >
+            <FormInput
+              value={this.state.tempNewItemDesc}
+              // value={this.tempNewItemDesc}
+              placeholder='input item'
+              onChangeText={tempNewItemDesc => this.setState({ tempNewItemDesc })}
+              // onChangeText={inputText => {
+              //   this.tempNewItemDesc = inputText
+              //   console.log('this.tempNewItemDesc : ', this.tempNewItemDesc)
+              // }}
+            />
+          </View>
+          <View
+            style={{
+              flex: 0,
+              // borderWidth: 1,
+              // padding: 0
+            }}>
+            <Button
+              title='Add'
+              onPress={async () => {
+                // console.log('this.tempNewItemDesc : ', this.tempNewItemDesc)
+                if(this.state.tempNewItemDesc !== '') {
+                  // await itemAdd()
+                  // const itemAdd = () => this.setState({
+                  //   items: this.state.items.concat(this.state.tempNewItem)
+                  // })
+                  console.log(`typeof this.state.tempNewItemDesc : ${typeof this.state.tempNewItemDesc}`)
+                  this.setState({
+                    newItem: {
+                      // desc: this.state.tempNewItemDesc,
+                      desc: this.state.tempNewItemDesc,
+                      // desc: this.tempNewItemDesc,
+                      itemId: state.lastId.items + 1,
+                      orderNum: 1,
+                      templateId: state.lastId.templates + 1,
+                    },
+                  })
+                  await this.setState({
+                    // newItems: this.state.newItems.concat(this.state.newItem),
+                    // newItems: {
+                    //   ...this.state.newItems,
+                    //   [this.state.newItem.itemId]: {
+                    //     ...this.state.newItem,
+                    //     desc: this.state.tempNewItemDesc
+                    //   }
+                    // },
+                    newItems: [
+                      ...this.state.newItems,
+                      {
+                        ...this.state.newItem,
+                        desc: this.state.tempNewItemDesc
+                      }
+                    ],
+                    newItem: {
+                      desc: '',
+                      itemId: this.state.newItem.itemId + 1,
+                      orderNum: this.state.newItem.orderNum + 1,
+                      templateId: 0,
+                    },
+                    tempNewItemDesc: ''
+                  })
+                  // console.log('first setState done - this.state : ', this.state)
+                  // console.log('second setState done : this.state : ', this.state)
+
+                  // this.dataSourceNewAddedItems = this.ds.cloneWithRows(this.state.newItems)
+                  // console.log(`second setState done : this.state : `, this.state)
+
+                  // console.log('setState done : this.state : ', this.state);
+                  let stateCopy_newItems = [
+                    ...this.state.newItems
+                  ]
+                  stateCopy_newItems.sort((data1, data2) => data2.orderNum - data1.orderNum)
+                  this.setState({
+                    newItems: stateCopy_newItems
+                  })
+                  this.setState({
+                    dataSourceNewAddedItems: this.ds.cloneWithRows(this.state.newItems)
+                  })
+                } else {
+                  alert('input a item');
+                }
+              }}
+            />
+          </View>
+        </View>
         <View style={{ height: 10 }}/>
         <Button
           title='Save'
-          onPress={async () => {
-            if(this.state.tempNewItemDesc !== '') {
-              // await itemAdd()
-              // const itemAdd = () => this.setState({
-              //   items: this.state.items.concat(this.state.tempNewItem)
-              // })
-              this.setState({
-                newItem: {
-                  desc: this.state.tempNewItemDesc,
-                  orderNum: 1,
-                  itemId: state.lastId.items + 1
-                },
-                tempNewItemDesc: ''
-              })
-              await this.setState({
-                newItems: this.state.newItems.concat([this.state.newItem]),
-                newItem: {
-                  desc: '',
-                  itemId: this.state.newItem.itemId + 1,
-                  orderNum: this.state.newItem.orderNum + 1,
-                  templateId: 0,
-                }
-              })
-              this.setState({
-                dataSourceNewAddedItems: this.ds.cloneWithRows(this.state.newItems)
-              })
-
-            } else {
-              alert('input a item')
-            }
-
-          }}
+          onPress={() => alert('save')}
         />
-        <List>
-          <ListView
-            dataSource={this.state.dataSourceNewAddedItems}
-            renderRow={renderRowNewItem}
-            enableEmptySections={true}
-          />
-        </List>
+        <View
+          style={{ flex: 1 }}>
+          <List>
+            <ListView
+              dataSource={this.state.dataSourceNewAddedItems}
+              // dataSource={this.dataSourceNewAddedItems}
+              renderRow={renderRowNewItem}
+              enableEmptySections={true}
+            />
+          </List>
+        </View>
         <View style={{ height: 10 }}/>
         <Modal
           animationType='slide'
