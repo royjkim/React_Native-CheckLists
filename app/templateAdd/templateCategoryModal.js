@@ -2,6 +2,7 @@ import React from 'react'
 import {
   View,
   ListView,
+  TouchableOpacity,
 } from 'react-native'
 import {
   List,
@@ -16,60 +17,71 @@ export default class TemplateCategoryModal extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      newCategory: '',
+      newCategory: ''
     }
   }
 
   render() {
-    const { categoryList, closeFn, chosenFn, categoryAddFn, dataSource } = this.props
+    const { addTemplateCategory, lastId, closeFn, categoryChosen, dataSourceTemplateCategories } = this.props
     const renderRow = (rowData, sectionID) => <ListItem
       key={sectionID}
       title={rowData.title}
       leftIcon={rowData.icon}
       onPress={() => {
-        chosenFn(rowData.title)
+        categoryChosen(rowData.title)
         closeFn()
       }}
+      hideChevron
     />
     return(
-      <View style={{ backgroundColor: 'white', marginTop: 180 }}>
-        <List>
-          <Icon
-            name='close'
-            onPress={() => closeFn()}
-            // iconStyle={{ alignSelf: 'flex-end', marginRight: 10 }}
-            containerStyle={{ marginTop: 5 }}
+      <View style={{
+        flex: 1,
+        backgroundColor: 'transparent',
+        justifyContent: 'flex-end'
+      }}>
+        <TouchableOpacity
+          style={{
+            flex: 1,
+          }}
+          onPress={() => closeFn()}
+          >
+        </TouchableOpacity>
+        <View
+          style={{
+            flex: 0,
+            backgroundColor: 'white',
+            borderColor: 'lightgray',
+            borderTopWidth: 1,
+            marginBottom: 8,
+          }}>
+          <List>
+            <FormLabel>
+              Categories : {dataSourceTemplateCategories._cachedRowCount}
+            </FormLabel>
+            <ListView
+              dataSource={dataSourceTemplateCategories}
+              enableEmptySections={true}
+              renderRow={renderRow}
+              style={{ maxHeight: 150 }}
+            />
+          </List>
+          <FormLabel>
+            New Category Add
+          </FormLabel>
+          <FormInput
+            onChangeText={newCategory => this.setState({ newCategory })}
           />
-          {/* {categoryList.map((value, index) => <ListItem
-            key={index}
-            title={value.title}
-            leftIcon={{ name: value.icon }}
+          <Button
+            title='save'
             onPress={() => {
-              chosenFn(value.title)
+              // categoryAddFn(this.state.newCategory)
+              addTemplateCategory(lastId, { title: this.state.newCategory })
+              categoryChosen(this.state.newCategory)
               closeFn()
             }}
-          />)} */}
-          <ListView
-            dataSource={dataSource}
-            enableEmptySections={true}
-            renderRow={renderRow}
-            style={{ maxHeight: 150 }}
+            buttonStyle={{ marginTop: 10 }}
           />
-        </List>
-        <FormLabel>
-          Category Add
-        </FormLabel>
-        <FormInput
-          onChangeText={newCategory => this.setState({ newCategory })}
-        />
-        <Button
-          title='save'
-          onPress={() => {
-            categoryAddFn(this.state.newCategory)
-            closeFn()
-          }}
-          buttonStyle={{ marginTop: 10 }}
-        />
+        </View>
       </View>
     )
   }

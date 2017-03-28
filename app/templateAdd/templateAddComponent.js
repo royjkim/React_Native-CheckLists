@@ -15,16 +15,19 @@ import {
   FormValidationMessage,
   List,
   ListItem,
+  Icon,
 } from 'react-native-elements'
-import TemplateCategoryModal from './templateCategoryModal'
-import ItemsInputedListModal from './itemsInputedListModal'
+// import TemplateCategoryModal from './templateCategoryModal'
+// import ItemsInputedListModalContainer from './itemsInputedListModalContainer'
+import TemplateAddNewContainer from './templateAddNewContainer'
 
 export default class TemplateAddComponent extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      templateName: '',
-      templateCategory: '',
+      // existingTemplatesVisible: true,
+      // templateName: '',
+      // templateCategory: '',
       items: [
         'Wear life vest',
         'Get on the boat'
@@ -34,116 +37,96 @@ export default class TemplateAddComponent extends React.Component {
         { title: 'rowing', icon: 'rowing' },
         { title: 'call', icon: 'call' }
       ],
-      ds: new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 }),
-      dataSource: '',
-      dataSourceItems: '',
+      // ds: new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 }),
+      // dataSource: '',
+      // dataSourceItems: '',
       itemsInputedListModalVisible: false,
       tempNewItem: ''
     }
   }
-  componentWillMount() {
-    this.setState({
-      dataSource: this.state.ds.cloneWithRows(this.state.categoryList),
-      dataSourceItems: this.state.ds.cloneWithRows(this.state.items)
-    })
-  }
+  // componentWillMount() {
+  //   this.setState({
+  //     // dataSource: this.state.ds.cloneWithRows(this.state.categoryList),
+  //     dataSourceItems: this.state.ds.cloneWithRows(this.state.items)
+  //   })
+  // }
   render() {
-    const categoryModalToggle = () => this.setState({ categoryListModalVisible: !this.state.categoryListModalVisible })
-    const categoryChosen = templateCategory => this.setState({ templateCategory })
-    const categoryAdd = newCategory => {
-      this.setState({ categoryList: this.state.categoryList.concat({
-          title: newCategory,
-          icon: 'rowing'
-      })})
-      this.setState({
-        dataSource: this.state.ds.cloneWithRows(this.state.categoryList)
-      })
-    }
-    const itemsInputedListModalToggle = () => this.setState({ itemsInputedListModalVisible: !this.state.itemsInputedListModalVisible })
-    const itemAdd = () => this.setState({
-      items: this.state.items.concat(this.state.tempNewItem)
-    })
+    const { route, navigator, state } = this.props
+    // const categoryModalToggle = () => this.setState({ categoryListModalVisible: !this.state.categoryListModalVisible })
+    // const categoryChosen = templateCategory => this.setState({ templateCategory })
+    // const categoryAdd = newCategory => {
+    //   this.setState({ categoryList: this.state.categoryList.concat({
+    //       title: newCategory,
+    //       icon: 'rowing'
+    //   })})
+    //   this.setState({
+    //     dataSource: this.state.ds.cloneWithRows(this.state.categoryList)
+    //   })
+    // }
+    // const itemsInputedListModalToggle = () => this.setState({ itemsInputedListModalVisible: !this.state.itemsInputedListModalVisible })
+    // const itemAdd = () => this.setState({
+    //   items: this.state.items.concat(this.state.tempNewItem)
+    // })
+
+    const renderRowTemplates = (rowData, sectionId) => <ListItem
+      key={sectionId}
+      title={rowData.title}
+      subtitle={rowData.category}
+    />
     return(
       <View style={styles.bodyContainer}>
-        <FormLabel>
-          Template Name
-        </FormLabel>
-        <FormInput
-          onChangeText={templateName => this.setState({ templateName })}
-        />
-        {this.state.templateName.length < 3 ? <FormValidationMessage>
-          Name is required. At least 3 characters.
-        </FormValidationMessage> : null}
-        <FormLabel>
-          Template Category
-        </FormLabel>
-        <FormInput
-          value={this.state.templateCategory}
-          onChangeText={templateCategory => this.setState({ templateCategory })}
-        />
-        <View style={{ height: 10 }}/>
+
+          <View>
+            <FormLabel>
+             Copy From Existing Templates({state.dataSourceTemplates._cachedRowCount})
+            </FormLabel>
+            {/* <View
+              style={{ alignSelf: 'flex-end' }}>
+              <Button
+                small
+                icon={{ name: 'close', color: 'gray' }}
+                title='Hide'
+                onPress={() => this.setState({ existingTemplatesVisible: false })}
+                backgroundColor='white'
+                color='gray'
+              />
+            </View> */}
+            <List>
+              <ListView
+                dataSource={state.dataSourceTemplates}
+                renderRow={renderRowTemplates}
+                enableEmptySections={true}
+              />
+            </List>
+            {/* <View style={{ backgroundColor: 'lightgray', height: 3, marginVertical: 13 }} /> */}
+          </View>
+        {/* <Button
+          title='Show Existing Template'
+          onPress={() => this.setState({ existingTemplatesVisible: true })}
+        /> */}
+        <View style={{ height: 15 }} />
         <Button
-          title='Category Show'
-          onPress={() => this.setState({ categoryListModalVisible: true })}
-        />
-        <View style={{ height: 10 }}/>
-        <Button
-          title='Show Items Inputed'
-          onPress={() => this.setState({ itemsInputedListModalVisible: !this.state.itemsInputedListModalVisible })}
-        />
-        <FormLabel>
-          New Item
-        </FormLabel>
-        <FormInput
-          value={this.state.tempNewItem}
-          onChangeText={tempNewItem => this.setState({ tempNewItem })}
-        />
-        <View style={{ height: 10 }}/>
-        <Button
-          title='Save'
-          onPress={async () => {
-            if(this.state.tempNewItem !== '') {
-              await itemAdd()
-              this.setState({
-                tempNewItem: '',
-                dataSourceItems: this.state.ds.cloneWithRows(this.state.items)
-              }, itemsInputedListModalToggle())
-            } else {
-              alert('input a item')
+          icon={{ name: 'add' }}
+          title='Make New Template'
+          backgroundColor='#2B98F0'
+          onPress={() => navigator.push(
+            {
+              passProps: {
+                leftButton: {
+                  title: 'back',
+                  component: ''
+                },
+                rightButton: {
+                  title: '',
+                  component: ''
+                }
+              },
+              title: 'Make New Template',
+              component: TemplateAddNewContainer,
             }
-
-          }}
+          )}
         />
-        <View style={{ height: 10 }}/>
-        <ScrollView style={{ maxHeight: 150 }}>
-          <Text>
-            this.state : {JSON.stringify(this.state, null, 3)}
-          </Text>
-        </ScrollView>
-        <Modal
-          animationType='slide'
-          transparent={true}
-          visible={this.state.categoryListModalVisible}
-          >
 
-            <TemplateCategoryModal
-              categoryList={this.state.categoryList}
-              closeFn={categoryModalToggle.bind(this)}
-              chosenFn={categoryChosen.bind(this)}
-              categoryAddFn={categoryAdd.bind(this)}
-              dataSource={this.state.dataSource}
-            />
-        </Modal>
-        <Modal
-          animationType='slide'
-          transparent={true}
-          visible={this.state.itemsInputedListModalVisible}
-          >
-          <ItemsInputedListModal
-            dataSourceItems={this.state.dataSourceItems}
-            closeFn={itemsInputedListModalToggle.bind(this)}
-          />
-        </Modal>
       </View>
     )
   }

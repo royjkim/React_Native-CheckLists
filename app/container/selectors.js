@@ -18,6 +18,7 @@ const countTest = {
   make_get_dataSourceOfItemsOfChosenTemplate: 0,
   make_get_dataSourceItemsOfChosenInstance: 0,
   make_get_dataSourceForAllInstances: 0,
+  make_get_dataSourceTemplateCategories: 0,
   make_get_badgeValueOfInstancesOfChosenTemplates: 0,
   make_get_badgeValueOfStatusOfEachInstanceOfChosenTemplate: 0,
   make_get_badgeValueOfStatusOfChosenInstance: 0,
@@ -63,6 +64,10 @@ let dataInputHistory = {
     // present: [], future: []
   },
   make_get_dataSourceForAllInstances: {
+    past: [],
+    // present: [], future: []
+  },
+  make_get_dataSourceTemplateCategories: {
     past: [],
     // present: [], future: []
   },
@@ -134,6 +139,10 @@ let dataResultHistory = {
     // present: [], future: []
   },
   make_get_dataSourceForAllInstances: {
+    past: [],
+    // present: [], future: []
+  },
+  make_get_dataSourceTemplateCategories: {
     past: [],
     // present: [], future: []
   },
@@ -303,6 +312,15 @@ const make_get_dataSourceForAllInstances = () => createSelector(
     const temp_dataSourceForAllInstances = ds.cloneWithRowsAndSections(itemsCustomizedOfAllItems, Object.keys(itemsCustomizedOfAllItems))
     addResultHistory(currentAttr, temp_dataSourceForAllInstances)
     return temp_dataSourceForAllInstances
+  }
+)
+
+const make_get_dataSourceTemplateCategories = () => createSelector(
+  templateCategories,
+  templateCategories => {
+    const currentAttr = 'make_get_dataSourceTemplateCategories'
+    compareInputHistory(currentAttr, templateCategories)
+    return make_dataSource_cloneWithRows(currentAttr, templateCategories)
   }
 )
 
@@ -488,6 +506,7 @@ const mySelectors = {
   make_get_dataSourceOfItemsOfChosenTemplate,
   make_get_dataSourceItemsOfChosenInstance,
   make_get_dataSourceForAllInstances,
+  make_get_dataSourceTemplateCategories,
   make_get_badgeValueOfInstancesOfChosenTemplates,
   make_get_badgeValueOfStatusOfEachInstanceOfChosenTemplate,
   make_get_badgeValueOfStatusOfChosenInstance,

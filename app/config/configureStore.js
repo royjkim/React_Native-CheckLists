@@ -3,7 +3,7 @@ import createLogger from 'redux-logger'
 import thunk from 'redux-thunk'
 import Reactotron from 'reactotron-react-native'
 import reducer from '../reducers/reducer'
-import * as dataActionCreators from '../actions/dataActionCreators'
+import { normalizedDataInput, findLastId } from '../actions/dataActionCreators'
 
 import HomeContainer from '../home/homeContainer'
 import normalizeStore from './normalizeStore'
@@ -111,7 +111,10 @@ export default function initializeStore() {
   initialData = normalizeStore.addCategory(initialData,
     { id: 1, title: 'Hobby' },
     { id: 2, title: 'NormalDay' },
-    { id: 3, title: 'Relax' }
+    { id: 3, title: 'Relax' },
+    { id: 4, title: 'testHobby' },
+    { id: 5, title: 'testNormalDay' },
+    { id: 6, title: 'testRelax' }
   )
 
   initialData = normalizeStore.addItemsCustomized(initialData,
@@ -141,8 +144,12 @@ export default function initializeStore() {
   // console.log(`After normalize - initialData : ', ${JSON.stringify(initialData, null, 1)}`)
   console.log('After normalize - initialData : ', initialData)
 
-  store.dispatch(dataActionCreators.normalizedDataInput(initialData))
+  store.dispatch(normalizedDataInput(initialData))
+  const tempResult = store.getState()
+  console.log(`tempResult : `, tempResult)
+  store.dispatch(findLastId(tempResult.normalizeReducer.result))
   // console.log(`store.getState() : ${JSON.stringify(store.getState(), null, 1)}`)
+  // console.log(`store.getState() : `, store.getState())
   return store
 
 }

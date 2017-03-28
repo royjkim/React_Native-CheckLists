@@ -13,7 +13,9 @@ const addTemplate = (state, action) => ({
   ...state,
   templates: {
     ...state.templates,
-    [action.newData.id]: { ...action.newData }
+    [action.newData.id]: {
+      ...action.newData
+    }
   }
 })
 
@@ -87,7 +89,14 @@ const delItem = (state, action) => ({
 })
 
 const addTemplateCategory = (state, action) => ({
-
+  ...state,
+  templateCategories: {
+    ...state.templateCategories,
+    [action.lastId + 1]: {
+      id: action.lastId + 1,
+      ...action.newData
+    }
+  }
 })
 
 const modifyTemplateCategory = (state, action) => ({

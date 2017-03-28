@@ -53,7 +53,8 @@ const delItem = (state, action) => ({
 })
 
 const addTemplateCategory = (state, action) => ({
-
+  ...state,
+  templateCategories: state.templateCategories.concat(action.lastId + 1)
 })
 
 const modifyTemplateCategory = (state, action) => ({

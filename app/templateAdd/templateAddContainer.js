@@ -1,5 +1,14 @@
 import { connect } from 'react-redux'
 import TemplateAddComponent from './templateAddComponent'
+import mySelectors from '../container/selectors'
 
+const mapStateToProps = (state, ownProps) => ({
+  state: {
+    dataSourceTemplates: mySelectors.make_get_dataSourceTemplates()(state.normalizeReducer),
+    
+  },
+  route: ownProps.route,
+  navigator: ownProps.navigator
+})
 
-export default connect()(TemplateAddComponent)
+export default connect(mapStateToProps)(TemplateAddComponent)

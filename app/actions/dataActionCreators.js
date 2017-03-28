@@ -70,19 +70,33 @@ export function modifyItemsCustomized(targetData) {
   }
 }
 
-export function addOriginalTemplate(newData) {
+export function addTemplateCategory(lastId, newData) {
   return {
-    type: types.ORIGINAL_DATA_ADD_TEMPLATE,
-    newData
+    type: types.ADD_TEMPLATE_CATEGORY,
+    lastId,
+    lastIndex: lastId - 1 < 0 ? 0 : lastId - 1,
+    newData,
   }
 }
 
-export function addOriginalInstance(newData) {
-  return {
-    type: types.ORIGINAL_DATA_ADD_INSTANCE,
-    newData
-  }
-}
+// ADD_TEMPLATE_CATEGORY = 'addTemplateCategory',
+// MODIFY_TEMPLATE_CATEGORY = 'modifyTemplateCategory',
+// DEL_TEMPLATE_CATEGORY = 'delTemplateCategory',
+
+
+// export function addOriginalTemplate(newData) {
+//   return {
+//     type: types.ORIGINAL_DATA_ADD_TEMPLATE,
+//     newData
+//   }
+// }
+
+// export function addOriginalInstance(newData) {
+//   return {
+//     type: types.ORIGINAL_DATA_ADD_INSTANCE,
+//     newData
+//   }
+// }
 
 export function normalizedDataInput(data) {
   return {
@@ -159,5 +173,13 @@ export function navigateTabCountReset(targetTab) {
   return {
     type: types.NAVIGATE_TAB_COUNT_RESET,
     targetTab
+  }
+}
+
+
+export function findLastId(result) {
+  return {
+    type: types.FIND_LAST_ID,
+    result
   }
 }

@@ -52,8 +52,14 @@ export default class MyTabs extends React.Component {
           <NavBar
             initialRoute={{
               passProps: {
-                leftButton: { title: '', component: '' },
-                rightButton: { title: 'Add', component: TemplateAddContainer }
+                leftButton: {
+                  title: '',
+                  component: ''
+                },
+                rightButton: {
+                  title: 'Add',
+                  component: TemplateAddContainer
+                }
               },
               title: 'Home',
               sideMenuVisible: false,

@@ -11,7 +11,8 @@ const make_mapStateToProps = () => (state, ownProps) => ({
     badgeValueOfInstancesOfChosenTemplates: mySelectors.make_get_badgeValueOfInstancesOfChosenTemplates()(state.normalizeReducer),
     badgeValueOfStatusOfAllInstances: mySelectors.make_get_badgeValueOfStatusOfAllInstances()(state.normalizeReducer),
     instances: state.normalizeReducer.entities.instances,
-    templates: state.normalizeReducer.entities.templates
+    templates: state.normalizeReducer.entities.templates,
+    navigatePopToTopTab: state.normalizeReducer.configValue.navigatePopToTopTab
   },
   route: ownProps.route,
   navigator: ownProps.navigator

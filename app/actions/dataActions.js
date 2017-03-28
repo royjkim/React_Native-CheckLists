@@ -20,7 +20,8 @@ const ADD_TEMPLATE = 'addNewTemplate',
       SEARCHBAR_TEXT_ITEM_LIST = 'searchBarTextItemList',
       CHOOSE_CATEGORY = 'chooseCategory',
       NAVIGATE_POP_TO_TOP_REQUEST = 'navigatePopToTopRequest',
-      NAVIGATE_TAB_COUNT_RESET = 'navigateTabCountReset';
+      NAVIGATE_TAB_COUNT_RESET = 'navigateTabCountReset',
+      FIND_LAST_ID = 'findLastId';
 
 const types = {
   ADD_TEMPLATE,
@@ -45,7 +46,8 @@ const types = {
   SEARCHBAR_TEXT_ITEM_LIST,
   CHOOSE_CATEGORY,
   NAVIGATE_POP_TO_TOP_REQUEST,
-  NAVIGATE_TAB_COUNT_RESET
+  NAVIGATE_TAB_COUNT_RESET,
+  FIND_LAST_ID
 }
 
 export default types

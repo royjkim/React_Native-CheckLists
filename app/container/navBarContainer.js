@@ -77,7 +77,7 @@ class NavBar extends React.Component {
                   }
                 },
                 title: 'Template Add',
-                component: TemplateAdd,
+                component: TemplateAddContainer,
               }
             )}
           />
