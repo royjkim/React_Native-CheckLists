@@ -140,3 +140,24 @@ export function chooseCategory(chosenCategory) {
     chosenCategory
   }
 }
+
+export function navigatePopToTopRequest(targetTab) {
+  return {
+    type: types.NAVIGATE_POP_TO_TOP_REQUEST,
+    targetTab
+  }
+}
+
+export function navigateTabCountPlus(targetTab) {
+  return {
+    type: types.NAVIGATE_TAB_COUNT_PLUS,
+    targetTab
+  }
+}
+
+export function navigateTabCountReset(targetTab) {
+  return {
+    type: types.NAVIGATE_TAB_COUNT_RESET,
+    targetTab
+  }
+}

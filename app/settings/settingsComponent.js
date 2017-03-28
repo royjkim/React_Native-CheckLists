@@ -22,21 +22,3 @@ const SettingsComponent = props => {
 }
 
 export default SettingsComponent
-
-// export default class SettingsComponent extends React.Component {
-//   render() {
-//     const currentVersion = '0.1'
-//     return(
-//       <View style={styles.bodyContainer}>
-//         <Text>
-//           SettingsComponent
-//           {'\n'}
-//           version : {currentVersion}
-//         </Text>
-//         <Text>
-//           Developer : roy
-//         </Text>
-//       </View>
-//     )
-//   }
-// }

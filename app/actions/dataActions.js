@@ -11,7 +11,6 @@ const ADD_TEMPLATE = 'addNewTemplate',
       ADD_TEMPLATE_CATEGORY = 'addTemplateCategory',
       MODIFY_TEMPLATE_CATEGORY = 'modifyTemplateCategory',
       DEL_TEMPLATE_CATEGORY = 'delTemplateCategory',
-      // MY_NORMALIZE = 'my_normalize',
       INITIATE_NORMALIZED_DATA_INPUT = 'normalizedDataInput',
       SEARCHBAR_TEXT_INSTANCE_LIST = 'searchBarTextInstanceList',
       SEARCHBAR_TEXT_ITEMS_OF_CHOSEN_TEMPLATE = 'searchBarTextItemsOfChosenTemplate',
@@ -19,7 +18,9 @@ const ADD_TEMPLATE = 'addNewTemplate',
       SEARCHBAR_TEXT_ITEMS_CUSTOMIZED_ALL_INSTANCES = 'searchBarTextItemsCustomizedAllInstances',
       SEARCHBAR_TEXT_TEMPLATE_LIST = 'searchBarTextTemplateList',
       SEARCHBAR_TEXT_ITEM_LIST = 'searchBarTextItemList',
-      CHOOSE_CATEGORY = 'chooseCategory';
+      CHOOSE_CATEGORY = 'chooseCategory',
+      NAVIGATE_POP_TO_TOP_REQUEST = 'navigatePopToTopRequest',
+      NAVIGATE_TAB_COUNT_RESET = 'navigateTabCountReset';
 
 const types = {
   ADD_TEMPLATE,
@@ -35,7 +36,6 @@ const types = {
   ADD_TEMPLATE_CATEGORY,
   MODIFY_TEMPLATE_CATEGORY,
   DEL_TEMPLATE_CATEGORY,
-  // MY_NORMALIZE,
   INITIATE_NORMALIZED_DATA_INPUT,
   SEARCHBAR_TEXT_INSTANCE_LIST,
   SEARCHBAR_TEXT_ITEMS_OF_CHOSEN_TEMPLATE,
@@ -43,7 +43,9 @@ const types = {
   SEARCHBAR_TEXT_ITEMS_CUSTOMIZED_ALL_INSTANCES,
   SEARCHBAR_TEXT_TEMPLATE_LIST,
   SEARCHBAR_TEXT_ITEM_LIST,
-  CHOOSE_CATEGORY
+  CHOOSE_CATEGORY,
+  NAVIGATE_POP_TO_TOP_REQUEST,
+  NAVIGATE_TAB_COUNT_RESET
 }
 
 export default types

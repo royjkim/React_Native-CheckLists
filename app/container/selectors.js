@@ -285,7 +285,6 @@ const make_get_dataSourceItemsOfChosenInstance = () => createSelector(
     const currentAttr = 'make_get_dataSourceItemsOfChosenInstance';
     compareInputHistory(currentAttr, itemsCustomizedOfChosenInstance, statusPicker,)
 
-    // let tempResult = []
     const statusPickerMapper = {
       'all': () => Object.values(itemsCustomizedOfChosenInstance),
       'completed': () => Object.values(itemsCustomizedOfChosenInstance).filter(value => value.status == true),

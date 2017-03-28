@@ -12,11 +12,21 @@ import {
   FormLabel,
   SearchBar,
 } from 'react-native-elements'
+import { isEqual } from 'lodash'
 
 import InstanceListContainer from './instanceList/instanceListContainer'
 import MySideMenu from '../components/mySideMenu'
 
 export default class TemplateListsComponent extends React.Component {
+
+  shouldComponentUpdate(nextProps) {
+    if(nextProps.state.navigatePopToTopRequest_templateList) {
+      this.props.navigateTabCountReset('templateList')
+      this.props.navigator.popToTop()
+      return false
+    }
+    return true
+  }
   render() {
     const { route, navigator, state, searchBarTextTemplateList } = this.props
     const renderRow = (rowData, sectionID) => <ListItem

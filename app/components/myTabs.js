@@ -11,7 +11,7 @@ import {
 } from 'react-native-elements'
 
 import HomeContainer from '../home/homeContainer'
-import TemplateAdd from '../templateLists/templateAdd'
+import TemplateAddContainer from '../templateAdd/templateAddContainer'
 import TemplateListsContainer from '../templateLists/templateListsContainer'
 // import InstanceListsAllContainer from '../instanceListsAll/instanceListsAllContainer'
 import ItemListsAllContainer from '../itemListsAll/itemListsAllContainer'
@@ -23,31 +23,37 @@ export default class MyTabs extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedTab: 'Home'
+      selectedTab: 'home'
     }
+    this.prevTab = 'home'
   }
 
   render() {
-    // const { navigationState } = this.props
-    // const { state, actions } = this.props
+    const { navigatePopToTopRequest } = this.props
+    const tabCountFn = attr => {
+      console.log(`this.prevTab : ${this.prevTab} // currentTab : ${attr}`)
+      this.prevTab == attr ? navigatePopToTopRequest(attr) : this.setState({ selectedTab: attr })
+      this.prevTab = attr
+    }
     return(
       <Tabs>
         <Tab
           titleStyle={styles.tabTitleStyle}
           selectedTitleStyle={{ marginTop: 0, marginBottom: 6 }}
-          selected={this.state.selectedTab == 'Home'}
-          title={this.state.selectedTab == 'Home' ? 'Home' : null}
+          selected={this.state.selectedTab == 'home'}
+          title={this.state.selectedTab == 'home' ? 'Home' : null}
           renderIcon={() => <Icon
             name='home'
             />}
-          onPress={() => this.setState({ selectedTab: 'Home' })}
+          // onPress={() => this.setState({ selectedTab: 'home' }) }
+          onPress={() => tabCountFn('home') }
           >
           {/* <HomeContainer state={state} actions={actions} /> */}
           <NavBar
             initialRoute={{
               passProps: {
                 leftButton: { title: '', component: '' },
-                rightButton: { title: '', component: '' }
+                rightButton: { title: 'Add', component: TemplateAddContainer }
               },
               title: 'Home',
               sideMenuVisible: false,
@@ -62,7 +68,7 @@ export default class MyTabs extends React.Component {
           renderIcon={() => <Icon
             name='list'
           />}
-          onPress={() => this.setState({ selectedTab: 'templateList' })}
+          onPress={() => tabCountFn('templateList')}
           // Below is for double click makes navigator.popToTop().
           // But this 'myTabs.js' is not a child of 'Navigator' page.
           // onPress={() => (this.state.selectedTab == 'templateList' ? navigator.popToTop() : this.setState({ selectedTab: 'templateList' }))}
@@ -72,7 +78,7 @@ export default class MyTabs extends React.Component {
             initialRoute={{
               passProps: {
                 leftButton: { title: '', component: '' },
-                rightButton: { title: 'Add', component: TemplateAdd }
+                rightButton: { title: 'Add', component: TemplateAddContainer }
               },
               title: 'Template List',
               sideMenuVisible: false,
@@ -87,12 +93,8 @@ export default class MyTabs extends React.Component {
           renderIcon={() => <Icon
             name='list'
           />}
-          onPress={() => this.setState({ selectedTab: 'itemList' })}
-          // Below is for double click makes navigator.popToTop().
-          // But this 'myTabs.js' is not a child of 'Navigator' page.
-          // onPress={() => (this.state.selectedTab == 'templateList' ? navigator.popToTop() : this.setState({ selectedTab: 'templateList' }))}
+          onPress={() => tabCountFn('itemList')}
           >
-          {/* <TemplateListsContainer state={state} actions={actions} /> */}
           <NavBar
             initialRoute={{
               passProps: {
@@ -116,7 +118,7 @@ export default class MyTabs extends React.Component {
           titleStyle={styles.tabTitleStyle}
           renderIcon={() => <Icon
             name='settings'
-            onPress={() => this.setState({ selectedTab: 'settings'})}
+            onPress={() => tabCountFn('settings')}
           />}
           >
           {/* <SettingsContainer state={state} actions={actions} /> */}

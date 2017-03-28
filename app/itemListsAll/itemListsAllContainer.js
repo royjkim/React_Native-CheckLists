@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import ItemsListsAllComponent from './itemListsAllComponent'
 import { bindActionCreators } from 'redux'
-import { modifyItemsCustomized, searchBarTextItemList } from '../actions/dataActionCreators'
+import { modifyItemsCustomized, searchBarTextItemList, navigateTabCountReset } from '../actions/dataActionCreators'
 import mySelectors from '../container/selectors'
 
 const make_mapStateToProps = () => (state, ownProps) => ({
@@ -11,6 +11,7 @@ const make_mapStateToProps = () => (state, ownProps) => ({
     templates: state.normalizeReducer.entities.templates,
     items: state.normalizeReducer.entities.items,
     dataSourceAllItems: mySelectors.make_get_dataSourceItems()(state.normalizeReducer),
+    navigatePopToTopRequest_itemList: state.normalizeReducer.configValue.navigatePopToTopRequest_itemList
   },
   route: ownProps.route,
   navigator: ownProps.navigator
@@ -18,7 +19,8 @@ const make_mapStateToProps = () => (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => ({
   modifyItemsCustomized: targetData => dispatch(modifyItemsCustomized(targetData)),
-  searchBarTextItemList: searchBarText => dispatch(searchBarTextItemList(searchBarText))
+  searchBarTextItemList: searchBarText => dispatch(searchBarTextItemList(searchBarText)),
+  navigateTabCountReset: targetTab => dispatch(navigateTabCountReset(targetTab))
 })
 
 export default connect(make_mapStateToProps, mapDispatchToProps)(ItemsListsAllComponent)

@@ -10,7 +10,7 @@ import {
   Icon,
 } from 'react-native-elements'
 
-import TemplateAdd from '../templateLists/templateAdd'
+import TemplateAddContainer from '../templateAdd/templateAddContainer'
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -94,7 +94,6 @@ class NavBar extends React.Component {
     return (
       <Navigator
         initialRoute={initialRoute}
-        // initialRoute={lastRoute}
         renderScene={renderScene}
         navigationBar={
           <Navigator.NavigationBar

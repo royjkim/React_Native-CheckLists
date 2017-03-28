@@ -18,7 +18,14 @@ import ChosenInstanceDetailsContainer from '../templateLists/instanceList/chosen
 import InstanceListsAllContainer from '../instanceListsAll/instanceListsAllContainer'
 
 export default class HomeComponent extends React.Component {
-
+  shouldComponentUpdate(nextProps) {
+    if(nextProps.state.navigatePopToTopRequest_home) {
+      this.props.navigateTabCountReset('home')
+      this.props.navigator.popToTop()
+      return false
+    }
+    return true
+  }
   render() {
     const { route, navigator, state, searchBarTextInstanceList } = this.props
     const renderRow = (rowData, sectionId) => <ListItem
@@ -31,23 +38,25 @@ export default class HomeComponent extends React.Component {
         badgeTextStyle: { color: 'white' },
         badgeContainerStyle: { marginTop: 15 }
       }}
-      onPress={() => navigator.push(
-        {
-          passProps: {
-            leftButton: {
-              title: 'back',
-              component: ''
+      onPress={() => {
+        navigator.push(
+          {
+            passProps: {
+              leftButton: {
+                title: 'back',
+                component: ''
+              },
+              rightButton: {
+                title: '',
+                component: ''
+              },
+              chosenInstance: rowData
             },
-            rightButton: {
-              title: '',
-              component: ''
-            },
-            chosenInstance: rowData
-          },
-          title: `${rowData.name}`,
-          component: ChosenInstanceDetailsContainer,
-        }
-      )}
+            title: `${rowData.name}`,
+            component: ChosenInstanceDetailsContainer,
+          }
+        )
+      }}
     />
     return(
       <View style={styles.bodyContainer}>

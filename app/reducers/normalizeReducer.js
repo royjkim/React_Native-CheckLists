@@ -16,7 +16,11 @@ const initialState = {
     searchBarTextItemList: '',
   },
   configValue: {
-    picker: 'all'
+    picker: 'all',
+    navigatePopToTopRequest_home: false,
+    navigatePopToTopRequest_templateList: false,
+    navigatePopToTopRequest_itemList: false,
+    navigatePopToTopRequest_settings: false
   }
 }
 
