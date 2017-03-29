@@ -33,12 +33,12 @@ export default class TemplateListsComponent extends React.Component {
       key={sectionID}
       title={rowData.title}
       subtitle={`Category(${rowData.category}), Instances(${(state.badgeValueOfInstancesOfChosenTemplates.hasOwnProperty(rowData.templateId) ? state.badgeValueOfInstancesOfChosenTemplates[rowData.templateId] : 0)}), Items(${state.templates[rowData.templateId].items.length})`}
-      hideChevron={
-        ((state.badgeValueOfInstancesOfChosenTemplates.hasOwnProperty(rowData.templateId) && state.badgeValueOfInstancesOfChosenTemplates[rowData.templateId] > 0)
-         ? false : true)
-      }
+      // hideChevron={
+      //   ((state.badgeValueOfInstancesOfChosenTemplates.hasOwnProperty(rowData.templateId) && state.badgeValueOfInstancesOfChosenTemplates[rowData.templateId] > 0)
+      //    ? false : true)
+      // }
       onPress={() => {
-        if(state.badgeValueOfInstancesOfChosenTemplates.hasOwnProperty(rowData.templateId) && state.badgeValueOfInstancesOfChosenTemplates[rowData.templateId] > 0) {
+        // if(state.badgeValueOfInstancesOfChosenTemplates.hasOwnProperty(rowData.templateId) && state.badgeValueOfInstancesOfChosenTemplates[rowData.templateId] > 0) {
           navigator.push(
             {
               passProps: {
@@ -56,7 +56,7 @@ export default class TemplateListsComponent extends React.Component {
               component: InstanceListContainer,
             }
           )
-        }
+        // }
       }}
     />
     return(

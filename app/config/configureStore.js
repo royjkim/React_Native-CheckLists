@@ -12,6 +12,12 @@ const logger = createLogger()
 
 export default function initializeStore() {
   const store = Reactotron.createStore(reducer, compose(applyMiddleware(thunk, logger)))
+  if(module.hot) {
+    module.hot.accept(() => {
+      const nextRootReducer = require('../reducers/reducer')
+      store.replaceReducer(nextRootReducer)
+    })
+  }
   let initialData = {
     templates: [],
     items: [],
@@ -114,7 +120,8 @@ export default function initializeStore() {
     { id: 3, title: 'Relax' },
     { id: 4, title: 'testHobby' },
     { id: 5, title: 'testNormalDay' },
-    { id: 6, title: 'testRelax' }
+    { id: 6, title: 'testRelax' },
+    { id: 7, title: 'aaaaTest' }
   )
 
   initialData = normalizeStore.addItemsCustomized(initialData,

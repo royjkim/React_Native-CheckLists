@@ -320,7 +320,11 @@ const make_get_dataSourceTemplateCategories = () => createSelector(
   templateCategories => {
     const currentAttr = 'make_get_dataSourceTemplateCategories'
     compareInputHistory(currentAttr, templateCategories)
-    return make_dataSource_cloneWithRows(currentAttr, templateCategories)
+    return make_dataSource_cloneWithRows(currentAttr, Object.values(templateCategories).sort((data1, data2) => {
+      const value1 = data1.title.toLowerCase()
+      const value2 = data2.title.toLowerCase()
+      return value1 == value2 ? 0 : value1 > value2 ? 1 : -1
+    }))
   }
 )
 

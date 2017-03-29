@@ -21,7 +21,8 @@ const ADD_TEMPLATE = 'addNewTemplate',
       CHOOSE_CATEGORY = 'chooseCategory',
       NAVIGATE_POP_TO_TOP_REQUEST = 'navigatePopToTopRequest',
       NAVIGATE_TAB_COUNT_RESET = 'navigateTabCountReset',
-      FIND_LAST_ID = 'findLastId';
+      FIND_LAST_ID = 'findLastId',
+      LAST_ID_PLUS = 'lastIdPlus';
 
 const types = {
   ADD_TEMPLATE,
@@ -47,7 +48,8 @@ const types = {
   CHOOSE_CATEGORY,
   NAVIGATE_POP_TO_TOP_REQUEST,
   NAVIGATE_TAB_COUNT_RESET,
-  FIND_LAST_ID
+  FIND_LAST_ID,
+  LAST_ID_PLUS
 }
 
 export default types

@@ -4,9 +4,12 @@ function internalAddNewTemplate() {
 
 }
 
-export function addNewTemplate(newData) {
+export function addNewTemplate(lastId, newData) {
   return {
     type: types.ADD_TEMPLATE,
+    attr: 'templates',
+    lastId,
+    lastIndex: lastId - 1 < 0 ? 0 : lastId - 1,
     newData
   }
 }
@@ -73,16 +76,12 @@ export function modifyItemsCustomized(targetData) {
 export function addTemplateCategory(lastId, newData) {
   return {
     type: types.ADD_TEMPLATE_CATEGORY,
+    attr: 'templateCategories',
     lastId,
     lastIndex: lastId - 1 < 0 ? 0 : lastId - 1,
     newData,
   }
 }
-
-// ADD_TEMPLATE_CATEGORY = 'addTemplateCategory',
-// MODIFY_TEMPLATE_CATEGORY = 'modifyTemplateCategory',
-// DEL_TEMPLATE_CATEGORY = 'delTemplateCategory',
-
 
 // export function addOriginalTemplate(newData) {
 //   return {
@@ -183,3 +182,9 @@ export function findLastId(result) {
     result
   }
 }
+
+const lastIdPlus = (attr, lastId) => ({
+  type: types.LAST_ID_PLUS,
+  attr,
+  lastId
+})

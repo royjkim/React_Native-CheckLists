@@ -9,15 +9,52 @@ const initialState = {
   }
 }
 
-const addTemplate = (state, action) => ({
-  ...state,
-  templates: {
-    ...state.templates,
-    [action.newData.id]: {
-      ...action.newData
+const addTemplate = (state, action) => {
+  let temp_items = {},
+      // temp_itemsCustomized = {},
+      prevLastIdItems = action.lastId.items,
+      prevLastIdItemsCustomized = action.lastId.itemsCustomized;
+  action.newData.items.map(value => {
+    temp_items[++prevLastIdItems] = {
+      ...value,
+      template: action.newData.title
     }
+    // temp_itemsCustomized[++prevLastIdItemsCustomized] = {
+    //   ...value,
+    //   instanceId: null,
+    //   itemCustomizedId: prevLastIdItemsCustomized,
+    //   status: false
+    // }
+  })
+  console.log(`action.newData.items.map(value => value.itemId) : `, action.newData.items.map(value => value.itemId))
+  return {
+    ...state,
+    templates: {
+      ...state.templates,
+      [action.lastId.templates + 1]: {
+        ...action.newData,
+        items: action.newData.items.map(value => value.itemId)
+        // items: [
+        //   ...action.newData.items.map(value => value.itemId)
+        // ]
+      }
+    },
+    items: {
+      ...state.items,
+      ...temp_items
+    }
+    // items: {
+    //   ...state.items,
+    //   [action.lastId.items + 1]: {
+    //     ...action.newData.items
+    //   }
+    // },
+    // itemsCustomized: {
+    //   ...state.itemsCustomized,
+    //   ...temp_itemsCustomized
+    // }
   }
-})
+}
 
 const addInstance = (state, action) => ({
   ...state,

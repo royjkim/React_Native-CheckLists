@@ -12,8 +12,13 @@ const addTemplate = (state, action) => ({
   ...state,
   templates: [
     ...state.templates,
-    action.newData.id
-  ]
+    action.lastId + 1
+  ],
+  // items: [
+  //   ...state.items,
+  //   ...action.newData.items.filter(value => value.itemId)
+  // ]
+  items: state.items.concat(action.newData.items.filter(value => value.itemId))
 })
 
 const modifyTemplate = (state, action) => ({

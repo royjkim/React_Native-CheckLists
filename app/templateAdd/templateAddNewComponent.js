@@ -65,7 +65,7 @@ export default class TemplateAddNewComponent extends React.Component {
   // }
 
   render() {
-    const { route, navigator, state, addTemplateCategory } = this.props
+    const { route, navigator, state, addTemplateCategory, addNewTemplate } = this.props
     const categoryModalToggle = () => this.setState({ categoryListModalVisible: !this.state.categoryListModalVisible })
     const categoryChosen = chosenCategory => this.setState({ chosenCategory })
     const categoryAdd = newCategory => {
@@ -80,25 +80,171 @@ export default class TemplateAddNewComponent extends React.Component {
       })
     }
     const itemsInputedListModalToggle = () => this.setState({ itemsInputedListModalVisible: !this.state.itemsInputedListModalVisible })
-    const renderRowNewItem = (rowData, sectionId) => <ListItem
-      key={sectionId}
-      // title={rowData.desc.toString()}
-      title={String(rowData.desc || 'none')}
-      // subtitle={rowData.orderNum.toString()}
-      subtitle={`orderNum : ${String(rowData.orderNum)}`}
-    />
+    const renderRowNewItem = (rowData, sectionId) => (
+      // <View>
+      //   <Text>
+      //     {rowData.desc}
+      //   </Text>
+      // </View>
+      <ListItem
+        key={sectionId}
+        // title={rowData.desc.toString()}
+        title={String(rowData.desc || 'none')}
+        // title={<View
+        //   style={{ flexDirection: 'row' }}
+        //   >
+        //   <Text>
+        //     orderNum : {String(rowData.desc) || 'none'}
+        //   </Text>
+        //   {/* <Button title='test' /> */}
+        //   {/* <TouchableOpacity
+        //     style={{ borderWidth: 1, borderRadius: 5, padding: 15 }}>
+        //     <Text>
+        //       Del
+        //     </Text>
+        //   </TouchableOpacity> */}
+        // </View>}
+        subtitle={String(rowData.orderNum)}
+        // subtitle={<View
+        //   style={{ flexDirection: 'row' }}
+        //   >
+        //   <Text>
+        //     orderNum : {String(rowData.orderNum)}
+        //   </Text>
+        //   {/* <Button title='test' /> */}
+        //   {/* <TouchableOpacity
+        //     style={{ borderWidth: 1, borderRadius: 5, padding: 5 }}>
+        //     <Text>
+        //       Del
+        //     </Text>
+        //   </TouchableOpacity> */}
+        // </View>
+        // }
+        hideChevron
+      />
+    )
     return (
       <View style={styles.bodyContainer}>
-        <FormLabel>
-          Template Name
+        {/* <FormLabel>
+          Template Title
         </FormLabel>
         <FormInput
           onChangeText={templateName => this.setState({ templateName })}
-        />
+        /> */}
+        <View
+          style={{
+            flexDirection: 'row',
+            marginHorizontal: 10,
+            marginVertical: 10
+          }}
+          >
+            <Text
+              style={{
+                color: '#86939D',
+                fontWeight: 'bold',
+                marginLeft: 8
+              }}
+              >
+              Template Title :
+            </Text>
+            <View
+              style={{
+                flex: 1,
+                borderColor: this.state.templateName.length > 3 ? '#C1C1C1' : '#FF2A1A',
+                borderBottomWidth: 1.5,
+                marginHorizontal: 10
+              }}
+              >
+              <TextInput
+                value={this.state.templateName}
+                onChangeText={templateName => this.setState({ templateName })}
+                placeholder='(at leat 3 characters)'
+                style={{
+                  flex: 1,
+                  color: this.state.templateName ? '#605E60' : '#FF2A1A',
+                  textAlign: 'center',
+                  marginBottom: 2
+                }}
+              />
+            </View>
+            {/* <TouchableOpacity
+              style={{
+                flex: 1,
+              }}
+              onPress={() => this.setState({ categoryListModalVisible: true })}
+              >
+                <Text
+                  style={{
+                    marginHorizontal: 20,
+                    marginBottom: 5,
+                    // marginVertical: 15,
+                    color: this.state.templateName ? '#605E60' : '#9E9E9E',
+                    textAlign: 'center'
+                  }}
+                  >
+                  {this.state.templateName ? this.state.templateName : 'input title'}
+                </Text>
+                <View
+                  style={{
+                    backgroundColor: '#C1C1C1',
+                    height: 1.5,
+                    marginHorizontal: 10
+                  }}
+                />
+            </TouchableOpacity> */}
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginHorizontal: 10,
+            marginVertical: 10
+          }}
+          >
+            <Text
+              style={{
+                color: '#86939D',
+                fontWeight: 'bold',
+                marginLeft: 8
+              }}
+              >
+              Template Category :
+            </Text>
+            <TouchableOpacity
+              style={{ flex: 1 }}
+              onPress={() => this.setState({ categoryListModalVisible: true })}
+              >
+                <Text
+                  style={{
+                    marginHorizontal: 20,
+                    marginBottom: 5,
+                    // marginVertical: 15,
+                    // color: this.state.chosenCategory ? '#605E60' : '#9E9E9E',
+                    color: this.state.chosenCategory ? '#605E60' : '#9E9E9E',
+                    textAlign: 'center'
+                  }}
+                  >
+                  {this.state.chosenCategory ? this.state.chosenCategory : 'choose category'}
+                </Text>
+                <View
+                  style={{
+                    backgroundColor: this.state.chosenCategory ? '#C1C1C1' : '#FF2A1A',
+                    height: 1.5,
+                    // borderWidth: 1,
+                    // borderBottomWidth: 1,
+                    // borderColor: 'gray',
+                    marginHorizontal: 10
+                  }}
+                />
+              {/* <FormInput
+                value={this.state.chosenCategory}
+                // onChangeText={chosenCategory => this.setState({ chosenCategory })}
+              /> */}
+            </TouchableOpacity>
+        </View>
         {/* {this.state.templateName.length < 3 ? <FormValidationMessage>
           Name is required. At least 3 characters.
         </FormValidationMessage> : null} */}
-        <FormLabel>
+        {/* <FormLabel>
           Template Category
         </FormLabel>
         <TouchableOpacity
@@ -121,13 +267,13 @@ export default class TemplateAddNewComponent extends React.Component {
                 marginHorizontal: 18
               }}
             />
-          {/* <FormInput
+          <FormInput
             value={this.state.chosenCategory}
-            // onChangeText={chosenCategory => this.setState({ chosenCategory })}
-          /> */}
+            onChangeText={chosenCategory => this.setState({ chosenCategory })}
+          />
         </TouchableOpacity>
         <View style={{ height: 10 }}/>
-        <View style={{ height: 10 }}/>
+        <View style={{ height: 10 }}/> */}
         {/* <Button
           title='Show Items Inputed'
           onPress={() => this.setState({ itemsInputedListModalVisible: !this.state.itemsInputedListModalVisible })}
@@ -170,7 +316,6 @@ export default class TemplateAddNewComponent extends React.Component {
                   // const itemAdd = () => this.setState({
                   //   items: this.state.items.concat(this.state.tempNewItem)
                   // })
-                  console.log(`typeof this.state.tempNewItemDesc : ${typeof this.state.tempNewItemDesc}`)
                   this.setState({
                     newItem: {
                       // desc: this.state.tempNewItemDesc,
@@ -232,19 +377,69 @@ export default class TemplateAddNewComponent extends React.Component {
         <View style={{ height: 10 }}/>
         <Button
           title='Save'
-          onPress={() => alert('save')}
+          onPress={() => {
+            if(this.state.templateName.length > 3 && this.state.chosenCategory && this.state.newItems.length > 0 && this.state.tempNewItemDesc == '') {
+              // console.log(`this.state.chosenCategory : ${this.state.chosenCategory}`)
+              // console.log(`this.state.newItems.filter(value => value.itemId) : `, this.state.newItems.filter(value => value.itemId))
+              // console.log(`lastId.templates + 1 : ${lastId.templates + 1}`)
+              addNewTemplate(state.lastId, {
+                additionalInfo: 'addable',
+                category: this.state.chosenCategory,
+                items: this.state.newItems,
+                templateId: state.lastId.templates + 1,
+                title: this.state.templateName
+              })
+              alert('save complete', navigator.popToTop())
+
+            } else {
+              this.state.templateName.length < 4 ? alert('input template name(at least 3 characters)') : !this.state.chosenCategory ? alert('input category') : this.state.newItems.length < 1 ? alert('add new item(at least 1 item)') : this.state.tempNewItemDesc !== '' ? alert('after input item, please press add button') : null
+            }
+          }}
         />
-        <View
-          style={{ flex: 1 }}>
-          <List>
-            <ListView
-              dataSource={this.state.dataSourceNewAddedItems}
-              // dataSource={this.dataSourceNewAddedItems}
-              renderRow={renderRowNewItem}
-              enableEmptySections={true}
-            />
-          </List>
-        </View>
+        {/* this.state = {
+          categoryListModalVisible: false,
+          templateName: '',
+          chosenCategory: '',
+          itemsInputedListModalVisible: false,
+          tempNewItemDesc: '',
+          newItem: {
+            desc: '',
+            itemId: this.props.state.lastId.items + 1,
+            orderNum: 1,
+            templateId: this.props.state.lastId.templates + 1
+          },
+          newItems: [],
+          dataSourceNewAddedItems: [],
+        } */}
+        {this.state.dataSourceNewAddedItems._cachedRowCount > 0 ? (
+          <View
+            style={{ flex: 1 }}>
+            {/* <View
+              style={{
+                backgroundColor: '#9E9E9E',
+                height: 2,
+                marginTop: 10
+              }}
+            /> */}
+            <List>
+              <FormLabel
+                containerStyle={{
+                  // marginVertical: 10
+                  marginBottom: 10
+                }}
+                >
+                Added Items : {this.state.dataSourceNewAddedItems._cachedRowCount}
+              </FormLabel>
+              <ListView
+                dataSource={this.state.dataSourceNewAddedItems}
+                // dataSource={this.dataSourceNewAddedItems}
+                renderRow={renderRowNewItem}
+                enableEmptySections={true}
+              />
+            </List>
+          </View>
+          ) : null }
+
         <View style={{ height: 10 }}/>
         <Modal
           animationType='slide'

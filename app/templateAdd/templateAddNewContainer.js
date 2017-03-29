@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import TemplateAddNewComponent from './templateAddNewComponent'
 import mySelectors from '../container/selectors'
-import { addTemplateCategory } from '../actions/dataActionCreators'
+import { addTemplateCategory, addNewTemplate } from '../actions/dataActionCreators'
 
 const mapStateToProps = (state, ownProps) => ({
   state: {
@@ -11,7 +11,8 @@ const mapStateToProps = (state, ownProps) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  addTemplateCategory: (lastId, newData) => dispatch(addTemplateCategory(lastId, newData))
+  addTemplateCategory: (lastId, newData) => dispatch(addTemplateCategory(lastId, newData)),
+  addNewTemplate: (lastId, newData) => dispatch(addNewTemplate(lastId, newData))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(TemplateAddNewComponent)
