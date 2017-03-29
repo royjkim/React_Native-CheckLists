@@ -71,7 +71,24 @@ export default class TemplateAddComponent extends React.Component {
     const renderRowTemplates = (rowData, sectionId) => <ListItem
       key={sectionId}
       title={rowData.title}
-      subtitle={rowData.category}
+      subtitle={`Category : ${rowData.category}, Items : ${rowData.items.length}`}
+      onPress={() => navigator.push(
+        {
+          passProps: {
+            leftButton: {
+              title: 'back',
+              component: ''
+            },
+            rightButton: {
+              title: '',
+              component: ''
+            },
+            chosenTemplate: rowData
+          },
+          title: `Copy from ${rowData.title}`,
+          component: TemplateAddNewContainer
+        }
+      )}
     />
     return(
       <View style={styles.bodyContainer}>

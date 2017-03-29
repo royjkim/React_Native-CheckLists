@@ -16,6 +16,8 @@ const SettingsComponent = props => {
       </Text>
       <Text>
         Developer : roy
+        {'\n'}
+        Save(Local - anti-flat) button 
       </Text>
     </View>
   )

@@ -6,8 +6,11 @@ import { addTemplateCategory, addNewTemplate } from '../actions/dataActionCreato
 const mapStateToProps = (state, ownProps) => ({
   state: {
     lastId: state.normalizeReducer.lastId,
+    items: state.normalizeReducer.entities.items,
     dataSourceTemplateCategories: mySelectors.make_get_dataSourceTemplateCategories()(state.normalizeReducer),
-  }
+  },
+  route: ownProps.route,
+  navigator: ownProps.navigator
 })
 
 const mapDispatchToProps = dispatch => ({

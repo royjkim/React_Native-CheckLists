@@ -45,7 +45,7 @@ export default class TemplateCategoryModal extends React.Component {
           style={{
             flex: 1,
           }}
-          onPress={() => closeFn()}
+          onPress={() => this.state.newCategory ? alert('after input new category, please press add button') : closeFn()}
           >
         </TouchableOpacity>
         <View
@@ -54,7 +54,7 @@ export default class TemplateCategoryModal extends React.Component {
             backgroundColor: 'white',
             borderColor: 'lightgray',
             // borderTopWidth: 1,
-            marginBottom: 8,
+            // marginBottom: 3,
           }}>
           <List>
             <FormLabel
@@ -80,7 +80,8 @@ export default class TemplateCategoryModal extends React.Component {
               flex: 1,
               flexDirection: 'row',
               marginHorizontal: 20,
-              marginVertical: 20
+              // marginVertical: 10
+              marginBottom: 20
             }}
             >
               {/* <Text
@@ -97,6 +98,7 @@ export default class TemplateCategoryModal extends React.Component {
                   flex: 1,
                   borderColor: '#C1C1C1',
                   borderBottomWidth: 1,
+                  marginBottom: 10
                 }}
                 >
                 <TextInput
@@ -114,9 +116,13 @@ export default class TemplateCategoryModal extends React.Component {
               <Button
                 title='Add'
                 onPress={() => {
-                  addTemplateCategory(lastId.templateCategories, { title: this.state.newCategory })
-                  categoryChosen(this.state.newCategory)
-                  closeFn()
+                  if(this.state.newCategory) {
+                    addTemplateCategory(lastId.templateCategories, { title: this.state.newCategory })
+                    categoryChosen(this.state.newCategory)
+                    closeFn()
+                  } else {
+                    alert('input new category')
+                  }
                 }}
               />
               {/* <View

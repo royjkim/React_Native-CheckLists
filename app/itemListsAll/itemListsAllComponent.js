@@ -36,47 +36,56 @@ export default class ItemsListsAllComponent extends React.Component {
       key={sectionId}
       title={rowData.desc}
       subtitle={`orderNum : ${rowData.orderNum}`}
-      hideChevron
     />
-    const renderSectionHeader = (sectionData, sectionId) => (
-      <TouchableOpacity
-        onPress={() => {
-          return navigator.push(
-            {
-              passProps: {
-                leftButton: {
-                  title: 'back',
-                  component: ''
+    const renderSectionHeader = (sectionData, sectionId) => {
+      console.log('sectionData : ', sectionData)
+      console.log('sectionId : ', sectionId)
+      return (
+        <TouchableOpacity
+          onPress={() => {
+            return navigator.push(
+              {
+                passProps: {
+                  leftButton: {
+                    title: 'back',
+                    component: ''
+                  },
+                  rightButton: {
+                    title: '',
+                    component: ''
+                  },
+                  chosenTemplate: state.templates[sectionId]
                 },
-                rightButton: {
-                  title: '',
-                  component: ''
-                },
-                chosenTemplate: state.templates[sectionId]
-              },
-              title: `${state.templates[sectionId].title}`,
-              component: InstancesListContainer,
-            }
-          )
-        }}
-        >
-          <View style={{ flexDirection: 'row', backgroundColor: 'lightgray', padding: 8 }}>
-            <Text
-              key={sectionId}
-              style={{ fontWeight: '500', color: '#161616' }}
+                title: `${state.templates[sectionId].title}`,
+                component: InstancesListContainer,
+              }
+            )
+          }}
+          >
+            <View
+              style={{
+                flexDirection: 'row',
+                backgroundColor: 'lightgray',
+                padding: 8
+              }}
               >
-              Template : {state.templates[sectionId].title}, Items : {sectionData.length}
-            </Text>
-            <View style={{ flex: 1 }}>
-              <Icon
-                name='chevron-right'
-                size={20}
-                containerStyle={{ alignSelf: 'flex-end' }}
-              />
+                <Text
+                  key={sectionId}
+                  style={{ fontWeight: '500', color: '#161616' }}
+                  >
+                  Template : {state.templates[sectionId].title}, Items : {sectionData.length}
+                </Text>
+                <View style={{ flex: 1 }}>
+                  <Icon
+                    name='chevron-right'
+                    size={20}
+                    containerStyle={{ alignSelf: 'flex-end' }}
+                  />
+                </View>
             </View>
-          </View>
-        </TouchableOpacity>
-    )
+          </TouchableOpacity>
+      )
+    }
     return(
       <View style={styles.bodyContainer}>
         <SearchBar
@@ -88,19 +97,17 @@ export default class ItemsListsAllComponent extends React.Component {
         <FormLabel>
           Total Items : {state.dataSourceAllItems._cachedRowCount}
         </FormLabel>
-        <List>
-          <ListView
-            dataSource={state.dataSourceAllItems}
-            enableEmptySections={true}
-            renderRow={renderRow}
-            renderSectionHeader={renderSectionHeader}
-          />
-        </List>
-        <View style={{ height: 5 }} />
-        <Button
-          title='Add Item'
-          onPress={() => alert('add Item')}
-        />
+        <View
+          style={{ flex: 1 }}>
+          <List>
+            <ListView
+              dataSource={state.dataSourceAllItems}
+              enableEmptySections={true}
+              renderRow={renderRow}
+              renderSectionHeader={renderSectionHeader}
+            />
+          </List>
+        </View>
       </View>
     )
   }

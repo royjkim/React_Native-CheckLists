@@ -61,7 +61,10 @@ export default class InstanceListComponent extends React.Component {
         />
         <FormLabel>
           {/* Template : {route.passProps.chosenTemplate.title}, Items({route.passProps.chosenTemplate.items.length}) */}
-          Template : {route.passProps.chosenTemplate.title}, Items({state.itemsLengthOfChosenTemplate})
+          Template : {route.passProps.chosenTemplate.title}
+        </FormLabel>
+        <FormLabel>  
+          Category : {route.passProps.chosenTemplate.category}, Items({state.itemsLengthOfChosenTemplate})
         </FormLabel>
         <List>
           <ListView
@@ -70,23 +73,25 @@ export default class InstanceListComponent extends React.Component {
             renderRow={renderRowItems}
           />
         </List>
-        <View style={{ marginVertical: 15, height: 2 }} />
-        <SearchBar
-          lightTheme
-          round={true}
-          onChangeText={searchBarText => searchBarTextInstancesOfChosenTemplate(searchBarText)}
-          placeholder='Search Instances'
-        />
-        <FormLabel>
-          ▼ Instance List of {route.title} : {state.dataSourceInstancesOfChosenTemplate._dataBlob.s1.length}
-        </FormLabel>
-        <List>
-          <ListView
-            dataSource={state.dataSourceInstancesOfChosenTemplate}
-            renderRow={renderRowInstances}
-            enableEmptySections={true}
+        {state.dataSourceInstancesOfChosenTemplate._cachedRowCount > 0 ? (<View>
+          <View style={{ marginVertical: 15, height: 2 }} />
+          <SearchBar
+            lightTheme
+            round={true}
+            onChangeText={searchBarText => searchBarTextInstancesOfChosenTemplate(searchBarText)}
+            placeholder='Search Instances'
           />
-        </List>
+          <FormLabel>
+            ▼ Instance List of {route.title} : {state.dataSourceInstancesOfChosenTemplate._dataBlob.s1.length}
+          </FormLabel>
+          <List>
+            <ListView
+              dataSource={state.dataSourceInstancesOfChosenTemplate}
+              renderRow={renderRowInstances}
+              enableEmptySections={true}
+            />
+          </List>
+        </View>) : null}
       </View>
     )
   }
