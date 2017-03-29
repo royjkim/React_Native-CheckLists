@@ -188,3 +188,19 @@ const lastIdPlus = (attr, lastId) => ({
   attr,
   lastId
 })
+
+export function navigatePrevent(routeTitle, statusBoolean) {
+  return {
+    type: types.NAVIGATE_PREVENT,
+    routeTitle,
+    status: statusBoolean
+  }
+}
+
+export function triedNavigateWhenPrevented(routeTitle, statusBoolean) {
+  return {
+    type: types.TRIED_NAVIGATE_WHEN_PREVENTED,
+    routeTitle,
+    status: statusBoolean
+  }
+}

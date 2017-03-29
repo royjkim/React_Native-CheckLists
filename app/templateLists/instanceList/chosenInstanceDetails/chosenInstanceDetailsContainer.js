@@ -1,4 +1,4 @@
-import { modifyItemsCustomized, chooseCategory } from '../../../actions/dataActionCreators'
+import { modifyItemsCustomized, chooseCategory, navigatePrevent, triedNavigateWhenPrevented } from '../../../actions/dataActionCreators'
 import ChosenInstanceDetailsComponent from './chosenInstanceDetailsComponent'
 import { connect } from 'react-redux'
 import mySelectors from '../../../container/selectors'
@@ -9,7 +9,9 @@ const make_mapStateToProps = () => (state, ownProps) => ({
       ...state.normalizeReducer.entities.templates[ownProps.route.passProps.chosenInstance.template]
     },
     itemsCustomizedOfChosenInstance: mySelectors.make_get_itemsCustomizedOfChosenInstance()(state.normalizeReducer, ownProps.route.passProps.chosenInstance),
-    statusPicker: state.normalizeReducer.configValue.picker
+    statusPicker: state.normalizeReducer.configValue.picker,
+    navigatePrevent: state.normalizeReducer.configValue.navigatePrevent,
+    triedNavigateWhenPrevented: state.normalizeReducer.configValue.triedNavigateWhenPrevented
   },
   route: ownProps.route,
   navigator: ownProps.navigator
@@ -17,7 +19,9 @@ const make_mapStateToProps = () => (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => ({
   modifyItemsCustomized: targetData => dispatch(modifyItemsCustomized(targetData)),
-  chooseCategory: category => dispatch(chooseCategory(category))
+  chooseCategory: category => dispatch(chooseCategory(category)),
+  navigatePrevent: (routeTitle, statusBoolean) => dispatch(navigatePrevent(routeTitle, statusBoolean)),
+  triedNavigateWhenPrevented: (routeTitle, statusBoolean) => dispatch(triedNavigateWhenPrevented(routeTitle, statusBoolean))
 })
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => ({

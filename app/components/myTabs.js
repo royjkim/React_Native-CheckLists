@@ -31,7 +31,6 @@ export default class MyTabs extends React.Component {
   render() {
     const { navigatePopToTopRequest } = this.props
     const tabCountFn = attr => {
-      console.log(`this.prevTab : ${this.prevTab} // currentTab : ${attr}`)
       this.prevTab == attr ? navigatePopToTopRequest(attr) : this.setState({ selectedTab: attr })
       this.prevTab = attr
     }

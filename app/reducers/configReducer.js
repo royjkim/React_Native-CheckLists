@@ -17,11 +17,48 @@ const navigateTabCountReset = (state, action) => {
   }
 }
 
+const navigatePrevent = (state, action) => {
+  let tempResult = {
+    ...state,
+    navigatePrevent: {
+     [action.routeTitle]: action.status
+    }
+  }
+  if(!action.status) {
+    delete tempResult.navigatePrevent[action.routeTitle]
+  }
+  console.log(`configReducer - tempResult : `, tempResult)
+  return tempResult
+  // return {
+  //   ...state,
+  //   navigatePrevent: {
+  //     [action.routeTitle]: action.status
+  //   }
+  // }
+}
+
+const triedNavigateWhenPrevented = (state, action) => {
+  if(!action.status) {
+    return {
+      ...state,
+      triedNavigateWhenPrevented: ''
+    }
+  } else {
+    return {
+      ...state,
+      triedNavigateWhenPrevented: action.routeTitle
+    }
+  }
+}
+
+
 export default function configReducer(state, action) {
   const reducerMap = {
     [types.CHOOSE_CATEGORY]: chooseCategory,
     [types.NAVIGATE_POP_TO_TOP_REQUEST]: navigatePopToTopRequest,
-    [types.NAVIGATE_TAB_COUNT_RESET]: navigateTabCountReset
+    [types.NAVIGATE_TAB_COUNT_RESET]: navigateTabCountReset,
+    [types.NAVIGATE_PREVENT]: navigatePrevent,
+    [types.TRIED_NAVIGATE_WHEN_PREVENTED]: triedNavigateWhenPrevented
   }
   return reducerMap.hasOwnProperty(action.type) ? reducerMap[action.type](state, action) : state
 }

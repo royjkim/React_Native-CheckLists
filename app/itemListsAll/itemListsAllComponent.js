@@ -38,8 +38,6 @@ export default class ItemsListsAllComponent extends React.Component {
       subtitle={`orderNum : ${rowData.orderNum}`}
     />
     const renderSectionHeader = (sectionData, sectionId) => {
-      console.log('sectionData : ', sectionData)
-      console.log('sectionId : ', sectionId)
       return (
         <TouchableOpacity
           onPress={() => {

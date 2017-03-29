@@ -22,7 +22,9 @@ const ADD_TEMPLATE = 'addNewTemplate',
       NAVIGATE_POP_TO_TOP_REQUEST = 'navigatePopToTopRequest',
       NAVIGATE_TAB_COUNT_RESET = 'navigateTabCountReset',
       FIND_LAST_ID = 'findLastId',
-      LAST_ID_PLUS = 'lastIdPlus';
+      LAST_ID_PLUS = 'lastIdPlus',
+      NAVIGATE_PREVENT = 'navigatePrevent',
+      TRIED_NAVIGATE_WHEN_PREVENTED = 'triedNavigateWhenPrevented';
 
 const types = {
   ADD_TEMPLATE,
@@ -49,7 +51,9 @@ const types = {
   NAVIGATE_POP_TO_TOP_REQUEST,
   NAVIGATE_TAB_COUNT_RESET,
   FIND_LAST_ID,
-  LAST_ID_PLUS
+  LAST_ID_PLUS,
+  NAVIGATE_PREVENT,
+  TRIED_NAVIGATE_WHEN_PREVENTED,
 }
 
 export default types

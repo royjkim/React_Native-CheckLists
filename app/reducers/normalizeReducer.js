@@ -21,7 +21,9 @@ const initialState = {
     navigatePopToTopRequest_home: false,
     navigatePopToTopRequest_templateList: false,
     navigatePopToTopRequest_itemList: false,
-    navigatePopToTopRequest_settings: false
+    navigatePopToTopRequest_settings: false,
+    navigatePrevent: {},
+    triedNavigateWhenPrevented: ''
   },
   lastId: {
     instances: 0,
