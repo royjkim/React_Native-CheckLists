@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import HomeComponent from './homeComponent'
-import { searchBarTextInstanceList, navigateTabCountReset } from '../actions/dataActionCreators'
+import { searchBarTextInstanceList, navigatePopToTopRequest } from '../actions/dataActionCreators'
 
 import mySelectors from '../container/selectors'
 
@@ -12,8 +12,7 @@ const make_mapStateToProps = () => (state, ownProps) => ({
     instances: state.normalizeReducer.entities.instances,
     templates: state.normalizeReducer.entities.templates,
     searchBarText: state.normalizeReducer.searchBarText.searchBarTextInstanceList,
-    // navigatePopToTopRequest: state.normalizeReducer.configValue.navigatePopToTopRequest
-    navigatePopToTopRequest_home: state.normalizeReducer.configValue.navigatePopToTopRequest_home
+    navigatePopToTopRequest: state.normalizeReducer.configValue.navigatePopToTopRequest
   },
   route: ownProps.route,
   navigator: ownProps.navigator
@@ -21,7 +20,7 @@ const make_mapStateToProps = () => (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => ({
   searchBarTextInstanceList: searchText => dispatch(searchBarTextInstanceList(searchText)),
-  navigateTabCountReset: targetTab => dispatch(navigateTabCountReset(targetTab))
+  navigatePopToTopRequest: (targetTab, statusBoolean) => dispatch(navigatePopToTopRequest(targetTab, statusBoolean))
 })
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => ({
