@@ -7,6 +7,7 @@ import {
   Modal,
   TouchableOpacity,
   TextInput,
+  ScrollView,
 } from 'react-native'
 import {
   List,
@@ -23,51 +24,23 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
     super(props)
     this.state = {
       modalPickerVisible: false,
+      saveButtonVisible: false,
       instanceName: this.props.route.passProps.chosenInstance.name || '',
-      templateName: this.props.state.chosenTemplate.title || '',
+      templateTitle: this.props.state.chosenTemplate.title || '',
       prev_instanceName: this.props.route.passProps.chosenInstance.name || '',
-      prev_templateName: this.props.state.chosenTemplate.title || '',
-      changeValueInstanceName: false,
-      changeValueTemplateTitle: false,
+      prev_templateTitle: this.props.state.chosenTemplate.title || '',
+      changeValue_instanceName: false,
+      changeValue_templateTitle: false,
       saved: false
     }
   }
 
-  // componentDidUpdate() {
-  //   !this.state.changeValueInstanceName && !this.state.changeValueTemplateTitle && this.props.state.triedNavigateWhenPrevented !== '' ? this.props.triedNavigateWhenPrevented(this.props.route.title, false) : null
-  //   this.props.state.triedNavigateWhenPrevented ? this.state.changeValueInstanceName ? alert('press save button to save changed instance name.') : this.state.changeValueTemplateTitle ? alert('press save button to save changed template name.') : null : null
-  // }
-  componentWillUpdate(nextProps, nextState) {
-    // console.log(`nexProps : `, nextProps)
-    // console.log(`nextState : `, nextState)
-
-
-
-
-
-
-  }
-
   componentDidUpdate() {
-
-    !this.state.changeValueInstanceName && !this.state.changeValueTemplateTitle && this.props.state.triedNavigateWhenPrevented !== '' ? this.props.triedNavigateWhenPrevented(this.props.route.title, false) : null
-
-    // this.state.changeValueTemplateTitle || this.state.changeValueInstanceName ? this.props.navigatePrevent(this.props.route.title, true) : null
-    // !this.state.changeValueTemplateTitle && !this.state.changeValueInstanceName ? this.props.navigatePrevent(this.props.route.title, false) : null
-
-    if(this.state.changeValueTemplateTitle || this.state.changeValueInstanceName) {
-      this.props.state.navigatePrevent[this.props.route.title] ? null : this.props.navigatePrevent(this.props.route.title, true)
-    }
-
-    if(!this.state.changeValueTemplateTitle && !this.state.changeValueInstanceName) {
-      this.props.state.navigatePrevent[this.props.route.title] ? this.props.navigatePrevent(this.props.route.title, false) : null
-    }
-    // this.state.changeValueTemplateTitle || this.state.changeValueInstanceName ? this.props.navigatePrevent(this.props.route.title, true) : null
-    // !this.state.changeValueTemplateTitle && !this.state.changeValueInstanceName ? this.props.navigatePrevent(this.props.route.title, false) : null
-
-    this.props.state.triedNavigateWhenPrevented ? this.state.changeValueInstanceName ? alert('press save button to save changed instance name.') : this.state.changeValueTemplateTitle ? alert('press save button to save changed template name.') : null : null
-
-
+    const __navigatorRouteID = this.props.route.__navigatorRouteID
+    !this.state.saveButtonVisible ? this.state.changeValue_instanceName || this.state.changeValue_templateTitle ? this.setState({ saveButtonVisible: true }) : null : null
+    this.state.changeValue_instanceName || this.state.changeValue_templateTitle ? this.props.state.navigatePrevent[__navigatorRouteID] ? null : this.props.navigatePrevent(__navigatorRouteID, true) : this.state.saveButtonVisible ? this.setState({ saveButtonVisible: false }) : null
+    !this.state.changeValue_instanceName && !this.state.changeValue_templateTitle && this.props.state.navigatePrevent[__navigatorRouteID] ? this.props.navigatePrevent(__navigatorRouteID, false) : null
+    this.props.state.triedNavigateWhenPrevented[__navigatorRouteID] ? this.state.changeValue_instanceName ? (alert('press save button to save changed instance name.'), this.props.triedNavigateWhenPrevented(__navigatorRouteID, false)): this.state.changeValue_templateTitle ? (alert('press save button to save changed template name.'), this.props.triedNavigateWhenPrevented(__navigatorRouteID, false)): null : null
   }
   render() {
     const {
@@ -89,27 +62,63 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
         />
       </View>
     )
-    // const preventOrNotFn = () => {
-    //   this.state.changeValueTemplateTitle || this.state.changeValueInstanceName ? navigatePrevent(route.title, true) : null
-    //   !this.state.changeValueTemplateTitle && !this.state.changeValueInstanceName ? navigatePrevent(route.title, false) : null
-    // }
     const resetData = () => {
       this.setState({
         modalPickerVisible: false,
         instanceName: this.props.route.passProps.chosenInstance.name || '',
-        templateName: this.props.state.chosenTemplate.title || '',
+        templateTitle: this.props.state.chosenTemplate.title || '',
         prev_instanceName: this.props.route.passProps.chosenInstance.name || '',
-        prev_templateName: this.props.state.chosenTemplate.title || '',
-        changeValueInstanceName: false,
-        changeValueTemplateTitle: false,
+        prev_templateTitle: this.props.state.chosenTemplate.title || '',
+        changeValue_instanceName: false,
+        changeValue_templateTitle: false,
         saved: false
       })
     }
+
+    // const instanceNameChange = instanceName => {
+    //   return prevState => {
+    //     console.log(`prevState : `, prevState)
+    //     let tempResult = {}
+    //     instanceName !== prevState.instanceName ? prevState.changeValue_instanceName ? tempResult = {
+    //       instanceName,
+    //     } : tempResult = {
+    //       instanceName,
+    //       changeValue_instanceName: true
+    //     } : null
+    //
+    //     instanceName == prevState.prev_instanceName ? prevState.changeValue_instanceName ? tempResult = {
+    //       ...tempResult,
+    //       changeValue_instanceName: false
+    //     } : null : null
+    //     return tempResult
+    //   }
+    // }
+
+    const changeCommon = (newValue, attr) => {
+      return prevState => {
+        let tempResult = {}
+
+        newValue !== prevState[attr] ? tempResult = {
+          [attr]: newValue
+        } : null
+
+        newValue !== prevState[`prev_${attr}`] ? prevState[`changeValue_${attr}`] ? tempResult = {
+          [attr]: newValue,
+        } : tempResult = {
+          [attr]: newValue,
+          [`changeValue_${attr}`]: true
+        } : null
+
+        newValue == prevState[`prev_${attr}`] ? prevState[`changeValue_${attr}`] ? tempResult = {
+          ...tempResult,
+          [`changeValue_${attr}`]: false
+        } : null : null
+        return tempResult
+      }
+    }
+
     return(
       <View style={styles.bodyContainer}>
-        {/* <FormLabel>
-          Instance Name : {chosenInstance.name}
-        </FormLabel> */}
         <View
           style={{
             flexDirection: 'row',
@@ -136,43 +145,17 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
               >
               <TextInput
                 value={this.state.instanceName}
-                onChangeText={instanceName => {
-                  this.setState({ instanceName })
-                  // this.state.instanceName !== this.state.prev_instanceName && !this.state.changeValueInstanceName ? this.setState({ changeValueInstanceName: true }) : this.state.instanceName == this.state.prev_instanceName && this.state.changeValueInstanceName ? this.setState({ changeValueInstanceName: false }) : null
-                  // this.state.instanceName !== this.state.prev_instanceName ? this.setState({ changeValueInstanceName: true }, console.log('this.state.changeValueInstanceName : ', String(this.state.changeValueInstanceName))) : this.setState({ changeValueInstanceName: false })
-
-                  // if(this.state.instanceName !== this.state.prev_instanceName && !this.state.changeValueInstanceName) {
-                  //   this.setState({ changeValueInstanceName: true })
-                  // } else if(this.state.instanceName == this.state.prev_instanceName && this.state.changeValueInstanceName) {
-                  //   this.setState({ changeValueInstanceName: false })
-                  // }
-                  // this.state.instanceName !== this.state.prev_instanceName && !this.state.changeValueInstanceName ?
-                  //   this.setState({ changeValueInstanceName: true }) : this.state.instanceName == this.state.prev_instanceName && this.state.changeValueInstanceName ?
-                  //    this.setState({ changeValueInstanceName: false }) : null
-                  // preventOrNotFn()
-
-                  this.state.instanceName !== this.state.prev_instanceName ? this.setState({ changeValueInstanceName: true }, console.log('this.state.changeValueInstanceName : ', String(this.state.changeValueInstanceName))) : this.setState({ changeValueInstanceName: false })
-                }}
+                onChangeText={instanceName => this.setState(changeCommon(instanceName, 'instanceName'))}
                 placeholder='(at least 3 characters.)'
                 style={{
                   flex: 1,
-                  color: this.state.instanceName ? '#605E60' : '#FF2A1A',
+                  color: this.state.changeValue_instanceName ? '#159589' : '#605E60',
                   textAlign: 'center',
                   marginBottom: 2
                 }}
               />
             </View>
         </View>
-        <Text>
-          instanceName : {this.state.instanceName}
-          {'\n'}
-          this.state.prev_instanceName : {this.state.prev_instanceName}
-          {'\n'}
-          this.state.changeValueInstanceName : {String(this.state.changeValueInstanceName)}
-          {'\n'}
-          this.props.state.triedNavigateWhenPrevented :{'\n'}
-          {JSON.stringify(this.props.state.triedNavigateWhenPrevented, null, 1)}
-        </Text>
         {/* <FormLabel>
           Template Name : {state.chosenTemplate.title}
         </FormLabel> */}
@@ -195,24 +178,18 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
             <View
               style={{
                 flex: 1,
-                borderColor: this.state.templateName.length > 3 ? '#C1C1C1' : '#FF2A1A',
+                borderColor: this.state.templateTitle.length > 3 ? '#C1C1C1' : '#FF2A1A',
                 borderBottomWidth: 1.5,
                 marginHorizontal: 10
               }}
               >
               <TextInput
-                value={this.state.templateName}
-                onChangeText={templateName => {
-                  this.setState({ templateName })
-                  // this.state.templateName !== this.state.prev_templateName && !this.state.changeValueTemplateTitle ? this.setState({ changeValueTemplateTitle: true }) : this.state.templateName == this.state.prev_templateName && this.state.changeValueTemplateTitle ? this.setState({ changeValueTemplateTitle: false }) : null
-                  // preventOrNotFn()
-                  this.state.templateName !== this.state.prev_templateName && !this.state.changeValueTemplateTitle ? this.setState({ changeValueTemplateTitle: true }) : this.state.templateName == this.state.prev_templateName && this.state.changeValueTemplateTitle ? this.setState({ changeValueTemplateTitle: false }) : null
-                }}
-                // placeholder={chosenInstance.name || '(at least 3 characters.)'}
+                value={this.state.templateTitle}
+                onChangeText={templateTitle => this.setState(changeCommon(templateTitle, 'templateTitle'))}
                 placeholder='(at least 3 characters.)'
                 style={{
                   flex: 1,
-                  color: this.state.templateName.length > 3 ? '#605E60' : '#FF2A1A',
+                  color: this.state.changeValue_templateTitle ? '#159589' : '#605E60',
                   textAlign: 'center',
                   marginBottom: 2
                 }}
@@ -240,30 +217,32 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
           />
         </List>
         <View style={{ height: 10 }} />
-        {this.state.changeValueInstanceName || this.state.changeValueTemplateTitle ? (<View>
-          <Button
-            icon={{ name: 'check' }}
-            title='Save'
-            backgroundColor='#6296F9'
-            onPress={() => {
-              this.setState({
-                saved: true,
-                prev_templateName: this.state.templateName,
-                prev_instanceName: this.state.instanceName,
-                changeValueInstanceName: false,
-                changeValueTemplateTitle: false
-              })
-              navigatePrevent(route.title, false)
-              alert('save complete')
-            }}
-          />
-          <View
-            style={{ height: 10 }}
-          />
-          <Button
-            title='reset'
-            onPress={() => resetData()}
-          />
+        {this.state.saveButtonVisible ? (
+          <View>
+            <Button
+              icon={{ name: 'check' }}
+              title='Save'
+              backgroundColor='#159589'
+              onPress={() => {
+                this.setState({
+                  saved: true,
+                  prev_templateTitle: this.state.templateTitle,
+                  prev_instanceName: this.state.instanceName,
+                  changeValue_instanceName: false,
+                  changeValue_templateTitle: false
+                })
+                state.navigatePrevent[route.__navigatorRouteID] ? navigatePrevent(route.__navigatorRouteID, false) : null
+                alert('save complete')
+              }}
+            />
+            <View
+              style={{ height: 10 }}
+            />
+            <Button
+              title='Restore'
+              backgroundColor='#86939D'
+              onPress={() => resetData()}
+            />
           </View>
         ) : null }
         <Modal

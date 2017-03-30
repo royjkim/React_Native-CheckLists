@@ -43,11 +43,10 @@ export default class MyTabs extends React.Component {
           title={this.state.selectedTab == 'home' ? 'Home' : null}
           renderIcon={() => <Icon
             name='home'
-            />}
-          // onPress={() => this.setState({ selectedTab: 'home' }) }
+            />
+          }
           onPress={() => tabCountFn('home') }
           >
-          {/* <HomeContainer state={state} actions={actions} /> */}
           <NavBar
             initialRoute={{
               passProps: {
@@ -74,11 +73,7 @@ export default class MyTabs extends React.Component {
             name='list'
           />}
           onPress={() => tabCountFn('templateList')}
-          // Below is for double click makes navigator.popToTop().
-          // But this 'myTabs.js' is not a child of 'Navigator' page.
-          // onPress={() => (this.state.selectedTab == 'templateList' ? navigator.popToTop() : this.setState({ selectedTab: 'templateList' }))}
           >
-          {/* <TemplateListsContainer state={state} actions={actions} /> */}
           <NavBar
             initialRoute={{
               passProps: {
@@ -132,7 +127,6 @@ export default class MyTabs extends React.Component {
             onPress={() => tabCountFn('settings')}
           />}
           >
-          {/* <SettingsContainer state={state} actions={actions} /> */}
           <NavBar
             initialRoute={{
               passProps: {

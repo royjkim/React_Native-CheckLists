@@ -23,17 +23,17 @@ export default class NavBar extends React.Component {
       }
     }
     const LeftButton = (route, navigator, index, navState) => {
-      // console.log(`navBarContainer - LeftButton - navState : ${JSON.stringify(navState, null, 2)}`)
+      // console.log(`navBarContainer - LeftButton - navState : `, navState)
       // console.log(`navBarContainer - LeftButton - route : ${JSON.stringify(route, null, 2)}`)
+      // console.log(`navBarContainer - LeftButton - route : `, route)
       if(route.passProps.leftButton.title !== '') {
-        console.log(`navBarComponent - state.navigatePrevent : `, state.navigatePrevent)
         return <Icon
           name='chevron-left'
           size={30}
           containerStyle={{ marginTop: 7, marginLeft: 8 }}
           onPress={() => {
-            console.log(`NavigationBar - state.navigatePrevent[route.title] : `, state.navigatePrevent[route.title])
-            state.navigatePrevent[route.title] && !state.triedNavigateWhenPrevented[route.title] ? triedNavigateWhenPrevented(route.title, true) : navigator.pop()
+            const __navigatorRouteID = navState.routeStack[navState.presentedIndex].__navigatorRouteID
+            state.navigatePrevent[navState.routeStack[navState.presentedIndex].__navigatorRouteID] && !state.triedNavigateWhenPrevented[route.title] ? triedNavigateWhenPrevented(navState.routeStack[navState.presentedIndex].__navigatorRouteID, true) : navigator.pop()
           }}
         />
       } else {

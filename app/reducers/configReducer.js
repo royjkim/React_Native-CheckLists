@@ -21,34 +21,24 @@ const navigatePrevent = (state, action) => {
   let tempResult = {
     ...state,
     navigatePrevent: {
-     [action.routeTitle]: action.status
+      ...state.navigatePrevent,
+      [action.__navigatorRouteID]: action.status
     }
   }
-  if(!action.status) {
-    delete tempResult.navigatePrevent[action.routeTitle]
-  }
-  console.log(`configReducer - tempResult : `, tempResult)
+  !action.status ? delete tempResult.navigatePrevent[action.__navigatorRouteID] : null
   return tempResult
-  // return {
-  //   ...state,
-  //   navigatePrevent: {
-  //     [action.routeTitle]: action.status
-  //   }
-  // }
 }
 
 const triedNavigateWhenPrevented = (state, action) => {
-  if(!action.status) {
-    return {
-      ...state,
-      triedNavigateWhenPrevented: ''
-    }
-  } else {
-    return {
-      ...state,
-      triedNavigateWhenPrevented: action.routeTitle
+  let tempResult = {
+    ...state,
+    triedNavigateWhenPrevented: {
+      ...state.triedNavigateWhenPrevented,
+      [action.__navigatorRouteID]: action.status
     }
   }
+  !action.status ? delete tempResult.triedNavigateWhenPrevented[action.__navigatorRouteID] : null
+  return tempResult
 }
 
 

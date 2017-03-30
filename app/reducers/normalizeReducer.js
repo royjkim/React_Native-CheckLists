@@ -23,7 +23,7 @@ const initialState = {
     navigatePopToTopRequest_itemList: false,
     navigatePopToTopRequest_settings: false,
     navigatePrevent: {},
-    triedNavigateWhenPrevented: ''
+    triedNavigateWhenPrevented: {}
   },
   lastId: {
     instances: 0,
