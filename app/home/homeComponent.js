@@ -19,9 +19,12 @@ import InstanceListsAllContainer from '../instanceListsAll/instanceListsAllConta
 
 export default class HomeComponent extends React.Component {
   shouldComponentUpdate(nextProps) {
-    let tempResult = true
-    nextProps.state.navigatePopToTopRequest.home ? (this.props.navigatePopToTopRequest('home', false), tempResult = false, this.props.navigator.popToTop()) : null
-    return tempResult
+    if(nextProps.state.navigatePopToTopRequest_home) {
+      this.props.navigateTabCountReset('home')
+      this.props.navigator.popToTop()
+      return false
+    }
+    return true
   }
   render() {
     const { route, navigator, state, searchBarTextInstanceList } = this.props

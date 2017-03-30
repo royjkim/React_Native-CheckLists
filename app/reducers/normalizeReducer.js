@@ -18,12 +18,10 @@ const initialState = {
   },
   configValue: {
     picker: 'all',
-    navigatePopToTopRequest: {
-      home: false,
-      templateList: false,
-      itemList: false,
-      settings: false
-    },
+    navigatePopToTopRequest_home: false,
+    navigatePopToTopRequest_templateList: false,
+    navigatePopToTopRequest_itemList: false,
+    navigatePopToTopRequest_settings: false,
     navigatePrevent: {},
     triedNavigateWhenPrevented: {}
   },

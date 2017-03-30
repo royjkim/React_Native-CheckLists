@@ -20,9 +20,12 @@ import MySideMenu from '../components/mySideMenu'
 export default class TemplateListsComponent extends React.Component {
 
   shouldComponentUpdate(nextProps) {
-    let tempResult = true
-    nextProps.state.navigatePopToTopRequest.templateList ? (this.props.navigatePopToTopRequest('templateList', false), tempResult = false, this.props.navigator.popToTop()) : null
-    return tempResult
+    if(nextProps.state.navigatePopToTopRequest_templateList) {
+      this.props.navigateTabCountReset('templateList')
+      this.props.navigator.popToTop()
+      return false
+    }
+    return true
   }
   render() {
     const { route, navigator, state, searchBarTextTemplateList } = this.props

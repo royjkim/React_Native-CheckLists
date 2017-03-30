@@ -1,15 +1,8 @@
 import React from 'react'
 import MyTabs from '../components/myTabs'
 import { connect } from 'react-redux'
-import { navigatePopToTopRequest,triedNavigateWhenPrevented } from '../actions/dataActionCreators'
+import { navigatePopToTopRequest } from '../actions/dataActionCreators'
 
-export default connect((state, ownProps) => ({
-  state: {
-    navigatePopToTopRequest: state.normalizeReducer.configValue.navigatePopToTopRequest,
-    navigatePrevent: state.normalizeReducer.configValue.navigatePrevent,
-    triedNavigateWhenPrevented: state.normalizeReducer.configValue.triedNavigateWhenPrevented
-  }
-}), dispatch => ({
-  navigatePopToTopRequest: (targetTab, statusBoolean) => dispatch(navigatePopToTopRequest(targetTab, statusBoolean)),
-  triedNavigateWhenPrevented: (__navigatorRouteID, statusBoolean) => dispatch(triedNavigateWhenPrevented(__navigatorRouteID, statusBoolean))
+export default connect(null, dispatch => ({
+  navigatePopToTopRequest: targetTab => dispatch(navigatePopToTopRequest(targetTab))
 }))(MyTabs)

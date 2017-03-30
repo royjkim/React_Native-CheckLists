@@ -83,6 +83,20 @@ export function addTemplateCategory(lastId, newData) {
   }
 }
 
+// export function addOriginalTemplate(newData) {
+//   return {
+//     type: types.ORIGINAL_DATA_ADD_TEMPLATE,
+//     newData
+//   }
+// }
+
+// export function addOriginalInstance(newData) {
+//   return {
+//     type: types.ORIGINAL_DATA_ADD_INSTANCE,
+//     newData
+//   }
+// }
+
 export function normalizedDataInput(data) {
   return {
     type: types.INITIATE_NORMALIZED_DATA_INPUT,
@@ -140,13 +154,27 @@ export function chooseCategory(chosenCategory) {
   }
 }
 
-export function navigatePopToTopRequest(targetTab, statusBoolean) {
+export function navigatePopToTopRequest(targetTab) {
   return {
     type: types.NAVIGATE_POP_TO_TOP_REQUEST,
-    targetTab,
-    status: statusBoolean
+    targetTab
   }
 }
+
+export function navigateTabCountPlus(targetTab) {
+  return {
+    type: types.NAVIGATE_TAB_COUNT_PLUS,
+    targetTab
+  }
+}
+
+export function navigateTabCountReset(targetTab) {
+  return {
+    type: types.NAVIGATE_TAB_COUNT_RESET,
+    targetTab
+  }
+}
+
 
 export function findLastId(result) {
   return {

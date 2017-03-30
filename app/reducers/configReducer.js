@@ -7,11 +7,15 @@ const chooseCategory = (state, action) => ({
 
 const navigatePopToTopRequest = (state, action) => ({
   ...state,
-  navigatePopToTopRequest: {
-    ...state.navigatePopToTopRequest,
-    [action.targetTab]: action.status
-  }
+  [`navigatePopToTopRequest_${action.targetTab}`]: true
 })
+
+const navigateTabCountReset = (state, action) => {
+  return {
+    ...state,
+    [`navigatePopToTopRequest_${action.targetTab}`]: false
+  }
+}
 
 const navigatePrevent = (state, action) => {
   let tempResult = {
@@ -42,6 +46,7 @@ export default function configReducer(state, action) {
   const reducerMap = {
     [types.CHOOSE_CATEGORY]: chooseCategory,
     [types.NAVIGATE_POP_TO_TOP_REQUEST]: navigatePopToTopRequest,
+    [types.NAVIGATE_TAB_COUNT_RESET]: navigateTabCountReset,
     [types.NAVIGATE_PREVENT]: navigatePrevent,
     [types.TRIED_NAVIGATE_WHEN_PREVENTED]: triedNavigateWhenPrevented
   }
