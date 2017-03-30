@@ -12,10 +12,8 @@ import {
   FormLabel,
   SearchBar,
 } from 'react-native-elements'
-import { isEqual } from 'lodash'
 
 import InstanceListContainer from './instanceList/instanceListContainer'
-import MySideMenu from '../components/mySideMenu'
 
 export default class TemplateListsComponent extends React.Component {
 
@@ -47,6 +45,7 @@ export default class TemplateListsComponent extends React.Component {
                   title: '',
                   component: ''
                 },
+                parentTab: route.passProps.parentTab,
                 chosenTemplate: rowData
               },
               title: `${rowData.title}`,

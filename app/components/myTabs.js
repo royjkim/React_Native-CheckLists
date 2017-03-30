@@ -31,7 +31,18 @@ export default class MyTabs extends React.Component {
   render() {
     const { state, navigatePopToTopRequest, navigatePrevent, triedNavigateWhenPrevented } = this.props
     const tabCountFn = attr => {
-      this.prevTab == attr ? state.navigatePopToTopRequest.home ? null : navigatePopToTopRequest(attr, true) : this.setState({ selectedTab: attr })
+      // this.prevTab == attr ? state.navigatePopToTopRequest.home ? null : navigatePopToTopRequest(attr, true) : this.setState({ selectedTab: attr })
+
+      // Below is for check current Tab is same with previous Tab or not.
+      // If an user tried to navigate even though there was data changes, let redux know 'An user had tried to navigate.'.
+      this.prevTab == attr ?
+        state.navigatePrevent[attr] ?
+          state.triedNavigateWhenPrevented[attr] ?
+            null : triedNavigateWhenPrevented(attr, true)
+              : state.navigatePopToTopRequest.home ?
+                null : navigatePopToTopRequest(attr, true)
+                  : this.setState({ selectedTab: attr })
+
       this.prevTab = attr
     }
     return(
@@ -57,7 +68,8 @@ export default class MyTabs extends React.Component {
                 rightButton: {
                   title: '',
                   component: ''
-                }
+                },
+                parentTab: 'home'
               },
               title: 'Home',
               sideMenuVisible: false,
@@ -84,7 +96,8 @@ export default class MyTabs extends React.Component {
                 rightButton: {
                   title: 'Add',
                   component: TemplateAddContainer
-                }
+                },
+                parentTab: 'templateList'
               },
               title: 'Template List',
               sideMenuVisible: false,
@@ -111,7 +124,8 @@ export default class MyTabs extends React.Component {
                 rightButton: {
                   title: '',
                   component: ''
-                }
+                },
+                parentTab: 'itemList'
               },
               title: 'Item List',
               component: ItemListsAllContainer
@@ -130,8 +144,15 @@ export default class MyTabs extends React.Component {
           <NavBar
             initialRoute={{
               passProps: {
-                leftButton: { title: '', component: '' },
-                rightButton: { title: '', component: '' }
+                leftButton: {
+                  title: '',
+                  component: ''
+                },
+                rightButton: {
+                  title: '',
+                  component: ''
+                },
+                parentTab: 'settings'
               },
               title: 'Setting',
               sideMenuVisible: false,

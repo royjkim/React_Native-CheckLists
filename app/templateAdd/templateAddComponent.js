@@ -83,6 +83,7 @@ export default class TemplateAddComponent extends React.Component {
               title: '',
               component: ''
             },
+            parentTab: route.passProps.parentTab,
             chosenTemplate: rowData
           },
           title: `Copy from ${rowData.title}`,
@@ -136,7 +137,8 @@ export default class TemplateAddComponent extends React.Component {
                 rightButton: {
                   title: '',
                   component: ''
-                }
+                },
+                parentTab: route.passProps.parentTab
               },
               title: 'Make New Template',
               component: TemplateAddNewContainer,

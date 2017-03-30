@@ -49,6 +49,7 @@ export default class ItemsListsAllComponent extends React.Component {
                     title: '',
                     component: ''
                   },
+                  parentTab: route.passProps.parentTab,
                   chosenTemplate: state.templates[sectionId]
                 },
                 title: `${state.templates[sectionId].title}`,

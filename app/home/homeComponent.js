@@ -20,7 +20,9 @@ import InstanceListsAllContainer from '../instanceListsAll/instanceListsAllConta
 export default class HomeComponent extends React.Component {
   shouldComponentUpdate(nextProps) {
     let tempResult = true
-    nextProps.state.navigatePopToTopRequest.home ? (this.props.navigatePopToTopRequest('home', false), tempResult = false, this.props.navigator.popToTop()) : null
+    // Below is for let this presentational component knows need to be navigate.popToTop().
+    nextProps.state.navigatePopToTopRequest.home ?
+      (this.props.navigatePopToTopRequest('home', false), tempResult = false, this.props.navigator.popToTop()) : null
     return tempResult
   }
   render() {
@@ -47,6 +49,7 @@ export default class HomeComponent extends React.Component {
                 title: '',
                 component: ''
               },
+              parentTab: route.passProps.parentTab,
               chosenInstance: rowData
             },
             title: `${rowData.name}`,
@@ -88,32 +91,13 @@ export default class HomeComponent extends React.Component {
                   title: '',
                   component: '',
                 },
+                parentTab: route.passProps.parentTab
               },
               title: 'Instance List with all items',
               component: InstanceListsAllContainer,
             })
           }}
         />
-        {/* <Button
-          icon={{ name: 'note-add' }}
-          title='Add Template'
-          onPress={() => {
-            navigator.push({
-              passProps: {
-                leftButton: {
-                  title: 'Back',
-                  component: '',
-                },
-                rightButton: {
-                  title: '',
-                  component: '',
-                },
-              },
-              title: 'Template Add',
-              component: TemplateAdd,
-            })
-          }}
-        /> */}
       </View>
     )
   }

@@ -54,6 +54,7 @@ export default class InstanceListsAllComponent extends React.Component {
                   title: '',
                   component: ''
                 },
+                parentTab: route.passProps.parentTab,
                 chosenInstance: state.instances[sectionId]
               },
               title: `${state.instances[sectionId].name}`,
@@ -114,6 +115,7 @@ export default class InstanceListsAllComponent extends React.Component {
                   title: '',
                   component: '',
                 },
+                parentTab: route.passProps.parentTab
               },
               title: 'Template Add',
               component: TemplateAdd,

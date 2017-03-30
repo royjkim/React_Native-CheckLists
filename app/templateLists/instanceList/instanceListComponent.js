@@ -39,6 +39,7 @@ export default class InstanceListComponent extends React.Component {
               title: '',
               component: ''
             },
+            parentTab: route.passProps.parentTab,
             chosenInstance: rowData
           },
           title: `${rowData.name}`,
@@ -63,7 +64,7 @@ export default class InstanceListComponent extends React.Component {
           {/* Template : {route.passProps.chosenTemplate.title}, Items({route.passProps.chosenTemplate.items.length}) */}
           Template : {route.passProps.chosenTemplate.title}
         </FormLabel>
-        <FormLabel>  
+        <FormLabel>
           Category : {route.passProps.chosenTemplate.category}, Items({state.itemsLengthOfChosenTemplate})
         </FormLabel>
         <List>

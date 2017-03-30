@@ -74,7 +74,8 @@ export default class NavBar extends React.Component {
                   rightButton: {
                     title: '',
                     component: ''
-                  }
+                  },
+                  parentTab: route.passProps.parentTab
                 },
                 title: 'Template Add',
                 component: TemplateAddContainer,

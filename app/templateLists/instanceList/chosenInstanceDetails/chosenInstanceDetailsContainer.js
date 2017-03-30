@@ -21,7 +21,7 @@ const mapDispatchToProps = dispatch => ({
   modifyItemsCustomized: targetData => dispatch(modifyItemsCustomized(targetData)),
   chooseCategory: category => dispatch(chooseCategory(category)),
   navigatePrevent: (routeTitle, statusBoolean) => dispatch(navigatePrevent(routeTitle, statusBoolean)),
-  triedNavigateWhenPrevented: (routeTitle, statusBoolean) => dispatch(triedNavigateWhenPrevented(routeTitle, statusBoolean))
+  triedNavigateWhenPrevented: (__navigatorRouteID, statusBoolean) => dispatch(triedNavigateWhenPrevented(__navigatorRouteID, statusBoolean))
 })
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => ({

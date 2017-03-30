@@ -37,10 +37,46 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
 
   componentDidUpdate() {
     const __navigatorRouteID = this.props.route.__navigatorRouteID
-    !this.state.saveButtonVisible ? this.state.changeValue_instanceName || this.state.changeValue_templateTitle ? this.setState({ saveButtonVisible: true }) : null : null
-    this.state.changeValue_instanceName || this.state.changeValue_templateTitle ? this.props.state.navigatePrevent[__navigatorRouteID] ? null : this.props.navigatePrevent(__navigatorRouteID, true) : this.state.saveButtonVisible ? this.setState({ saveButtonVisible: false }) : null
-    !this.state.changeValue_instanceName && !this.state.changeValue_templateTitle && this.props.state.navigatePrevent[__navigatorRouteID] ? this.props.navigatePrevent(__navigatorRouteID, false) : null
-    this.props.state.triedNavigateWhenPrevented[__navigatorRouteID] ? this.state.changeValue_instanceName ? (alert('press save button to save changed instance name.'), this.props.triedNavigateWhenPrevented(__navigatorRouteID, false)): this.state.changeValue_templateTitle ? (alert('press save button to save changed template name.'), this.props.triedNavigateWhenPrevented(__navigatorRouteID, false)): null : null
+    !this.state.saveButtonVisible ?
+      this.state.changeValue_instanceName || this.state.changeValue_templateTitle ?
+        this.setState({ saveButtonVisible: true }) : null
+          : null
+
+    // Below is for changeValue of 'instanceName or templateTitle', make redux navigate prevent & hide save button.
+    this.state.changeValue_instanceName || this.state.changeValue_templateTitle ?
+      this.props.state.navigatePrevent[__navigatorRouteID] ?
+        this.props.state.navigatePrevent[this.props.route.passProps.parentTab] ?
+          null : this.props.navigatePrevent(this.props.route.passProps.parentTab, true)
+          : this.props.state.navigatePrevent[this.props.route.passProps.parentTab] ?
+              this.props.navigatePrevent(__navigatorRouteID, true) : (this.props.navigatePrevent(__navigatorRouteID, true) , this.props.navigatePrevent(this.props.route.passProps.parentTab, true))
+                : this.state.saveButtonVisible ?
+                  this.setState({ saveButtonVisible: false }) : null
+
+    // Below is for restored the valus of 'instanceName or templateTitle', make redux navigate able.
+    !this.state.changeValue_instanceName && !this.state.changeValue_templateTitle ?
+      this.props.state.navigatePrevent[__navigatorRouteID] ?
+        this.props.state.navigatePrevent[this.props.route.passProps.parentTab] ?
+          (this.props.navigatePrevent(__navigatorRouteID, false), this.props.navigatePrevent(this.props.route.passProps.parentTab), false)
+          : this.props.navigatePrevent(__navigatorRouteID, false)
+            : null
+              : null
+
+    // Below is for alert let an user know 'save before navigate', then make redux 'alert completed'.
+    this.props.state.triedNavigateWhenPrevented[this.props.route.passProps.parentTab] || this.props.state.triedNavigateWhenPrevented[__navigatorRouteID] ?
+      this.props.state.triedNavigateWhenPrevented[__navigatorRouteID] ?
+        this.state.changeValue_instanceName ?
+          (alert('press save button to save changed instance name.'), this.props.triedNavigateWhenPrevented(__navigatorRouteID, false))
+            : this.state.changeValue_templateTitle ?
+              (alert('press save button to save changed template name.'), this.props.triedNavigateWhenPrevented(__navigatorRouteID, false))
+                : null
+                  : this.props.state.triedNavigateWhenPrevented[this.props.route.passProps.parentTab] ?
+                      this.state.changeValue_instanceName ?
+                        (alert('press save button to save changed instance name.'), this.props.triedNavigateWhenPrevented(this.props.route.passProps.parentTab, false))
+                        : this.state.changeValue_templateTitle ?
+                          (alert('press save button to save changed template name.'), this.props.triedNavigateWhenPrevented(this.props.route.passProps.parentTab, false))
+                            : null
+                              : null
+                                : null
   }
   render() {
     const {
@@ -94,6 +130,7 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
     //   }
     // }
 
+    // Below is for change the 'this state of instanceName and templateTitle & changeValue_instanceName and changeValue_templateTitle'.
     const changeCommon = (newValue, attr) => {
       return prevState => {
         let tempResult = {}
@@ -232,6 +269,7 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
                   changeValue_templateTitle: false
                 })
                 state.navigatePrevent[route.__navigatorRouteID] ? navigatePrevent(route.__navigatorRouteID, false) : null
+                state.navigatePrevent[route.passProps.parentTab] ? navigatePrevent(route.passProps.parentTab, false) : null
                 alert('save complete')
               }}
             />
