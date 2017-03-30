@@ -29,9 +29,9 @@ export default class MyTabs extends React.Component {
   }
 
   render() {
-    const { navigatePopToTopRequest } = this.props
+    const { state, navigatePopToTopRequest, navigatePrevent, triedNavigateWhenPrevented } = this.props
     const tabCountFn = attr => {
-      this.prevTab == attr ? navigatePopToTopRequest(attr) : this.setState({ selectedTab: attr })
+      this.prevTab == attr ? state.navigatePopToTopRequest.home ? null : navigatePopToTopRequest(attr, true) : this.setState({ selectedTab: attr })
       this.prevTab = attr
     }
     return(

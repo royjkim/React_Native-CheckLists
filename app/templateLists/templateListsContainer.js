@@ -1,7 +1,7 @@
 import TemplateListsComponent from './templateListsComponent'
 import { connect } from 'react-redux'
 import mySelectors from '../container/selectors'
-import { searchBarTextTemplateList, navigateTabCountReset } from '../actions/dataActionCreators'
+import { searchBarTextTemplateList, navigatePopToTopRequest } from '../actions/dataActionCreators'
 
 const make_mapStateToProps = () => (state, ownProps) => ({
   state: {
@@ -9,7 +9,7 @@ const make_mapStateToProps = () => (state, ownProps) => ({
     templatesLength: state.normalizeReducer.result.templates.length,
     dataSourceTemplates: mySelectors.make_get_dataSourceTemplates()(state.normalizeReducer),
     badgeValueOfInstancesOfChosenTemplates: mySelectors.make_get_badgeValueOfInstancesOfChosenTemplates()(state.normalizeReducer),
-    navigatePopToTopRequest_templateList: state.normalizeReducer.configValue.navigatePopToTopRequest_templateList
+    navigatePopToTopRequest: state.normalizeReducer.configValue.navigatePopToTopRequest
   },
   route: ownProps.routes,
   navigator: ownProps.navigator
@@ -17,7 +17,7 @@ const make_mapStateToProps = () => (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => ({
   searchBarTextTemplateList: searchBarText => dispatch(searchBarTextTemplateList(searchBarText)),
-  navigateTabCountReset: targetTab => dispatch(navigateTabCountReset(targetTab))
+  navigatePopToTopRequest: (targetTab, statusBoolean) => dispatch(navigatePopToTopRequest(targetTab, statusBoolean))
 })
 
 export default connect(make_mapStateToProps, mapDispatchToProps)(TemplateListsComponent)

@@ -23,12 +23,9 @@ import ChosenInstanceDetailsContainer from '../templateLists/instanceList/chosen
 export default class ItemsListsAllComponent extends React.Component {
 
   shouldComponentUpdate(nextProps) {
-    if(nextProps.state.navigatePopToTopRequest_itemList) {
-      this.props.navigateTabCountReset('itemList')
-      this.props.navigator.popToTop()
-      return false
-    }
-    return true
+    let tempResult = true
+    nextProps.state.navigatePopToTopRequest.itemList ? (this.props.navigatePopToTopRequest('itemList', false), tempResult = false, this.props.navigator.popToTop()) : null
+    return tempResult
   }
   render() {
     const { route, navigator, state, searchBarTextItemList } = this.props
