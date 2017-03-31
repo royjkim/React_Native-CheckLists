@@ -5,6 +5,8 @@ import {
   ListView,
   TextInput,
   Alert,
+  TouchableOpacity,
+  Modal,
 } from 'react-native'
 import styles from '../../components/styles'
 import {
@@ -13,6 +15,7 @@ import {
   ListItem,
   FormLabel,
   SearchBar,
+  Icon,
 } from 'react-native-elements'
 import { isEqual } from 'lodash'
 
@@ -28,8 +31,24 @@ export default class InstanceListComponent extends React.Component {
       },
       tempItemDesc: {},
       hasEmptyOnItemDesc: false,
-      changeValue: false
+      changeValue: false,
+      addItemModalVisible: false,
+      newItemTempDesc: '',
+      newItemTemp: {
+        desc: '',
+        itemId: this.props.state.lastId.items,
+        orderNum: this.props.state.items[this.props.state.chosenTemplate.items.sort((data1, data2) => data1 - data2).slice(-1)[0]].orderNum,
+        template: this.props.state.chosenTemplate.title,
+        templateId: this.props.state.chosenTemplate.templateId
+        // itemId: parseInt(this.props.state.lastId.items),
+        // orderNum: parseInt(this.props.state.items[this.props.state.chosenTemplate.items.sort((data1, data2) => data1 - data2).slice(-1)[0]].orderNum),
+        // template: String(this.props.state.chosenTemplate.title),
+        // templateId: parseInt(this.props.state.chosenTemplate.templateId)
+      },
+      newItems: this.props.state.itemsOfChosenTemplate || [],
+      dataSource_newItemAdded: this.props.state.dataSourceOfItemsOfChosenTemplate || []
     }
+    this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
     this.initialStateDataFn = () => {
       let tempData = {}
       this.props.state.itemsOfChosenTemplate.map(value => tempData[value.itemId] = value.desc)
@@ -42,12 +61,18 @@ export default class InstanceListComponent extends React.Component {
 
   componentWillMount() {
     this.initialStateDataFn()
-    // let tempData = {}
-    // this.props.state.itemsOfChosenTemplate.map(value => tempData[value.itemId] = value.desc)
-    // this.setState(state => ({
-    //   tempItemDesc: tempData,
-    //   prevItemDesc: tempData
-    // }))
+    console.log(`this.state : `, this.state)
+    // console.log('itemsOfChosenTemplate : ', this.props.state.itemsOfChosenTemplate)
+    // orderNum: this.props.state.items[this.props.state.chosenTemplate.items.sort((data1, data2) => data1.orderNum - data2.orderNum).slice(-1)[0]].orderNum,
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    console.log(`componentWillUpdate - nextState : `, nextState)
+    // console.log('nextState.newItems : ', nextState.newItems)
+    // console.log('this.state.newItems : ', this.state.newItems)
+    isEqual(nextState.newItems, this.state.newItems) || this.setState({
+      dataSource_newItemAdded: this.ds.cloneWithRows(nextState.newItems)
+    })
   }
 
   componentDidUpdate() {
@@ -87,7 +112,20 @@ export default class InstanceListComponent extends React.Component {
         },
         tempItemDesc: {},
         hasEmptyOnItemDesc: false,
-        changeValue: false
+        changeValue: false,
+        addItemModalVisible: false,
+        newItemTempDesc: '',
+        newItemTemp: {
+          desc: '',
+          // itemId: parseInt(this.props.state.lastId.items),
+          // orderNum: parseInt(this.props.state.items[this.props.state.chosenTemplate.items.sort((data1, data2) => data2.orderNum - data1.orderNum).slice(-1)[0]].orderNum),
+          // template: String(this.props.state.chosenTemplate.title),
+          // templateId: parseInt(this.props.state.chosenTemplate.templateId)
+          itemId: this.props.state.lastId.items,
+          orderNum: this.props.state.items[this.props.state.chosenTemplate.items.sort((data1, data2) => data2.orderNum - data1.orderNum).slice(-1)[0]].orderNum,
+          template: this.props.state.chosenTemplate.title,
+          templateId: this.props.state.chosenTemplate.templateId
+        },
       }))
       this.initialStateDataFn()
     };
@@ -100,7 +138,7 @@ export default class InstanceListComponent extends React.Component {
           { text: 'Save', onPress: () => {
             let tempResult = this.state.tempItemDesc
             for(let key in tempResult) {
-              tempResult[key].desc == '' ? delete tempResult[key] : null
+              tempResult[key].desc == '' && delete tempResult[key]
             }
             saveProcessFn(tempResult);
           }}
@@ -113,8 +151,8 @@ export default class InstanceListComponent extends React.Component {
         prevItemDesc: newItemDesc ? newItemDesc : prevState.tempItemDesc,
         hasEmptyOnItemDesc: false
       })),
-      state.navigatePrevent[route.__navigatorRouteID] ? navigatePreventFn(route.__navigatorRouteID, false) : null;
-      state.navigatePrevent[route.passProps.parentTab] ? navigatePreventFn(route.passProps.parentTab, false) : null;
+      state.navigatePrevent[route.__navigatorRouteID] && navigatePreventFn(route.__navigatorRouteID, false);
+      state.navigatePrevent[route.passProps.parentTab] && navigatePreventFn(route.passProps.parentTab, false);
       alert('save complete');
       this.props.navigator.pop()
     }
@@ -175,7 +213,7 @@ export default class InstanceListComponent extends React.Component {
           }}
           >
               <TextInput
-                value={this.state.tempItemDesc[rowData.itemId]}
+                // value={this.state.tempItemDesc[rowData.itemId]}
                 onChangeText={itemText => this.setState(changeItemText(itemText, rowData.itemId, itemText == ''))}
                 placeholder={this.state.prevItemDesc[rowData.itemId]}
                 placeholderTextColor='#86939D'
@@ -224,14 +262,46 @@ export default class InstanceListComponent extends React.Component {
             )}
         <List>
           <ListView
-            dataSource={state.dataSourceOfItemsOfChosenTemplate}
+            dataSource={this.state.dataSource_newItemAdded}
             enableEmptySections={true}
             renderRow={renderRowItems}
+            style={{ maxHeight: 200 }}
           />
         </List>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            marginRight: 5
+          }}
+          >
+            <TouchableOpacity
+              style={{
+                flexDirection: 'row',
+              }}
+              onPress={() => this.setState({ addItemModalVisible: true })}
+              >
+              <Icon
+                name='add-circle-outline'
+                size={17}
+                color='#9E9E9E'
+              />
+              <Text
+                style={{
+                  color: '#9E9E9E',
+                  fontSize: 15
+                }}
+                >
+                add
+              </Text>
+            </TouchableOpacity>
+        </View>
         {this.state.changeValue
           ? (
             <View>
+              <View
+                style={{ height: 10 }}
+              />
               <Button
                 icon={{ name: 'check' }}
                 title='Save'
@@ -286,6 +356,123 @@ export default class InstanceListComponent extends React.Component {
             />
           </List>
         </View>
+        <Modal
+          animationType={'slide'}
+          transparent={true}
+          visible={this.state.addItemModalVisible}
+          >
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: 'transparent',
+              justifyContent: 'center',
+            }}
+            >
+            <View
+              style={{
+                flex: 1
+              }}
+              >
+              <TouchableOpacity
+                style={{
+                  flex: 1,
+                }}
+                onPress={() => this.setState({ addItemModalVisible: false })}
+              />
+            </View>
+            <View
+              style={{
+                flex: 0,
+                height: 110,
+                backgroundColor: 'white',
+                // paddingBottom: 20,
+                borderTopWidth: 1,
+                borderColor: '#86939D',
+                // paddingBottom: 20,
+                // paddingVertical: 20,
+                borderWidth: 1,
+                // borderColor: '#9E9E9E',
+              }}
+              >
+                <FormLabel>
+                  New Item
+                </FormLabel>
+                <View
+                  style={{ flexDirection: 'row'}}
+                  >
+                  <View
+                    style={{
+                      flex: 1,
+                      borderColor: '#86939D',
+                      borderBottomWidth: 1,
+                      marginLeft: 15,
+                      // marginBottom: 10,
+                      // marginTop: 10,
+                    }}
+                  >
+                    <TextInput
+                      value={this.state.newItemTempDesc}
+                      onChangeText={newItemTempDesc => this.setState({ newItemTempDesc })}
+                      style={{
+                        flex: 1,
+                        // height: 45,
+                        // borderWidth: 1,
+                        textAlign: 'center',
+                      }}
+                    />
+                  </View>
+                  <Button
+                    title='Add'
+                    onPress={() => {
+                      this.setState(prevState => {
+                        // let tempResult = {
+                        //   newItemTemp: {
+                        //     desc: prevState.newItemTempDesc,
+                        //     itemId: prevState.itemId + 1,
+                        //     orderNum: prevState.orderNum + 1,
+                        //     template: prevState.template,
+                        //     templateId: prevState.templateId,
+                        //   },
+                        //   newItems: prevState.newItems
+                        // }
+                        console.log(`prevState : `, prevState)
+                        console.log('this.state : ', this.state)
+                        let tempResult = {
+                          // newItems: this.state.newItems.concat({
+                          //   desc: this.state.newItemTempDesc,
+                          //   itemId: this.state.itemId + 1,
+                          //   orderNum: this.state.orderNum + 1,
+                          //   template: this.state.template,
+                          //   templateId: this.state.templateId,
+                          // }),
+                          newItems: [
+                            ...this.state.newItems,
+                            {
+                              desc: this.state.newItemTempDesc,
+                              itemId: this.state.newItemTemp.itemId + 1,
+                              orderNum: this.state.newItemTemp.orderNum + 1,
+                              template: this.state.newItemTemp.template,
+                              templateId: this.state.newItemTemp.templateId,
+                            }
+                          ],
+                          newItemTemp: {
+                            desc: '',
+                            itemId: this.state.newItemTemp.itemId + 1,
+                            orderNum: this.state.newItemTemp.orderNum + 1,
+                            template: this.state.newItemTemp.template,
+                            templateId: this.state.newItemTemp.templateId,
+                          },
+                          newItemTempDesc: ''
+                        }
+                        console.log('tempResult : ', tempResult)
+                        return tempResult
+                      })
+                      alert('add completed')}}
+                  />
+                </View>
+            </View>
+          </View>
+        </Modal>
       </View>
     )
   }

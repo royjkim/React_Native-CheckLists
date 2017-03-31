@@ -32,7 +32,7 @@ export default function initializeStore() {
       category: 'Hobby',
       items: [
         { itemId: 3, desc: 'Get on the boat', template: 'GoingFishing', orderNum: 1 },
-        { itemId: 5, desc: 'Open Door', template: 'BeforeGoOutHome', orderNum: 8 }
+        { itemId: 6, desc: 'Open Door', template: 'GoingFishing', orderNum: 8 }
       ]
     },
     {
@@ -40,8 +40,9 @@ export default function initializeStore() {
       title: 'BeforeGoOutHome',
       category: 'NormalDay',
       items: [
-        { itemId: 2, desc: 'Watching TV', template: 'StayHome', orderNum: 1  },
-        { itemId: 4, desc: 'Close Door', template: 'BeforeGoOutHome', orderNum: 10 }
+        { itemId: 4, desc: 'Close Door', template: 'BeforeGoOutHome', orderNum: 10 },
+        { itemId: 7, desc: 'Watching TV', template: 'BeforeGoOutHome', orderNum: 3  },
+
       ]
     },
     {
@@ -49,8 +50,8 @@ export default function initializeStore() {
       title: 'StayHome',
       category: 'Relax',
       items: [
-        { itemId: 5, desc: 'Open Door', template: 'BeforeGoOutHome', orderNum: 8 },
-        { itemId: 3, desc: 'Get on the boat', template: 'GoingFishing', orderNum: 1 },
+        { itemId: 8, desc: 'Open Door', template: 'StayHome', orderNum: 8 },
+        { itemId: 9, desc: 'Get on the boat', template: 'StayHome', orderNum: 1 },
       ]
     }
   )
@@ -110,7 +111,12 @@ export default function initializeStore() {
     { itemId: 2, desc: 'Watching TV', templateId: 3, orderNum: 1  },
     { itemId: 3, desc: 'Get on the boat', templateId: 1, orderNum: 1 },
     { itemId: 4, desc: 'Close Door', templateId: 2, orderNum: 10 },
-    { itemId: 5, desc: 'Open Door', templateId: 2, orderNum: 8 }
+    { itemId: 5, desc: 'Open Door', templateId: 2, orderNum: 8 },
+    { itemId: 5, desc: 'Open Door', template: 'BeforeGoOutHome', orderNum: 8 },
+    { itemId: 6, desc: 'Open Door', template: 'GoingFishing', orderNum: 8 },
+    { itemId: 7, desc: 'Watching TV', template: 'BeforeGoOutHome', orderNum: 3  },
+    { itemId: 8, desc: 'Open Door', template: 'StayHome', orderNum: 8 },
+    { itemId: 9, desc: 'Get on the boat', template: 'StayHome', orderNum: 1 },
   )
 
   initialData = normalizeStore.addCategory(initialData,
@@ -152,7 +158,7 @@ export default function initializeStore() {
 
   store.dispatch(normalizedDataInput(initialData))
   const tempResult = store.getState()
-  console.log(`tempResult : `, tempResult)
+  // console.log(`tempResult : `, tempResult)
   store.dispatch(findLastId(tempResult.normalizeReducer.result))
   // console.log(`store.getState() : ${JSON.stringify(store.getState(), null, 1)}`)
   // console.log(`store.getState() : `, store.getState())

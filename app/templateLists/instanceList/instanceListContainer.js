@@ -9,7 +9,10 @@ const make_mapStateToProps = () => (state, ownProps) => ({
     itemsCustomized: state.normalizeReducer.entities.itemsCustomized,
     itemsOfChosenTemplate: mySelectors.make_get_itemsOfChosenTemplate()(state.normalizeReducer, ownProps.route.passProps.chosenTemplate),
     navigatePrevent: state.configReducer.navigatePrevent,
-    triedNavigateWhenPrevented: state.configReducer.triedNavigateWhenPrevented
+    triedNavigateWhenPrevented: state.configReducer.triedNavigateWhenPrevented,
+    lastId: state.normalizeReducer.lastId,
+    chosenTemplate: ownProps.route.passProps.chosenTemplate,
+    items: state.normalizeReducer.entities.items
   },
   route: ownProps.route,
   navigator: ownProps.navigator
