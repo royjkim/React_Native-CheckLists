@@ -16,6 +16,12 @@ import {
 import InstanceListContainer from './instanceList/instanceListContainer'
 
 export default class TemplateListsComponent extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      searchText_templateList: ''
+    }
+  }
 
   shouldComponentUpdate(nextProps) {
     let tempResult = true
@@ -60,12 +66,26 @@ export default class TemplateListsComponent extends React.Component {
         <SearchBar
           lightTheme
           round={true}
-          onChangeText={searchText => searchBarText(searchText.trim(), 'templateList')}
+          onChangeText={searchText => {
+            this.setState(state => ({
+              searchText_templateList: searchText
+            }))
+            searchBarText(searchText.trim(), 'templateList')
+          }}
           placeholder='Search Templates'
         />
-        <FormLabel>
-          Check List Templates : {state.templatesLength}
-        </FormLabel>
+        {this.state.searchText_templateList !== ''
+          ? (
+              <FormLabel>
+                Check List Templates : {state.dataSourceTemplates._cachedRowCount}, searched
+              </FormLabel>
+            )
+          : (
+              <FormLabel>
+                Check List Templates : {state.templatesLength}
+              </FormLabel>
+            )
+        }
         <List>
           <ListView
             dataSource={state.dataSourceTemplates}

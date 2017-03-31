@@ -20,6 +20,12 @@ import {
 import ChosenInstanceDetailsContainer from '../templateLists/instanceList/chosenInstanceDetails/chosenInstanceDetailsContainer'
 
 export default class InstanceListsAllComponent extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      searchText_itemsCustomizedAllInstances: ''
+    }
+  }
 
   render() {
     const { route, navigator, state, modifyItemsCustomized, searchBarText } = this.props
@@ -86,12 +92,26 @@ export default class InstanceListsAllComponent extends React.Component {
         <SearchBar
           lightTheme
           round={true}
-          onChangeText={searchText => searchBarText(searchText.trim(), 'itemsCustomizedAllInstances')}
+          onChangeText={searchText => {
+            this.setState(state => ({
+              searchText_itemsCustomizedAllInstances: searchText
+            }))
+            searchBarText(searchText.trim(), 'itemsCustomizedAllInstances')
+          }}
           placeholder='Search Items'
         />
-        <FormLabel>
-          Total Instances : {state.dataSourceForAllInstances.sectionIdentities.length}
-        </FormLabel>
+        {this.state.searchText_itemsCustomizedAllInstances !== ''
+          ? (
+              <FormLabel>
+                Total Instances : {state.dataSourceForAllInstances.sectionIdentities.length}, searched
+              </FormLabel>
+            )
+          : (
+              <FormLabel>
+                Total Instances : {state.dataSourceForAllInstances.sectionIdentities.length}
+              </FormLabel>
+            )
+        }
         <List>
           <ListView
             dataSource={state.dataSourceForAllInstances}

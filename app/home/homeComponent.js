@@ -18,6 +18,12 @@ import ChosenInstanceDetailsContainer from '../templateLists/instanceList/chosen
 import InstanceListsAllContainer from '../instanceListsAll/instanceListsAllContainer'
 
 export default class HomeComponent extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      searchText_instanceList: ''
+    }
+  }
   shouldComponentUpdate(nextProps) {
     let tempResult = true
     // Below is for let this presentational component knows need to be navigate.popToTop().
@@ -25,6 +31,7 @@ export default class HomeComponent extends React.Component {
       (this.props.navigatePopToTopRequest('home', false), tempResult = false, this.props.navigator.popToTop()) : null
     return tempResult
   }
+
   render() {
     const { route, navigator, state, searchBarText } = this.props
     const renderRow = (rowData, sectionId) => <ListItem
@@ -63,12 +70,26 @@ export default class HomeComponent extends React.Component {
         <SearchBar
           lightTheme
           round={true}
-          onChangeText={searchText => searchBarText(searchText.trim(), 'instanceList')}
+          onChangeText={searchText => {
+            this.setState(state => ({
+              searchText_instanceList: searchText
+            }))
+            searchBarText(searchText.trim(), 'instanceList')
+          }}
           placeholder='Search Instances'
         />
-        <FormLabel>
-          Total Instances : {state.templateLength}
-        </FormLabel>
+        {this.state.searchText_instanceList !== ''
+          ? (
+              <FormLabel>
+                Total Instances : {state.templateLength}, searched
+              </FormLabel>
+            )
+          : (
+              <FormLabel>
+                Total Instances : {state.templateLength}
+              </FormLabel>
+          )
+        }
         <List>
           <ListView
             dataSource={state.dataSourceForAllInstances}
@@ -93,7 +114,7 @@ export default class HomeComponent extends React.Component {
                 },
                 parentTab: route.passProps.parentTab
               },
-              title: 'Instance List with all items',
+              title: 'All items in instance List',
               component: InstanceListsAllContainer,
             })
           }}

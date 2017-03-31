@@ -7,14 +7,6 @@ import lastIdReducer from './lastIdReducer'
 const initialState = {
   entities: {},
   result: {},
-  // searchBarText: {
-  //   searchBarTextInstanceList: '',
-  //   searchBarTextItemsOfChosenTemplate: '',
-  //   searchBarTextInstancesOfChosenTemplate: '',
-  //   searchBarTextItemsCustomizedAllInstances: '',
-  //   searchBarTextTemplateList: '',
-  //   searchBarTextItemList: '',
-  // },
   searchBarText: {
     instanceList: '',
     itemsOfChosenTemplate: '',

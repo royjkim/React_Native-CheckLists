@@ -21,6 +21,12 @@ import InstancesListContainer from '../templateLists/instanceList/instanceListCo
 import ChosenInstanceDetailsContainer from '../templateLists/instanceList/chosenInstanceDetails/chosenInstanceDetailsContainer'
 
 export default class ItemsListsAllComponent extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      searchText_itemList: ''
+    }
+  }
 
   shouldComponentUpdate(nextProps) {
     let tempResult = true
@@ -87,12 +93,26 @@ export default class ItemsListsAllComponent extends React.Component {
         <SearchBar
           lightTheme
           round={true}
-          onChangeText={searchText => searchBarText(searchText.trim(), 'itemList')}
+          onChangeText={searchText => {
+            this.setState(state => ({
+              searchText_itemList: searchText
+            }))
+            searchBarText(searchText.trim(), 'itemList')
+          }}
           placeholder='Search Items'
         />
-        <FormLabel>
-          Total Items : {state.dataSourceAllItems._cachedRowCount}
-        </FormLabel>
+        {this.state.searchText_itemList !== ''
+          ? (
+              <FormLabel>
+                Total Items : {state.dataSourceAllItems._cachedRowCount}, searched
+              </FormLabel>
+            )
+          : (
+            <FormLabel>
+              Total Items : {state.dataSourceAllItems._cachedRowCount}
+            </FormLabel>
+            )
+        }
         <View
           style={{ flex: 1 }}>
           <List>
