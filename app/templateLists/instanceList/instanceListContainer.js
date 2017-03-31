@@ -31,7 +31,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
     dataSourceInstancesOfChosenTemplate: mySelectors.make_get_dataSourceInstancesOfChosenTemplate()(stateProps.state.instancesOfChosenTemplate),
     dataSourceOfItemsOfChosenTemplate: mySelectors.make_get_dataSourceOfItemsOfChosenTemplate()(stateProps.state.itemsOfChosenTemplate),
     badgeValueOfStatusOfEachInstanceOfChosenTemplate: mySelectors.make_get_badgeValueOfStatusOfEachInstanceOfChosenTemplate()(stateProps.state.itemsCustomized, stateProps.state.instancesOfChosenTemplate),
-    itemsLengthOfChosenTemplate: stateProps.state.itemsOfChosenTemplate.length
+    itemsLengthOfChosenTemplate: stateProps.state.itemsOfChosenTemplate.length,
   },
   ...dispatchProps
 })

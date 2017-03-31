@@ -29,7 +29,15 @@ export default class InstanceListComponent extends React.Component {
         instancesOfChosenTemplate: '',
         itemsOfChosenTemplate: ''
       },
-      tempItemDesc: {},
+      // tempItemDesc: {},
+      prevItemDesc: ((tempData = {}) => {
+        this.props.state.itemsOfChosenTemplate.map(value => tempData[value.itemId] = value.desc)
+        return tempData
+      })(),
+      tempItemDesc: ((tempData = {}) => {
+        this.props.state.itemsOfChosenTemplate.map(value => tempData[value.itemId] = value.desc)
+        return tempData
+      })(),
       hasEmptyOnItemDesc: false,
       changeValue: false,
       addItemModalVisible: false,
@@ -37,7 +45,7 @@ export default class InstanceListComponent extends React.Component {
       newItemTemp: {
         desc: '',
         itemId: this.props.state.lastId.items,
-        orderNum: this.props.state.items[this.props.state.chosenTemplate.items.sort((data1, data2) => data1 - data2).slice(-1)[0]].orderNum,
+        orderNum: this.props.state.chosenTemplate.items.map(value => this.props.state.items[value]).sort((data1, data2) => data1.orderNum - data2.orderNum).slice(-1)[0].orderNum,
         template: this.props.state.chosenTemplate.title,
         templateId: this.props.state.chosenTemplate.templateId
         // itemId: parseInt(this.props.state.lastId.items),
@@ -49,33 +57,73 @@ export default class InstanceListComponent extends React.Component {
       dataSource_newItemAdded: this.props.state.dataSourceOfItemsOfChosenTemplate || []
     }
     this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
-    this.initialStateDataFn = () => {
+    this.initialStateDataFn = inputData => {
+
       let tempData = {}
-      this.props.state.itemsOfChosenTemplate.map(value => tempData[value.itemId] = value.desc)
-      this.setState(state => ({
-        tempItemDesc: tempData,
-        prevItemDesc: tempData
-      }))
-    }
+      // this.props.state.itemsOfChosenTemplate.map(value => tempData[value.itemId] = value.desc)
+      console.log('parameter - inputData : ', inputData)
+      console.log('this.props.state.itemsOfChosenTemplate : ', this.props.state.itemsOfChosenTemplate)
+      inputData.map(value => tempData[value.itemId] = value.desc)
+      console.log('tempData : ', tempData)
+      // this.setState(state => ({
+      //   tempItemDesc: tempData,
+      //   prevItemDesc: tempData
+      //   // tempItemDesc: {
+      //   //   ...tempData
+      //   // },
+      //   // prevItemDesc: {
+      //   //   ...tempData
+      //   // }
+      // }))
+      this.setState({
+          tempItemDesc: tempData,
+          prevItemDesc: tempData
+      })
+      console.log('this.initialStateDataFn - this.state : ', this.state)
+    };
+    // this.initialStateDataFn(this.props.state.itemsOfChosenTemplate);
   }
 
   componentWillMount() {
-    this.initialStateDataFn()
-    console.log(`this.state : `, this.state)
-    // console.log('itemsOfChosenTemplate : ', this.props.state.itemsOfChosenTemplate)
-    // orderNum: this.props.state.items[this.props.state.chosenTemplate.items.sort((data1, data2) => data1.orderNum - data2.orderNum).slice(-1)[0]].orderNum,
+    // this.initialStateDataFn(this.props.state.itemsOfChosenTemplate)
+    console.log(`componentWillMount - this.state : `, this.state)
+    // console.log(`before - this.state : `, this.state)
+    // let tempData = {}
+    // // this.props.state.itemsOfChosenTemplate.map(value => tempData[value.itemId] = value.desc)
+    // // console.log('parameter - inputData : ', inputData)
+    // console.log('this.props.state.itemsOfChosenTemplate : ', this.props.state.itemsOfChosenTemplate)
+    // this.props.state.itemsOfChosenTemplate.map(value => tempData[value.itemId] = value.desc)
+    // console.log('tempData : ', tempData)
+    // // this.setState(state => ({
+    // //   test: 'melong',
+    // //   tempItemDesc: tempData,
+    // //   prevItemDesc: tempData
+    // // //   // tempItemDesc: {
+    // // //   //   ...tempData
+    // // //   // },
+    // // //   // prevItemDesc: {
+    // // //   //   ...tempData
+    // // //   // }
+    // // }))
+    // this.setState({
+    //   test: 'melong',
+    // })
+    // console.log(`after - this.state : `, this.state)
+
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    console.log(`componentWillUpdate - nextState : `, nextState)
-    // console.log('nextState.newItems : ', nextState.newItems)
-    // console.log('this.state.newItems : ', this.state.newItems)
-    isEqual(nextState.newItems, this.state.newItems) || this.setState({
-      dataSource_newItemAdded: this.ds.cloneWithRows(nextState.newItems)
-    })
-  }
+  // componentWillUpdate(nextProps, nextState) {
+  //   console.log(`componentWillUpdate - nextState : `, nextState)
+  //   // console.log('nextState.newItems : ', nextState.newItems)
+  //   // console.log('this.state.newItems : ', this.state.newItems)
+  //   // isEqual(nextState.newItems, this.state.newItems) || this.setState({
+  //   //   dataSource_newItemAdded: this.ds.cloneWithRows(nextState.newItems)
+  //   // })
+  //   return isEqual(nextProps, this.props) && !isEqual(nextState, this.state) ? true : false
+  // }
 
   componentDidUpdate() {
+    console.log(`componentDidUpdate - this.state : `, this.state)
     const { navigatePrevent, triedNavigateWhenPrevented } = this.props.state,
           __navigatorRouteID = this.props.route.__navigatorRouteID,
           parentTab = this.props.route.passProps.parentTab,
@@ -100,6 +148,8 @@ export default class InstanceListComponent extends React.Component {
         : triedNavigateWhenPrevented[parentTab] ?
           (alert('press save button to save changed item'), triedNavigateWhenPreventedFn(parentTab, false))
             : null
+
+    this.state.addItemModalVisible && this.refs['newItemTempDescTextInput'].focus()
   }
 
   render() {
@@ -126,8 +176,10 @@ export default class InstanceListComponent extends React.Component {
           template: this.props.state.chosenTemplate.title,
           templateId: this.props.state.chosenTemplate.templateId
         },
+        newItems: this.props.state.itemsOfChosenTemplate || [],
+        dataSource_newItemAdded: this.props.state.dataSourceOfItemsOfChosenTemplate || []
       }))
-      this.initialStateDataFn()
+      this.initialStateDataFn(this.props.state.itemsOfChosenTemplate)
     };
     const saveAlertFn = () => {
       Alert.alert(
@@ -184,7 +236,7 @@ export default class InstanceListComponent extends React.Component {
         }
       )}
     />;
-    const changeItemText = (itemText, chosen_itemId, emptyStatusBoolean)=> prevState => {
+    const changeItemText = (itemText, chosen_itemId, emptyStatusBoolean) => prevState => {
       let tempResult = {
         tempItemDesc: {
           ...prevState.tempItemDesc,
@@ -213,7 +265,7 @@ export default class InstanceListComponent extends React.Component {
           }}
           >
               <TextInput
-                // value={this.state.tempItemDesc[rowData.itemId]}
+                value={this.state.tempItemDesc[rowData.itemId]}
                 onChangeText={itemText => this.setState(changeItemText(itemText, rowData.itemId, itemText == ''))}
                 placeholder={this.state.prevItemDesc[rowData.itemId]}
                 placeholderTextColor='#86939D'
@@ -232,7 +284,7 @@ export default class InstanceListComponent extends React.Component {
     };
     return(
       <View style={styles.bodyContainerOnSideMenu}>
-        <SearchBar
+        {!this.state.changeValue ? (<SearchBar
           lightTheme
           round={true}
           onChangeText={searchText => {
@@ -245,7 +297,7 @@ export default class InstanceListComponent extends React.Component {
             searchBarText(searchText, 'itemsOfChosenTemplate')
           }}
           placeholder='Search Items'
-        />
+        />) : null}
         <FormLabel>
           Template : {route.passProps.chosenTemplate.title}
         </FormLabel>
@@ -255,14 +307,19 @@ export default class InstanceListComponent extends React.Component {
                 Category : {route.passProps.chosenTemplate.category}, Items({state.itemsLengthOfChosenTemplate}, searched)
               </FormLabel>
             )
-          : (
-              <FormLabel>
-                Category : {route.passProps.chosenTemplate.category}, Items({state.itemsLengthOfChosenTemplate})
-              </FormLabel>
-            )}
+          : this.state.changeValue ? (
+            <FormLabel>
+              Category : {route.passProps.chosenTemplate.category}, Items({Object.keys(this.state.tempItemDesc).length}, new item added)
+            </FormLabel>
+          ) : (
+                <FormLabel>
+                  Category : {route.passProps.chosenTemplate.category}, Items({state.itemsLengthOfChosenTemplate})
+                </FormLabel>
+              )
+        }
         <List>
           <ListView
-            dataSource={this.state.dataSource_newItemAdded}
+            dataSource={this.state.searchText.itemsOfChosenTemplate == '' ? this.state.dataSource_newItemAdded : state.dataSourceOfItemsOfChosenTemplate}
             enableEmptySections={true}
             renderRow={renderRowItems}
             style={{ maxHeight: 200 }}
@@ -377,7 +434,7 @@ export default class InstanceListComponent extends React.Component {
                 style={{
                   flex: 1,
                 }}
-                onPress={() => this.setState({ addItemModalVisible: false })}
+                onPress={() => this.state.newItemTempDesc == '' ? this.setState({ addItemModalVisible: false }) : alert('press add button, after input a new item.')}
               />
             </View>
             <View
@@ -411,6 +468,7 @@ export default class InstanceListComponent extends React.Component {
                     }}
                   >
                     <TextInput
+                      ref='newItemTempDescTextInput'
                       value={this.state.newItemTempDesc}
                       onChangeText={newItemTempDesc => this.setState({ newItemTempDesc })}
                       style={{
@@ -436,7 +494,7 @@ export default class InstanceListComponent extends React.Component {
                         //   newItems: prevState.newItems
                         // }
                         console.log(`prevState : `, prevState)
-                        console.log('this.state : ', this.state)
+                        // console.log('this.state : ', this.state)
                         let tempResult = {
                           // newItems: this.state.newItems.concat({
                           //   desc: this.state.newItemTempDesc,
@@ -446,27 +504,39 @@ export default class InstanceListComponent extends React.Component {
                           //   templateId: this.state.templateId,
                           // }),
                           newItems: [
-                            ...this.state.newItems,
+                            ...prevState.newItems,
                             {
-                              desc: this.state.newItemTempDesc,
-                              itemId: this.state.newItemTemp.itemId + 1,
-                              orderNum: this.state.newItemTemp.orderNum + 1,
-                              template: this.state.newItemTemp.template,
-                              templateId: this.state.newItemTemp.templateId,
+                              desc: prevState.newItemTempDesc,
+                              itemId: prevState.newItemTemp.itemId + 1,
+                              orderNum: prevState.newItemTemp.orderNum + 1,
+                              template: prevState.newItemTemp.template,
+                              templateId: prevState.newItemTemp.templateId,
                             }
                           ],
                           newItemTemp: {
                             desc: '',
-                            itemId: this.state.newItemTemp.itemId + 1,
-                            orderNum: this.state.newItemTemp.orderNum + 1,
-                            template: this.state.newItemTemp.template,
-                            templateId: this.state.newItemTemp.templateId,
+                            itemId: prevState.newItemTemp.itemId + 1,
+                            orderNum: prevState.newItemTemp.orderNum + 1,
+                            template: prevState.newItemTemp.template,
+                            templateId: prevState.newItemTemp.templateId,
                           },
-                          newItemTempDesc: ''
+                          newItemTempDesc: '',
+                          tempItemDesc: {
+                            ...prevState.tempItemDesc,
+                            [prevState.newItemTemp.itemId + 1]: prevState.newItemTempDesc
+                          },
+                          // prevItemDesc: {
+                          //   ...prevState.prevItemDesc,
+                          //   [prevState.newItemTemp.itemId + 1]: prevState.newItemTempDesc
+                          // }
+
                         }
+                        tempResult.dataSource_newItemAdded = this.ds.cloneWithRows(tempResult.newItems)
+                        tempResult.changeValue = !isEqual(prevState.prevItemDesc, tempResult.tempItemDesc)
                         console.log('tempResult : ', tempResult)
                         return tempResult
                       })
+                      // this.initialStateDataFn(this.state.newItems)
                       alert('add completed')}}
                   />
                 </View>
