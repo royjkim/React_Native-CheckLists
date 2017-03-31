@@ -16,9 +16,18 @@ import {
 import ChosenInstanceDetailsContainer from './chosenInstanceDetails/chosenInstanceDetailsContainer'
 
 export default class InstanceListComponent extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      searchText: {
+        instancesOfChosenTemplate: '',
+        itemsOfChosenTemplate: ''
+      }
+    }
+  }
 
   render() {
-    const { route, navigator, state, searchBarTextInstancesOfChosenTemplate, searchBarTextItemsOfChosenTemplate } = this.props
+    const { route, navigator, state, searchBarText } = this.props
     renderRowInstances = (rowData, sectionID) => <ListItem
       key={sectionID}
       title={rowData.name}
@@ -57,16 +66,32 @@ export default class InstanceListComponent extends React.Component {
         <SearchBar
           lightTheme
           round={true}
-          onChangeText={searchBarText => searchBarTextItemsOfChosenTemplate(searchBarText)}
+          onChangeText={searchText => {
+            this.setState(state => ({
+              searchText: {
+                ...state.searchText,
+                itemsOfChosenTemplate: searchText
+              }
+            }))
+            searchBarText(searchText, 'itemsOfChosenTemplate')
+          }}
           placeholder='Search Items'
         />
         <FormLabel>
           {/* Template : {route.passProps.chosenTemplate.title}, Items({route.passProps.chosenTemplate.items.length}) */}
           Template : {route.passProps.chosenTemplate.title}
         </FormLabel>
-        <FormLabel>
-          Category : {route.passProps.chosenTemplate.category}, Items({state.itemsLengthOfChosenTemplate})
-        </FormLabel>
+        {this.state.searchText.itemsOfChosenTemplate !== ''
+          ? (
+              <FormLabel>
+                Category : {route.passProps.chosenTemplate.category}, Items({state.itemsLengthOfChosenTemplate}, searched)
+              </FormLabel>
+            )
+          : (
+              <FormLabel>
+                Category : {route.passProps.chosenTemplate.category}, Items({state.itemsLengthOfChosenTemplate})
+              </FormLabel>
+            )}
         <List>
           <ListView
             dataSource={state.dataSourceOfItemsOfChosenTemplate}
@@ -74,17 +99,34 @@ export default class InstanceListComponent extends React.Component {
             renderRow={renderRowItems}
           />
         </List>
-        {state.dataSourceInstancesOfChosenTemplate._cachedRowCount > 0 ? (<View>
+        <View>
           <View style={{ marginVertical: 15, height: 2 }} />
           <SearchBar
             lightTheme
             round={true}
-            onChangeText={searchBarText => searchBarTextInstancesOfChosenTemplate(searchBarText)}
             placeholder='Search Instances'
+            onChangeText={searchText => {
+              this.setState(state => ({
+                searchText: {
+                  ...state,
+                  instancesOfChosenTemplate: searchText
+                }
+              }))
+              searchBarText(searchText, 'instancesOfChosenTemplate');
+            }}
           />
-          <FormLabel>
-            ▼ Instance List of {route.title} : {state.dataSourceInstancesOfChosenTemplate._dataBlob.s1.length}
-          </FormLabel>
+          {this.state.searchText.instancesOfChosenTemplate !== ''
+            ? (
+                <FormLabel>
+                  ▼ Instance List of {route.title} : {state.dataSourceInstancesOfChosenTemplate._dataBlob.s1.length}(searched)
+                </FormLabel>
+              )
+            : (
+                <FormLabel>
+                  ▼ Instance List of {route.title} : {state.dataSourceInstancesOfChosenTemplate._dataBlob.s1.length}
+                </FormLabel>
+              )
+          }
           <List>
             <ListView
               dataSource={state.dataSourceInstancesOfChosenTemplate}
@@ -92,7 +134,7 @@ export default class InstanceListComponent extends React.Component {
               enableEmptySections={true}
             />
           </List>
-        </View>) : null}
+        </View>
       </View>
     )
   }

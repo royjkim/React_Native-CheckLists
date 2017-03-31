@@ -1,8 +1,10 @@
 import normalizeReducer from './normalizeReducer'
+import configReducer from './configReducer'
 import { combineReducers } from 'redux'
 
 const reducer = combineReducers({
-  normalizeReducer
+  normalizeReducer,
+  configReducer
 })
 
 export default reducer

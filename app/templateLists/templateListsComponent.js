@@ -23,7 +23,7 @@ export default class TemplateListsComponent extends React.Component {
     return tempResult
   }
   render() {
-    const { route, navigator, state, searchBarTextTemplateList } = this.props
+    const { route, navigator, state, searchBarText } = this.props
     const renderRow = (rowData, sectionID) => <ListItem
       key={sectionID}
       title={rowData.title}
@@ -33,7 +33,7 @@ export default class TemplateListsComponent extends React.Component {
       //    ? false : true)
       // }
       onPress={() => {
-        // if(state.badgeValueOfInstancesOfChosenTemplates.hasOwnProperty(rowData.templateId) && state.badgeValueOfInstancesOfChosenTemplates[rowData.templateId] > 0) {
+        console.log(`TemplateListsComponent - route : `, route)
           navigator.push(
             {
               passProps: {
@@ -60,7 +60,7 @@ export default class TemplateListsComponent extends React.Component {
         <SearchBar
           lightTheme
           round={true}
-          onChangeText={searchBarText => searchBarTextTemplateList(searchBarText)}
+          onChangeText={searchText => searchBarText(searchText.trim(), 'templateList')}
           placeholder='Search Templates'
         />
         <FormLabel>

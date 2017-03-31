@@ -294,7 +294,12 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
               onPress={() => this.setState({ modalPickerVisible: false })}>
             </TouchableOpacity>
             <View
-              style={{ flex: 0, justifyContent: 'flex-end', marginBottom: 30 }}>
+              style={{
+                flex: 0,
+                justifyContent: 'flex-end',
+                marginBottom: 30,
+                backgroundColor: 'white'
+              }}>
               <Picker
                 selectedValue={state.statusPicker}
                 onValueChange={category => chooseCategory(category)}>

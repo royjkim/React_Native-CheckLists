@@ -2,30 +2,26 @@ import types from '../actions/dataActions'
 import entitiesReducer from './entitiesReducer'
 import resultReducer from './resultReducer'
 import searchBarReducer from './searchBarReducer'
-import configReducer from './configReducer'
 import lastIdReducer from './lastIdReducer'
 
 const initialState = {
   entities: {},
   result: {},
+  // searchBarText: {
+  //   searchBarTextInstanceList: '',
+  //   searchBarTextItemsOfChosenTemplate: '',
+  //   searchBarTextInstancesOfChosenTemplate: '',
+  //   searchBarTextItemsCustomizedAllInstances: '',
+  //   searchBarTextTemplateList: '',
+  //   searchBarTextItemList: '',
+  // },
   searchBarText: {
-    searchBarTextInstanceList: '',
-    searchBarTextItemsOfChosenTemplate: '',
-    searchBarTextInstancesOfChosenTemplate: '',
-    searchBarTextItemsCustomizedAllInstances: '',
-    searchBarTextTemplateList: '',
-    searchBarTextItemList: '',
-  },
-  configValue: {
-    picker: 'all',
-    navigatePopToTopRequest: {
-      home: false,
-      templateList: false,
-      itemList: false,
-      settings: false
-    },
-    navigatePrevent: {},
-    triedNavigateWhenPrevented: {}
+    instanceList: '',
+    itemsOfChosenTemplate: '',
+    instancesOfChosenTemplate: '',
+    itemsCustomizedAllInstances: '',
+    templateList: '',
+    itemList: '',
   },
   lastId: {
     instances: 0,
@@ -41,7 +37,6 @@ export default function normalizeReducer(state = initialState, action) {
     entities: entitiesReducer(state.entities, action),
     result: resultReducer(state.result, action),
     searchBarText: searchBarReducer(state.searchBarText, action),
-    configValue: configReducer(state.configValue, action),
     lastId: lastIdReducer(state.lastId, action)
   }
 }

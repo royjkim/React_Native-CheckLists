@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import InstanceListsAllComponent from './instanceListsAllComponent'
 import { bindActionCreators } from 'redux'
-import { modifyItemsCustomized, searchBarTextItemsCustomizedAllInstances } from '../actions/dataActionCreators'
+import { modifyItemsCustomized, searchBarText } from '../actions/dataActionCreators'
 import mySelectors from '../container/selectors'
 
 const make_mapStateToProps = () => (state, ownProps) => ({
@@ -12,7 +12,7 @@ const make_mapStateToProps = () => (state, ownProps) => ({
     badgeValueOfStatusOfAllInstances: mySelectors.make_get_badgeValueOfStatusOfAllInstances()(state.normalizeReducer),
     instances: state.normalizeReducer.entities.instances,
     templates: state.normalizeReducer.entities.templates,
-    navigatePopToTopTab: state.normalizeReducer.configValue.navigatePopToTopTab
+    navigatePopToTopTab: state.configReducer.navigatePopToTopTab
   },
   route: ownProps.route,
   navigator: ownProps.navigator
@@ -20,7 +20,7 @@ const make_mapStateToProps = () => (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => ({
   modifyItemsCustomized: targetData => dispatch(modifyItemsCustomized(targetData)),
-  searchBarTextItemsCustomizedAllInstances: searchBarText => dispatch(searchBarTextItemsCustomizedAllInstances(searchBarText))
+  searchBarText: (searchText, attr) => dispatch(searchBarText(searchText, attr))
 })
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => ({

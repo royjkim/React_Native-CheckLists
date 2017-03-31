@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import HomeComponent from './homeComponent'
-import { searchBarTextInstanceList, navigatePopToTopRequest, triedNavigateWhenPrevented } from '../actions/dataActionCreators'
+import { searchBarText, navigatePopToTopRequest, triedNavigateWhenPrevented } from '../actions/dataActionCreators'
 
 import mySelectors from '../container/selectors'
 
@@ -11,17 +11,16 @@ const make_mapStateToProps = () => (state, ownProps) => ({
     badgeValueOfStatusOfAllInstances: mySelectors.make_get_badgeValueOfStatusOfAllInstances()(state.normalizeReducer),
     instances: state.normalizeReducer.entities.instances,
     templates: state.normalizeReducer.entities.templates,
-    searchBarText: state.normalizeReducer.searchBarText.searchBarTextInstanceList,
-    navigatePrevent: state.normalizeReducer.configValue.navigatePrevent,
-    navigatePopToTopRequest: state.normalizeReducer.configValue.navigatePopToTopRequest,
-    triedNavigateWhenPrevented: state.normalizeReducer.configValue.triedNavigateWhenPrevented
+    navigatePrevent: state.configReducer.navigatePrevent,
+    navigatePopToTopRequest: state.configReducer.navigatePopToTopRequest,
+    triedNavigateWhenPrevented: state.configReducer.triedNavigateWhenPrevented
   },
   route: ownProps.route,
   navigator: ownProps.navigator
 })
 
 const mapDispatchToProps = dispatch => ({
-  searchBarTextInstanceList: searchText => dispatch(searchBarTextInstanceList(searchText)),
+  searchBarText: (searchText, attr) => dispatch(searchBarText(searchText, attr)),
   navigatePopToTopRequest: (targetTab, statusBoolean) => dispatch(navigatePopToTopRequest(targetTab, statusBoolean)),
   triedNavigateWhenPrevented: (parentTab, statusBoolean) => dispatch(triedNavigateWhenPrevented(parentTab, statusBoolean))
 })

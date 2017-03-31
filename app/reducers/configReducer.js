@@ -37,8 +37,19 @@ const triedNavigateWhenPrevented = (state, action) => {
   return tempResult
 }
 
+const initialState = {
+  picker: 'all',
+  navigatePopToTopRequest: {
+    home: false,
+    templateList: false,
+    itemList: false,
+    settings: false
+  },
+  navigatePrevent: {},
+  triedNavigateWhenPrevented: {}
+}
 
-export default function configReducer(state, action) {
+export default function configReducer(state = initialState, action) {
   const reducerMap = {
     [types.CHOOSE_CATEGORY]: chooseCategory,
     [types.NAVIGATE_POP_TO_TOP_REQUEST]: navigatePopToTopRequest,

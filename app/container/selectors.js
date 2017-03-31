@@ -211,14 +211,14 @@ const itemsCustomized = state => state.entities.itemsCustomized
 // const sideMenuVisible = state => state.sideMenuVisible
 const templateCategories = state => state.entities.templateCategories
 
-const searchBarTextInstanceList = state => state.searchBarText.searchBarTextInstanceList.toLowerCase()
-const searchBarTextItemsOfChosenTemplate = state => state.searchBarText.searchBarTextItemsOfChosenTemplate.toLowerCase()
-const searchBarTextInstancesOfChosenTemplate = state => state.searchBarText.searchBarTextInstancesOfChosenTemplate.toLowerCase()
-const searchBarTextItemsCustomizedAllInstances = state => state.searchBarText.searchBarTextItemsCustomizedAllInstances.toLowerCase()
-const searchBarTextTemplateList = state => state.searchBarText.searchBarTextTemplateList.toLowerCase()
-const searchBarTextItemList = state => state.searchBarText.searchBarTextItemList.toLowerCase()
+const searchBarTextInstanceList = state => state.searchBarText.instanceList.toLowerCase()
+const searchBarTextItemsOfChosenTemplate = state => state.searchBarText.itemsOfChosenTemplate.toLowerCase()
+const searchBarTextInstancesOfChosenTemplate = state => state.searchBarText.instancesOfChosenTemplate.toLowerCase()
+const searchBarTextItemsCustomizedAllInstances = state => state.searchBarText.itemsCustomizedAllInstances.toLowerCase()
+const searchBarTextTemplateList = state => state.searchBarText.templateList.toLowerCase()
+const searchBarTextItemList = state => state.searchBarText.itemList.toLowerCase()
 
-const statusPicker = state => state.configValue.picker
+const statusPicker = state => state.picker
 
 const make_get_dataSourceTemplates = () => createSelector(
   templates,

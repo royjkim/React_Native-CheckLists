@@ -5,8 +5,8 @@ import { triedNavigateWhenPrevented } from '../actions/dataActionCreators'
 const mapStateToProps = (state, ownProps) => ({
   state: {
     initialRoute: ownProps.initialRoute,
-    navigatePrevent: state.normalizeReducer.configValue.navigatePrevent,
-    triedNavigateWhenPrevented: state.normalizeReducer.configValue.triedNavigateWhenPrevented
+    navigatePrevent: state.configReducer.navigatePrevent,
+    triedNavigateWhenPrevented: state.configReducer.triedNavigateWhenPrevented
   }
 })
 

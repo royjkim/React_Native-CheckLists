@@ -90,46 +90,11 @@ export function normalizedDataInput(data) {
   }
 }
 
-export function searchBarTextInstanceList(searchBarText) {
+export function searchBarText(searchText, attr) {
   return {
-    type: types.SEARCHBAR_TEXT_INSTANCE_LIST,
-    searchBarText
-  }
-}
-
-export function searchBarTextItemsOfChosenTemplate(searchBarText) {
-  return {
-    type: types.SEARCHBAR_TEXT_ITEMS_OF_CHOSEN_TEMPLATE,
-    searchBarText
-  }
-}
-
-export function searchBarTextInstancesOfChosenTemplate(searchBarText) {
-  return {
-    type: types.SEARCHBAR_TEXT_INSTANCES_OF_CHOSEN_TEMPLATE,
-    searchBarText
-  }
-}
-
-
-export function searchBarTextItemsCustomizedAllInstances(searchBarText) {
-  return {
-    type: types.SEARCHBAR_TEXT_ITEMS_CUSTOMIZED_ALL_INSTANCES,
-    searchBarText
-  }
-}
-
-export function searchBarTextTemplateList(searchBarText) {
-  return {
-    type: types.SEARCHBAR_TEXT_TEMPLATE_LIST,
-    searchBarText
-  }
-}
-
-export function searchBarTextItemList(searchBarText) {
-  return {
-    type: types.SEARCHBAR_TEXT_ITEM_LIST,
-    searchBarText
+    type: types.SEARCHBAR_TEXT,
+    attr,
+    searchText
   }
 }
 

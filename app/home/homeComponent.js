@@ -26,7 +26,7 @@ export default class HomeComponent extends React.Component {
     return tempResult
   }
   render() {
-    const { route, navigator, state, searchBarTextInstanceList } = this.props
+    const { route, navigator, state, searchBarText } = this.props
     const renderRow = (rowData, sectionId) => <ListItem
       key={sectionId}
       title={rowData.name}
@@ -63,7 +63,7 @@ export default class HomeComponent extends React.Component {
         <SearchBar
           lightTheme
           round={true}
-          onChangeText={searchBarText => searchBarTextInstanceList(searchBarText.trim())}
+          onChangeText={searchText => searchBarText(searchText.trim(), 'instanceList')}
           placeholder='Search Instances'
         />
         <FormLabel>

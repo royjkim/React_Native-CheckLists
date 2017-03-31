@@ -22,7 +22,7 @@ import ChosenInstanceDetailsContainer from '../templateLists/instanceList/chosen
 export default class InstanceListsAllComponent extends React.Component {
 
   render() {
-    const { route, navigator, state, modifyItemsCustomized, searchBarTextItemsCustomizedAllInstances } = this.props
+    const { route, navigator, state, modifyItemsCustomized, searchBarText } = this.props
     const renderRow = (rowData, sectionId, rowId) => <ListItem
       key={rowId}
       // title={rowData.desc}
@@ -86,7 +86,7 @@ export default class InstanceListsAllComponent extends React.Component {
         <SearchBar
           lightTheme
           round={true}
-          onChangeText={searchBarText => searchBarTextItemsCustomizedAllInstances(searchBarText.trim())}
+          onChangeText={searchText => searchBarText(searchText.trim(), 'itemsCustomizedAllInstances')}
           placeholder='Search Items'
         />
         <FormLabel>

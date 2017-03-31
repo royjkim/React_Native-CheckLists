@@ -5,9 +5,9 @@ import { navigatePopToTopRequest, navigatePrevent, triedNavigateWhenPrevented } 
 
 export default connect((state, ownProps) => ({
   state: {
-    navigatePopToTopRequest: state.normalizeReducer.configValue.navigatePopToTopRequest,
-    navigatePrevent: state.normalizeReducer.configValue.navigatePrevent,
-    triedNavigateWhenPrevented: state.normalizeReducer.configValue.triedNavigateWhenPrevented
+    navigatePopToTopRequest: state.configReducer.navigatePopToTopRequest,
+    navigatePrevent: state.configReducer.navigatePrevent,
+    triedNavigateWhenPrevented: state.configReducer.triedNavigateWhenPrevented
   }
 }), dispatch => ({
   navigatePopToTopRequest: (targetTab, statusBoolean) => dispatch(navigatePopToTopRequest(targetTab, statusBoolean)),
