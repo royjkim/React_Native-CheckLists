@@ -38,28 +38,24 @@ export default class TemplateListsComponent extends React.Component {
       //   ((state.badgeValueOfInstancesOfChosenTemplates.hasOwnProperty(rowData.templateId) && state.badgeValueOfInstancesOfChosenTemplates[rowData.templateId] > 0)
       //    ? false : true)
       // }
-      onPress={() => {
-        console.log(`TemplateListsComponent - route : `, route)
-          navigator.push(
-            {
-              passProps: {
-                leftButton: {
-                  title: 'back',
-                  component: ''
-                },
-                rightButton: {
-                  title: '',
-                  component: ''
-                },
-                parentTab: route.passProps.parentTab,
-                chosenTemplate: rowData
-              },
-              title: `${rowData.title}`,
-              component: InstanceListContainer,
-            }
-          )
-        // }
-      }}
+      onPress={() => navigator.push(
+        {
+          passProps: {
+            leftButton: {
+              title: 'back',
+              component: ''
+            },
+            rightButton: {
+              title: '',
+              component: ''
+            },
+            parentTab: route.passProps.parentTab,
+            chosenTemplate: rowData
+          },
+          title: `${rowData.title}`,
+          component: InstanceListContainer,
+        }
+      )}
     />
     return(
       <View style={styles.bodyContainer}>

@@ -1,20 +1,24 @@
 import InstanceListComponent from './instanceListComponent'
 import { connect } from 'react-redux'
 import mySelectors from '../../container/selectors'
-import { searchBarText } from '../../actions/dataActionCreators'
+import { searchBarText, navigatePrevent, triedNavigateWhenPrevented } from '../../actions/dataActionCreators'
 
 const make_mapStateToProps = () => (state, ownProps) => ({
   state: {
     instancesOfChosenTemplate: mySelectors.make_get_instancesOfChosenTemplate()(state.normalizeReducer, ownProps.route.passProps.chosenTemplate),
     itemsCustomized: state.normalizeReducer.entities.itemsCustomized,
-    itemsOfChosenTemplate: mySelectors.make_get_itemsOfChosenTemplate()(state.normalizeReducer, ownProps.route.passProps.chosenTemplate)
+    itemsOfChosenTemplate: mySelectors.make_get_itemsOfChosenTemplate()(state.normalizeReducer, ownProps.route.passProps.chosenTemplate),
+    navigatePrevent: state.configReducer.navigatePrevent,
+    triedNavigateWhenPrevented: state.configReducer.triedNavigateWhenPrevented
   },
   route: ownProps.route,
   navigator: ownProps.navigator
 })
 
 const mapDispatchToProps = dispatch => ({
-  searchBarText: (searchText, attr) => dispatch(searchBarText(searchText, attr))
+  searchBarText: (searchText, attr) => dispatch(searchBarText(searchText, attr)),
+  navigatePreventFn: (__navigatorRouteID, statusBoolean) => dispatch(navigatePrevent(__navigatorRouteID, statusBoolean)),
+  triedNavigateWhenPreventedFn: (parentTab, statusBoolean) => dispatch(triedNavigateWhenPrevented(parentTab, statusBoolean))
 })
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => ({

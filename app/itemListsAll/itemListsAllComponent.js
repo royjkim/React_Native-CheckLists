@@ -18,7 +18,6 @@ import {
 } from 'react-native-elements'
 
 import InstancesListContainer from '../templateLists/instanceList/instanceListContainer'
-import ChosenInstanceDetailsContainer from '../templateLists/instanceList/chosenInstanceDetails/chosenInstanceDetailsContainer'
 
 export default class ItemsListsAllComponent extends React.Component {
   constructor(props) {
@@ -39,6 +38,7 @@ export default class ItemsListsAllComponent extends React.Component {
       key={sectionId}
       title={rowData.desc}
       subtitle={`orderNum : ${rowData.orderNum}`}
+      hideChevron
     />
     const renderSectionHeader = (sectionData, sectionId) => {
       return (

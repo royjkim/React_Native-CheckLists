@@ -52,7 +52,7 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
                 : this.state.saveButtonVisible ?
                   this.setState({ saveButtonVisible: false }) : null
 
-    // Below is for restored the valus of 'instanceName or templateTitle', make redux navigate able.
+    // Below is for when the value of 'instanceName or templateTitle' restored , make redux navigate able.
     !this.state.changeValue_instanceName && !this.state.changeValue_templateTitle ?
       this.props.state.navigatePrevent[__navigatorRouteID] ?
         this.props.state.navigatePrevent[this.props.route.passProps.parentTab] ?
@@ -110,25 +110,6 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
         saved: false
       })
     }
-
-    // const instanceNameChange = instanceName => {
-    //   return prevState => {
-    //     console.log(`prevState : `, prevState)
-    //     let tempResult = {}
-    //     instanceName !== prevState.instanceName ? prevState.changeValue_instanceName ? tempResult = {
-    //       instanceName,
-    //     } : tempResult = {
-    //       instanceName,
-    //       changeValue_instanceName: true
-    //     } : null
-    //
-    //     instanceName == prevState.prev_instanceName ? prevState.changeValue_instanceName ? tempResult = {
-    //       ...tempResult,
-    //       changeValue_instanceName: false
-    //     } : null : null
-    //     return tempResult
-    //   }
-    // }
 
     // Below is for change the 'this state of instanceName and templateTitle & changeValue_instanceName and changeValue_templateTitle'.
     const changeCommon = (newValue, attr) => {
@@ -193,9 +174,6 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
               />
             </View>
         </View>
-        {/* <FormLabel>
-          Template Name : {state.chosenTemplate.title}
-        </FormLabel> */}
         <View
           style={{
             flexDirection: 'row',

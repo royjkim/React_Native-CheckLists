@@ -106,7 +106,6 @@ export default function initializeStore() {
   )
 
   initialData = normalizeStore.addItem(initialData,
-    // { itemId: 1, desc: 'Wear life vest', template: 'GoingFishing', orderNum: 5 },
     { itemId: 1, desc: 'Wear life vest', templateId: 1, orderNum: 5 },
     { itemId: 2, desc: 'Watching TV', templateId: 3, orderNum: 1  },
     { itemId: 3, desc: 'Get on the boat', templateId: 1, orderNum: 1 },
