@@ -83,6 +83,14 @@ export function addItem(lastId, newData) {
   }
 }
 
+export function modifyItem(targetId, data) {
+  return {
+    type: types.MODIFY_ITEM,
+    targetId,
+    data,
+  }
+}
+
 export function addTemplateCategory(lastId, newData) {
   return {
     type: types.ADD_TEMPLATE_CATEGORY,

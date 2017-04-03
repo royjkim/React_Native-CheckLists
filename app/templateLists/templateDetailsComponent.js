@@ -28,8 +28,10 @@ export default class TemplateDetailsComponent extends React.Component {
     super(props)
     this.state = {
       searchText: '',
-      prevItems: this.props.state.itemsOfChosenTemplate,
-      tempItems: this.props.state.itemsOfChosenTemplate,
+      // prevItems: this.props.state.itemsOfChosenTemplate,
+      // tempItems: this.props.state.itemsOfChosenTemplate,
+      prevItems: [ ...this.props.state.itemsOfChosenTemplate ],
+      tempItems: [ ...this.props.state.itemsOfChosenTemplate ],
       hasEmptyOnItemDesc: false,
       changeValue: false,
       addItemModalVisible: false,
@@ -82,7 +84,8 @@ export default class TemplateDetailsComponent extends React.Component {
       state,
       searchBarText,
       navigatePreventFn,
-      addItem
+      addItem,
+      modifyItem
     } = this.props;
     const resetData = () => this.setState(
       {
@@ -109,8 +112,8 @@ export default class TemplateDetailsComponent extends React.Component {
         'You make an existing item empty. If you want to delete it, press Save. Or press Cancel.',
         [
           { text: 'Cancel', onPress: () => {
-            // console.log('this.state.emptyRefs : ', this.state.emptyRefs)
-            // this.refs[this.state.emptyRefs].focus()
+            console.log('this.state.emptyRefs : ', this.state.emptyRefs)
+            this.refs[this.state.emptyRefs].focus()
           }},
           { text: 'Save', onPress: () => {
             let tempResult = this.state.tempItemDesc
@@ -165,15 +168,21 @@ export default class TemplateDetailsComponent extends React.Component {
       )}
     />;
     const changeItemText = (itemText, rowId, emptyStatusBoolean) => state => {
-      state.tempItems[rowId] = {
+      // state.newItem.desc = itemText
+      // state.tempItems[rowId] = {
+      //   ...state.tempItems[rowId],
+      //   desc: itemText
+      // };
+      state.tempItems.length < rowId ? state.newItem.desc = itemText : (state.tempItems[rowId] = {
         ...state.tempItems[rowId],
         desc: itemText
-      }
+      }), modifyItem(state.tempItems[rowId].itemId, itemText);
       state.dataSource_newItemAdded = this.ds.cloneWithRows(state.tempItems);
       state.changeValue = !isEqual(state.prevItems, state.tempItems);
       state.changeValue ? state.searchText = '' : null;
       state.hasEmptyOnItemDesc = emptyStatusBoolean;
       state.emptyRefs = `itemsTextInput_${rowId}`;
+      console.log('after - changeItemText - this.state : ', this.state)
     }
     const renderRowItems = (rowData, sectionId, rowId) => {
       // console.log('renderRowItems - rowData : ', rowData)
@@ -246,7 +255,8 @@ export default class TemplateDetailsComponent extends React.Component {
         }
         <List>
           <ListView
-            dataSource={this.state.changeValue ?  this.state.dataSource_newItemAdded : state.dataSourceOfItemsOfChosenTemplate}
+            // dataSource={this.state.changeValue ?  this.state.dataSource_newItemAdded : state.dataSourceOfItemsOfChosenTemplate}
+            dataSource={this.state.dataSource_newItemAdded}
             enableEmptySections={true}
             renderRow={renderRowItems}
             style={{ maxHeight: 250 }}

@@ -138,13 +138,19 @@ const addItem = (state, action) => {
           ...action.newData.map(value => value.itemId)
         ]
       }
-
     }
   }
 }
 
 const modifyItem = (state, action) => ({
-
+  ...state,
+  items: {
+    ...state.items,
+    [action.targetId]: {
+      ...state.items[action.targetId],
+      desc: action.data
+    }
+  }
 })
 
 const delItem = (state, action) => ({

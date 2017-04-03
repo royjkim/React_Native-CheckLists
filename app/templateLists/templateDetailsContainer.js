@@ -1,7 +1,12 @@
 import TemplateDetailsComponent from './templateDetailsComponent'
 import { connect } from 'react-redux'
 import mySelectors from '../container/selectors'
-import { searchBarText, navigatePrevent, triedNavigateWhenPrevented, addItem } from '../actions/dataActionCreators'
+import {
+  searchBarText,
+  navigatePrevent,
+  triedNavigateWhenPrevented,
+  addItem,
+  modifyItem } from '../actions/dataActionCreators'
 
 const make_mapStateToProps = () => (state, ownProps) => ({
   state: {
@@ -23,7 +28,8 @@ const mapDispatchToProps = dispatch => ({
   searchBarText: (searchText, attr) => dispatch(searchBarText(searchText, attr)),
   navigatePreventFn: (__navigatorRouteID, statusBoolean) => dispatch(navigatePrevent(__navigatorRouteID, statusBoolean)),
   triedNavigateWhenPreventedFn: (parentTab, statusBoolean) => dispatch(triedNavigateWhenPrevented(parentTab, statusBoolean)),
-  addItem: (lastId, newData) => dispatch(addItem(lastId, newData))
+  addItem: (lastId, newData) => dispatch(addItem(lastId, newData)),
+  modifyItem: (targetId, data) => dispatch(modifyItem(targetId, data))
 })
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => ({

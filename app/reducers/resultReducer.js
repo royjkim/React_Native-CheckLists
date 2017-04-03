@@ -58,10 +58,6 @@ const addItem = (state, action) => {
   }
 }
 
-const modifyItem = (state, action) => ({
-
-})
-
 const delItem = (state, action) => ({
 
 })
@@ -90,7 +86,6 @@ export default function resultReducer(state, action) {
     [types.DELETE_INSTANCE]: deleteInstance,
     [types.MODIFY_INSTANCE]: modifyInstance,
     [types.ADD_ITEM]: addItem,
-    [types.MODIFY_ITEM]: modifyItem,
     [types.DEL_ITEM]: delItem,
     [types.ADD_TEMPLATE_CATEGORY]: addTemplateCategory,
     [types.MODIFY_TEMPLATE_CATEGORY]: modifyTemplateCategory,
