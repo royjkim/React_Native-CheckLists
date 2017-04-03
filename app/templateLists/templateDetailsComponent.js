@@ -27,10 +27,7 @@ export default class TemplateDetailsComponent extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      searchText: {
-        instancesOfChosenTemplate: '',
-        itemsOfChosenTemplate: ''
-      },
+      searchText: '',
       prevItems: this.props.state.itemsOfChosenTemplate,
       tempItems: this.props.state.itemsOfChosenTemplate,
       hasEmptyOnItemDesc: false,
@@ -46,11 +43,10 @@ export default class TemplateDetailsComponent extends React.Component {
       dataSource_newItemAdded: this.props.state.dataSourceOfItemsOfChosenTemplate || []
     }
     this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
-    console.log('this.props.state.dataSourceOfItemsOfChosenTemplate : ', this.props.state.dataSourceOfItemsOfChosenTemplate)
   }
 
   componentDidUpdate() {
-    console.log(`componentDidUpdate - this.state : `, this.state)
+    // console.log(`componentDidUpdate - this.state : `, this.state)
     const { navigatePrevent, triedNavigateWhenPrevented } = this.props.state,
           __navigatorRouteID = this.props.route.__navigatorRouteID,
           parentTab = this.props.route.passProps.parentTab,
@@ -90,10 +86,7 @@ export default class TemplateDetailsComponent extends React.Component {
     } = this.props;
     const resetData = () => this.setState(
       {
-        searchText: {
-          instancesOfChosenTemplate: '',
-          itemsOfChosenTemplate: ''
-        },
+        searchText: '',
         prevItems: this.props.state.itemsOfChosenTemplate,
         tempItems: this.props.state.itemsOfChosenTemplate,
         hasEmptyOnItemDesc: false,
@@ -139,10 +132,6 @@ export default class TemplateDetailsComponent extends React.Component {
       });
       state.navigatePrevent[route.__navigatorRouteID] && navigatePreventFn(route.__navigatorRouteID, false);
       state.navigatePrevent[route.passProps.parentTab] && navigatePreventFn(route.passProps.parentTab, false);
-      console.log('this.state.tempItems : ', this.state.tempItems)
-      console.log('this.state.prevItems : ', this.state.prevItems)
-      console.log('state.itemsOfChosenTemplate : ', state.itemsOfChosenTemplate)
-      console.log('call addItem - this.state.prevItems.slice(state.itemsOfChosenTemplate.length) : ', this.state.prevItems.slice(state.itemsOfChosenTemplate.length))
       addItem(state.lastId.items, this.state.prevItems.slice(state.itemsOfChosenTemplate.length));
       alert('save complete');
       // this.props.navigator.pop()
@@ -182,7 +171,7 @@ export default class TemplateDetailsComponent extends React.Component {
       }
       state.dataSource_newItemAdded = this.ds.cloneWithRows(state.tempItems);
       state.changeValue = !isEqual(state.prevItems, state.tempItems);
-      state.changeValue ? state.searchText.itemsOfChosenTemplate = '' : null;
+      state.changeValue ? state.searchText = '' : null;
       state.hasEmptyOnItemDesc = emptyStatusBoolean;
       state.emptyRefs = `itemsTextInput_${rowId}`;
     }
@@ -229,19 +218,17 @@ export default class TemplateDetailsComponent extends React.Component {
           round={true}
           onChangeText={searchText => {
             this.setState({
-              searchText: {
-                ...this.state.searchText,
-                itemsOfChosenTemplate: searchText
-              }
+              searchText
             })
             searchBarText(searchText, 'itemsOfChosenTemplate')
           }}
           placeholder='Search Items'
+          value={this.state.searchText}
         />) : null}
         <FormLabel>
           Template : {route.passProps.chosenTemplate.title}
         </FormLabel>
-        {this.state.searchText.itemsOfChosenTemplate !== ''
+        {this.state.searchText !== ''
           ? (
               <FormLabel>
                 Category : {route.passProps.chosenTemplate.category}, Items({state.itemsLengthOfChosenTemplate}, searched)
@@ -259,8 +246,7 @@ export default class TemplateDetailsComponent extends React.Component {
         }
         <List>
           <ListView
-            // dataSource={this.state.searchText.itemsOfChosenTemplate == '' ? this.state.dataSource_newItemAdded : state.dataSourceOfItemsOfChosenTemplate}
-            dataSource={this.state.dataSource_newItemAdded}
+            dataSource={this.state.changeValue ?  this.state.dataSource_newItemAdded : state.dataSourceOfItemsOfChosenTemplate}
             enableEmptySections={true}
             renderRow={renderRowItems}
             style={{ maxHeight: 250 }}
@@ -278,7 +264,13 @@ export default class TemplateDetailsComponent extends React.Component {
               style={{
                 flexDirection: 'row',
               }}
-              onPress={() => this.setState({ addItemModalVisible: true })}
+              onPress={() => {
+                this.setState({
+                  searchText: '',
+                  addItemModalVisible: true
+                })
+                searchBarText('', 'itemsOfChosenTemplate')
+            }}
               >
               <Icon
                 name='add-circle-outline'
@@ -374,17 +366,16 @@ export default class TemplateDetailsComponent extends React.Component {
                 height: 110,
                 backgroundColor: 'white',
                 // paddingBottom: 20,
-                borderTopWidth: 1,
+                // borderTopWidth: 1,
                 borderColor: '#86939D',
                 // paddingBottom: 20,
                 // paddingVertical: 20,
-                borderWidth: 1,
                 // borderColor: '#9E9E9E',
               }}
               behavior='position'
               contentContainerStyle={{
                 backgroundColor: 'white',
-                borderWidth: 1,
+                borderTopWidth: 1,
                 borderColor: '#86939D',
                 // paddingVertical: 20
                 paddingBottom: 27
@@ -431,7 +422,6 @@ export default class TemplateDetailsComponent extends React.Component {
                     title='Add'
                     onPress={() => {
                       this.state.newItem.desc !== '' ? (this.setState(state => {
-                        console.log('before - add - this.state : ', this.state)
                         state.tempItems = [
                           ...state.tempItems,
                           { ...state.newItem }

@@ -8,13 +8,10 @@ const findLastId = (state, action) => ({
   templates: action.result.templates.slice(-1)[0]
 })
 
-const lastIdPlus = (state, action) => {
-  console.log('lastIdReducer - action.newData : ', action.newData)
-  return {
-    ...state,
-    [action.attr]: action.lastId + action.newData.length
-  }
-}
+const lastIdPlus = (state, action) => ({
+  ...state,
+  [action.attr]: action.lastId + action.newData.length
+})
 
 const lastIdPlusAddTemplate = (state, action) => ({
   ...state,

@@ -74,12 +74,10 @@ export default class InstanceListComponent extends React.Component {
             lightTheme
             round={true}
             placeholder='Search Instances'
+            value={this.state.searchText}
             onChangeText={searchText => {
               this.setState(state => ({
-                searchText: {
-                  ...state,
-                  instancesOfChosenTemplate: searchText
-                }
+                searchText
               }))
               searchBarText(searchText, 'instancesOfChosenTemplate');
             }}
@@ -87,12 +85,12 @@ export default class InstanceListComponent extends React.Component {
           {this.state.searchText !== ''
             ? (
                 <FormLabel>
-                  ▼ Instance List of {route.title} : {state.dataSourceInstancesOfChosenTemplate._dataBlob.s1.length}(searched)
+                  ▼ {route.title} : {state.dataSourceInstancesOfChosenTemplate._dataBlob.s1.length}(searched)
                 </FormLabel>
               )
             : (
                 <FormLabel>
-                  ▼ Instance List of {route.title} : {state.dataSourceInstancesOfChosenTemplate._dataBlob.s1.length}
+                  ▼ {route.title} : {state.dataSourceInstancesOfChosenTemplate._dataBlob.s1.length}
                 </FormLabel>
               )
           }
