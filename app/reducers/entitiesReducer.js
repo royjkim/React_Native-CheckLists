@@ -113,9 +113,35 @@ const modifyItemsCustomized = (state, action) => ({
   }
 })
 
-const addItem = (state, action) => ({
+const addItem = (state, action) => {
+  const tempData_items = ((tempResult = {}) => {
+    action.newData.map(value => tempResult[value.itemId] = value)
+    return tempResult
+  })()
+  // const tempData_itemsOftemplates = action.newData.map(value => value.itemId)
+  return {
+    ...state,
+    items: {
+      ...state.items,
+      // [action.newData.itemId]: {
+      //   ...action.newData
+      // }
+      // ...action.newData.map(value => [value.itemId]: value)
+      ...tempData_items
+    },
+    templates: {
+      ...state.templates,
+      [action.templateId]: {
+        ...state.templates[action.templateId],
+        items: [
+          ...state.templates[action.templateId].items,
+          ...action.newData.map(value => value.itemId)
+        ]
+      }
 
-})
+    }
+  }
+}
 
 const modifyItem = (state, action) => ({
 

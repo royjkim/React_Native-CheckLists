@@ -1,12 +1,12 @@
 import types from '../actions/dataActions'
-const initialState = {
-  result: {
-    templates: [],
-    instances: [],
-    items: [],
-    templateCategories: []
-  }
-}
+// const initialState = {
+//   result: {
+//     templates: [],
+//     instances: [],
+//     items: [],
+//     templateCategories: []
+//   }
+// }
 
 const addTemplate = (state, action) => ({
   ...state,
@@ -45,9 +45,18 @@ const modifyInstance = (state, action) => ({
 
 })
 
-const addItem = (state, action) => ({
-
-})
+const addItem = (state, action) => {
+  // Below need to be modified, to
+  // const itemId =  action.newData.map(value => value.itemId)
+  return {
+    ...state,
+    items: [
+      ...state.items,
+      // action.newData.itemId
+      ...action.newData.map(value => value.itemId)
+    ]
+  }
+}
 
 const modifyItem = (state, action) => ({
 
@@ -72,7 +81,7 @@ const delTemplateCategory = (state, action) => ({
 
 const normalizedDataInput = (state, action) => action.data.result
 
-export default function resultReducer(state = initialState, action) {
+export default function resultReducer(state, action) {
   const reducerMap = {
     [types.ADD_TEMPLATE]: addTemplate,
     [types.MODIFY_TEMPLATE]: modifyTemplate,

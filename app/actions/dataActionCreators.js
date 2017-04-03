@@ -73,6 +73,16 @@ export function modifyItemsCustomized(targetData) {
   }
 }
 
+export function addItem(lastId, newData) {
+  return {
+    type: types.ADD_ITEM,
+    newData,
+    attr: 'items',
+    lastId,
+    templateId: newData[0].templateId
+  }
+}
+
 export function addTemplateCategory(lastId, newData) {
   return {
     type: types.ADD_TEMPLATE_CATEGORY,

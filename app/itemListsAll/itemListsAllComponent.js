@@ -41,6 +41,7 @@ export default class ItemsListsAllComponent extends React.Component {
       hideChevron
     />
     const renderSectionHeader = (sectionData, sectionId) => {
+      const tempData = { ...state.templates[sectionId] }
       return (
         <TouchableOpacity
           onPress={() => {
@@ -75,7 +76,8 @@ export default class ItemsListsAllComponent extends React.Component {
                   key={sectionId}
                   style={{ fontWeight: '500', color: '#161616' }}
                   >
-                  Template : {state.templates[sectionId].title}, Items : {sectionData.length}
+                  {/* Template : {state.templates[sectionId].title}, Items : {sectionData.length} */}
+                  Template : {tempData.title}, Items : {sectionData.length}
                 </Text>
                 <View style={{ flex: 1 }}>
                   <Icon

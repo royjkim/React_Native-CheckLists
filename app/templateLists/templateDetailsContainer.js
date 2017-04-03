@@ -1,7 +1,7 @@
-import InstanceListComponent from './instanceListComponent'
+import TemplateDetailsComponent from './templateDetailsComponent'
 import { connect } from 'react-redux'
-import mySelectors from '../../container/selectors'
-import { searchBarText, navigatePrevent, triedNavigateWhenPrevented, addItem } from '../../actions/dataActionCreators'
+import mySelectors from '../container/selectors'
+import { searchBarText, navigatePrevent, triedNavigateWhenPrevented, addItem } from '../actions/dataActionCreators'
 
 const make_mapStateToProps = () => (state, ownProps) => ({
   state: {
@@ -37,4 +37,4 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
   ...dispatchProps
 })
 
-export default connect(make_mapStateToProps, mapDispatchToProps, mergeProps)(InstanceListComponent)
+export default connect(make_mapStateToProps, mapDispatchToProps, mergeProps)(TemplateDetailsComponent)

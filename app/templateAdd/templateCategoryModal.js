@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Text,
   TextInput,
+  KeyboardAvoidingView,
 } from 'react-native'
 import {
   List,
@@ -48,14 +49,23 @@ export default class TemplateCategoryModal extends React.Component {
           onPress={() => this.state.newCategory ? alert('after input new category, please press add button') : closeFn()}
           >
         </TouchableOpacity>
-        <View
+        <KeyboardAvoidingView
           style={{
             flex: 1,
             backgroundColor: 'white',
             borderColor: 'lightgray',
             // borderTopWidth: 1,
             // marginBottom: 3,
-          }}>
+          }}
+          behavior={'position'}
+          contentContainerStyle={{
+            flex: 1,
+            // borderTopWidth: 1,
+            borderColor: '#86939D',
+            backgroundColor: 'white',
+            // borderWidth: 1
+          }}
+          >
           <List>
             <FormLabel
               containerStyle={{
@@ -84,15 +94,6 @@ export default class TemplateCategoryModal extends React.Component {
               marginBottom: 20
             }}
             >
-              {/* <Text
-                style={{
-                  color: '#86939D',
-                  fontWeight: 'bold',
-                  marginLeft: 8
-                }}
-                >
-                New Category :
-              </Text> */}
               <View
                 style={{
                   flex: 1,
@@ -125,56 +126,8 @@ export default class TemplateCategoryModal extends React.Component {
                   }
                 }}
               />
-              {/* <View
-                style={{
-                  backgroundColor: '#C1C1C1',
-                  height: 1.5,
-                  marginHorizontal: 10
-                }}
-              /> */}
-              {/* <TouchableOpacity
-                style={{
-                  flex: 1,
-                  // marginLeft: 32,
-                }}
-                onPress={() => this.setState({ categoryListModalVisible: true })}
-                >
-                  <Text
-                    style={{
-                      marginHorizontal: 20,
-                      marginBottom: 5,
-                      color: this.state.templateName ? '#605E60' : '#9E9E9E',
-                      textAlign: 'center'
-                    }}
-                    >
-                    {this.state.templateName ? this.state.templateName : 'input title'}
-                  </Text>
-                  <View
-                    style={{
-                      backgroundColor: '#C1C1C1',
-                      height: 1.5,
-                      marginHorizontal: 10
-                    }}
-                  />
-              </TouchableOpacity> */}
           </View>
-          {/* <FormLabel>
-            New Category Add
-          </FormLabel>
-          <FormInput
-            onChangeText={newCategory => this.setState({ newCategory })}
-          />
-          <Button
-            title='save'
-            onPress={() => {
-              // categoryAddFn(this.state.newCategory)
-              addTemplateCategory(lastId, { title: this.state.newCategory })
-              categoryChosen(this.state.newCategory)
-              closeFn()
-            }}
-            buttonStyle={{ marginTop: 10 }}
-          /> */}
-        </View>
+        </KeyboardAvoidingView>
       </View>
     )
   }

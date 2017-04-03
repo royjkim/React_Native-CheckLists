@@ -13,7 +13,8 @@ import {
   SearchBar,
 } from 'react-native-elements'
 
-import InstanceListContainer from './instanceList/instanceListContainer'
+// import InstanceListContainer from './instanceList/instanceListContainer'
+import TemplateDetailsContainer from './templateDetailsContainer'
 
 export default class TemplateListsComponent extends React.Component {
   constructor(props) {
@@ -53,7 +54,7 @@ export default class TemplateListsComponent extends React.Component {
             chosenTemplate: rowData
           },
           title: `${rowData.title}`,
-          component: InstanceListContainer,
+          component: TemplateDetailsContainer,
         }
       )}
     />

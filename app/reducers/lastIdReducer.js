@@ -8,10 +8,13 @@ const findLastId = (state, action) => ({
   templates: action.result.templates.slice(-1)[0]
 })
 
-const lastIdPlus = (state, action) => ({
-  ...state,
-  [action.attr]: action.lastId + 1
-})
+const lastIdPlus = (state, action) => {
+  console.log('lastIdReducer - action.newData : ', action.newData)
+  return {
+    ...state,
+    [action.attr]: action.lastId + action.newData.length
+  }
+}
 
 const lastIdPlusAddTemplate = (state, action) => ({
   ...state,
@@ -25,7 +28,8 @@ export default function lastIdReducer(state, action) {
     [types.FIND_LAST_ID]: findLastId,
     // [types.LAST_ID_PLUS]: lastIdPlus
     [types.ADD_TEMPLATE_CATEGORY]: lastIdPlus,
-    [types.ADD_TEMPLATE]: lastIdPlusAddTemplate
+    [types.ADD_TEMPLATE]: lastIdPlusAddTemplate,
+    [types.ADD_ITEM]: lastIdPlus
   }
   return reducerMapper.hasOwnProperty(action.type) ? reducerMapper[action.type](state, action) : state
 }
