@@ -72,7 +72,6 @@ export default class MyTabs extends React.Component {
                 parentTab: 'home'
               },
               title: 'Home',
-              sideMenuVisible: false,
               component: HomeContainer
             }}
           />
@@ -100,7 +99,6 @@ export default class MyTabs extends React.Component {
                 parentTab: 'templateList'
               },
               title: 'Template List',
-              sideMenuVisible: false,
               component: TemplateListsContainer
             }}
           />
@@ -155,7 +153,6 @@ export default class MyTabs extends React.Component {
                 parentTab: 'settings'
               },
               title: 'Setting',
-              sideMenuVisible: false,
               component: SettingsContainer
             }}
           />

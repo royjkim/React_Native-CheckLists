@@ -17,15 +17,16 @@ import {
   SearchBar,
   Icon,
 } from 'react-native-elements'
-import { isEqual } from 'lodash'
 
+import TemplateAddContainer from '../../templateAdd/templateAddContainer'
 import ChosenInstanceDetailsContainer from './chosenInstanceDetails/chosenInstanceDetailsContainer'
 
 export default class InstanceListComponent extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      searchText: ''
+      searchText: '',
+      addNewInstanceModalVisible: false
     }
   }
 
@@ -64,9 +65,13 @@ export default class InstanceListComponent extends React.Component {
         }
       )}
     />;
+    const renderRowTemplates = rowData => <ListItem
+      key={rowData.templateId}
+      title={rowData.title}
+    />
     return(
       <View
-        style={styles.bodyContainerOnSideMenu}
+        style={styles.bodyContainer}
         >
         <View>
           <View style={{ marginVertical: 10, height: 2 }} />
@@ -101,6 +106,75 @@ export default class InstanceListComponent extends React.Component {
                 enableEmptySections={true}
               />
             </List>
+            <View style={{ height: 10 }}/>
+            <Button
+              icon={{ name: 'add' }}
+              title='Add Instance'
+              backgroundColor='#339AED'
+              onPress={() => this.setState({ addNewInstanceModalVisible: true })}
+            />
+            <Modal
+              animationType={'slide'}
+              transparent={true}
+              visible={this.state.addNewInstanceModalVisible}
+              >
+              <View
+                style={{ flex: 1 }}
+                >
+                  <TouchableOpacity
+                    style={{
+                      flex: 1,
+                    }}
+                    onPress={() => this.setState({ addNewInstanceModalVisible: false })}
+                    >
+                  </TouchableOpacity>
+                  <View
+                    style={{
+                      flex: 0,
+                      backgroundColor: 'white',
+                      borderTopWidth: 1,
+                      borderColor: '#86939D',
+                      paddingBottom: 30
+                    }}
+                    >
+                      <FormLabel>
+                        Choose Template.
+                      </FormLabel>
+                      <List>
+                        <ListView
+                          dataSource={state.dataSourceTemplates}
+                          renderRow={renderRowTemplates}
+                          enableEmptySections={true}
+                          style={{ maxHeight: 200 }}
+                        />
+                      </List>
+                      <View style={{ height: 10 }} />
+                      <Button
+                        icon={{ name: 'note-add' }}
+                        title='Add new template'
+                        backgroundColor='#339AED'
+                        onPress={() => {
+                          this.setState({ addNewInstanceModalVisible: false })
+                          navigator.push({
+                            passProps: {
+                              leftButton: {
+                                title: 'back',
+                                component: ''
+                              },
+                              rightButton: {
+                                title: '',
+                                component: ''
+                              },
+                              parentTab: route.passProps.parentTab
+                            },
+                            title: 'Template Add',
+                            component: TemplateAddContainer
+                          })
+                        }}
+                      />
+                  </View>
+              </View>
+            </Modal>
         </View>
       </View>
     )

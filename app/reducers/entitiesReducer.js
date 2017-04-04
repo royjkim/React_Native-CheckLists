@@ -10,22 +10,22 @@ const initialState = {
 }
 
 const addTemplate = (state, action) => {
-  let temp_items = {},
+  let temp_items = {};
       // temp_itemsCustomized = {},
-      prevLastIdItems = action.lastId.items;
+      // prevLastIdItems = action.lastId.items;
       // prevLastIdItemsCustomized = action.lastId.itemsCustomized;
-  console.log(`action.newData.items : `, action.newData.items);
+  // console.log(`action.newData.items : `, action.newData.items);
   action.newData.items.map(value => {
-    temp_items[++prevLastIdItems] = {
+    temp_items[value.itemId] = {
       ...value,
       template: action.newData.title
     }
-    // temp_itemsCustomized[++prevLastIdItemsCustomized] = {
-    //   ...value,
-    //   instanceId: null,
-    //   itemCustomizedId: prevLastIdItemsCustomized,
-    //   status: false
-    // }
+  //   // temp_itemsCustomized[++prevLastIdItemsCustomized] = {
+  //   //   ...value,
+  //   //   instanceId: null,
+  //   //   itemCustomizedId: prevLastIdItemsCustomized,
+  //   //   status: false
+  //   // }
   })
   return {
     ...state,

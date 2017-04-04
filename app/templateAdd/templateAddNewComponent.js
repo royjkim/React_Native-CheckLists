@@ -6,6 +6,7 @@ import {
   Modal,
   ListView,
   TouchableOpacity,
+  Alert,
 } from 'react-native'
 import styles from '../components/styles'
 import {
@@ -17,6 +18,7 @@ import {
   ListItem,
   Icon,
 } from 'react-native-elements'
+import { isEqual } from 'lodash';
 import TemplateCategoryModal from './templateCategoryModal'
 import ItemsInputedListModalContainer from './itemsInputedListModalContainer'
 
@@ -32,44 +34,88 @@ export default class TemplateAddNewComponent extends React.Component {
       tempNewItemDesc: '',
       newItem: {
         desc: '',
-        // itemId: this.props.state.lastId.items + 1,
-        itemId: 0,
+        itemId: this.props.state.lastId.items,
+        // itemId: 0,
         orderNum: 0,
-        // templateId: this.props.state.lastId.templates + 1
-        templateId: 0
+        templateId: this.props.state.lastId.templates + 1
+        // templateId: 0
       },
-      newItems: [],
+      tempItems: [],
+      prevItems: [],
       dataSourceNewAddedItems: [],
+      changeValue: false
     }
     this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
   }
 
-  async componentWillMount() {
+  componentWillMount() {
     if(this.props.route.passProps.chosenTemplate) {
       const { chosenTemplate } = this.props.route.passProps
       const tempSorted_newItems = chosenTemplate.items.map(value => ({
         ...this.props.state.items[value],
         templateId: this.props.state.lastId.templates + 1
       })).sort((data1, data2) => data2.orderNum - data1.orderNum)
-      await this.setState({
-        templateName: chosenTemplate.title || '',
-        chosenCategory: chosenTemplate.category || '',
-        newItem: {
+      this.setState(prevState => {
+        prevState.templateName = chosenTemplate.title || '';
+        prevState.chosenCategory = chosenTemplate.category || '';
+        prevState.newItem = {
           desc: '',
           itemId: this.props.state.lastId.items + 1,
           orderNum: tempSorted_newItems.length > 0 ? tempSorted_newItems[0].orderNum + 1 : 0,
           templateId: this.props.state.lastId.templates + 1
-        },
-        newItems: tempSorted_newItems
+        };
+        prevState.prevItems = [
+          ...chosenTemplate.items.map(value => ({
+            ...this.props.state.items[value],
+          })).sort((data1, data2) => data2.orderNum - data1.orderNum)
+        ];
+        prevState.tempItems = [ ...prevState.prevItems ];
       })
     }
-    this.setState({
-      dataSourceNewAddedItems: this.ds.cloneWithRows(this.state.newItems || [])
+    this.setState(prevState => {
+      prevState.dataSourceNewAddedItems = this.ds.cloneWithRows(prevState.tempItems || []);
     })
   }
 
+  componentDidUpdate() {
+    const { navigatePrevent, triedNavigateWhenPrevented } = this.props.state,
+          __navigatorRouteID = this.props.route.__navigatorRouteID,
+          parentTab = this.props.route.passProps.parentTab,
+          navigatePreventFn = this.props.navigatePreventFn,
+          triedNavigateWhenPreventedFn = this.props.triedNavigateWhenPreventedFn,
+          { chosenTemplate } = this.props.route.passProps;
+
+    (chosenTemplate && this.state.templateName !== chosenTemplate.title) || this.state.tempNewItemDesc !== '' || !isEqual(this.state.prevItems, this.state.tempItems) ?
+      this.state.changeValue || this.setState({ changeValue: true })
+        : this.state.changeValue && this.setState({ changeValue: false })
+
+    this.state.changeValue ? (navigatePrevent[__navigatorRouteID] || navigatePreventFn(__navigatorRouteID, true), navigatePrevent[parentTab] || navigatePreventFn(parentTab, true)) : (navigatePrevent[__navigatorRouteID] && navigatePreventFn(__navigatorRouteID, false), navigatePrevent[parentTab] && navigatePreventFn(parentTab, false));
+
+    (triedNavigateWhenPrevented[__navigatorRouteID] || triedNavigateWhenPrevented[parentTab]) && (Alert.alert(
+        'Save needed',
+        'Press save button to complete adding template.',
+        [
+          {
+            text: 'Cancel Adding', onPress: () => this.props.navigator.pop()
+          },
+          {
+            text: 'Keep Adding'
+          }
+        ]
+      ),
+      triedNavigateWhenPrevented[__navigatorRouteID] && triedNavigateWhenPreventedFn(__navigatorRouteID, false),
+      triedNavigateWhenPrevented[parentTab] && triedNavigateWhenPreventedFn(parentTab, false));
+  }
+
   render() {
-    const { route, navigator, state, addTemplateCategory, addNewTemplate } = this.props
+    const {
+      route,
+      navigator,
+      state,
+      addTemplateCategory,
+      addNewTemplate,
+      addItem,
+    } = this.props
     const categoryModalToggle = () => this.setState({ categoryListModalVisible: !this.state.categoryListModalVisible })
     const categoryChosen = chosenCategory => this.setState({ chosenCategory })
     const categoryAdd = newCategory => {
@@ -84,11 +130,29 @@ export default class TemplateAddNewComponent extends React.Component {
       })
     }
     const itemsInputedListModalToggle = () => this.setState({ itemsInputedListModalVisible: !this.state.itemsInputedListModalVisible })
-    const renderRowNewItem = (rowData, sectionId) => (
+    const deleteAlert = (chosen_rowData, rowId) => {
+      rowId = parseInt(rowId)
+      Alert.alert(
+        'Delete Confirm',
+        'Do you want to delete this item?',
+        [
+          { text: 'Cancel' },
+          { text: 'Delete', onPress: () => this.setState(prevState => {
+            prevState.tempItems = [
+              ...prevState.tempItems.slice(0, rowId),
+              ...prevState.tempItems.slice(rowId + 1)
+            ];
+            prevState.dataSourceNewAddedItems = this.ds.cloneWithRows(prevState.tempItems)
+          })}
+        ]
+      );
+    }
+    const renderRowNewItem = (rowData, sectionId, rowId) => (
       <ListItem
-        key={sectionId}
+        key={rowData.itemId}
         title={String(rowData.desc || 'none')}
         subtitle={`orderNum : ${String(rowData.orderNum)}, templateId : ${rowData.templateId}`}
+        onPress={() => deleteAlert(rowData, rowId)}
         hideChevron
       />
     )
@@ -199,45 +263,31 @@ export default class TemplateAddNewComponent extends React.Component {
             }}>
             <Button
               title='Add'
-              onPress={async () => {
-                if(this.state.tempNewItemDesc !== '') {
-                  this.setState({
-                    newItem: {
-                      desc: this.state.tempNewItemDesc,
-                      itemId: this.state.newItems.length == 0 ? state.lastId.items + 1 : state.lastId.items + 1 + this.state.newItems.length,
-                      orderNum: this.state.orderNum + 1,
-                      templateId: state.lastId.templates + 1,
-                    },
-                  })
-                  await this.setState({
-                    newItems: [
-                      ...this.state.newItems,
-                      {
-                        ...this.state.newItem,
-                        desc: this.state.tempNewItemDesc
-                      }
-                    ],
-                    newItem: {
-                      desc: '',
-                      itemId: this.state.newItem.itemId + 1,
-                      orderNum: this.state.newItem.orderNum + 1,
-                      templateId: state.lastId.templates + 1,
-                    },
-                    tempNewItemDesc: ''
-                  })
-                  let stateCopy_newItems = [
-                    ...this.state.newItems
-                  ]
-                  stateCopy_newItems.sort((data1, data2) => data2.orderNum - data1.orderNum)
-                  this.setState({
-                    newItems: stateCopy_newItems
-                  })
-                  this.setState({
-                    dataSourceNewAddedItems: this.ds.cloneWithRows(this.state.newItems)
-                  })
-                } else {
-                  alert('input a item');
-                }
+              onPress={() => {
+                this.state.tempNewItemDesc !== '' && this.setState(prevState => {
+                  prevState.newItem = {
+                    desc: prevState.tempNewItemDesc,
+                    itemId: prevState.tempItems.length == 0 ? state.lastId.items + 1 : state.lastId.items + 1 + prevState.tempItems.length,
+                    orderNum: prevState.orderNum + 1,
+                    templateId: state.lastId.templates + 1
+                  };
+                  prevState.tempItems = [
+                    ...prevState.tempItems,
+                    {
+                      ...prevState.newItem,
+                      desc: prevState.tempNewItemDesc
+                    }
+                  ];
+                  prevState.newItem = {
+                    desc: '',
+                    itemId: prevState.newItem.itemId + 1,
+                    orderNum: prevState.newItem.orderNum + 1,
+                    templateId: state.lastId.templates + 1,
+                  };
+                  prevState.tempNewItemDesc = '';
+                  prevState.tempItems.sort((data1, data2) => data2.orderNum - data1.orderNum);
+                  prevState.dataSourceNewAddedItems = this.ds.cloneWithRows(prevState.tempItems);
+                })
               }}
             />
           </View>
@@ -245,18 +295,21 @@ export default class TemplateAddNewComponent extends React.Component {
         <View style={{ height: 10 }}/>
         <Button
           title='Save'
+          backgroundColor='#159588'
           onPress={() => {
-            if(this.state.templateName.length > 3 && this.state.chosenCategory && this.state.newItems.length > 0 && this.state.tempNewItemDesc == '') {
+            if(this.state.templateName.length > 3 && this.state.chosenCategory && this.state.tempItems.length > 0 && this.state.tempNewItemDesc == '') {
+              this.setState({ changeValue: false })
               addNewTemplate(state.lastId, {
                 additionalInfo: 'addable',
                 category: this.state.chosenCategory,
-                items: this.state.newItems,
+                items: this.state.tempItems,
                 templateId: state.lastId.templates + 1,
                 title: this.state.templateName
-              })
-              alert('save complete', navigator.popToTop())
+              }),
+              // addItem(state.lastId.items, this.state.tempItems.slice(0, this.state.prevItems.length))
+              alert('save complete', navigator.pop())
             } else {
-              this.state.templateName.length < 4 ? alert('input template name(at least 3 characters)') : !this.state.chosenCategory ? alert('input category') : this.state.newItems.length < 1 ? alert('add new item(at least 1 item)') : this.state.tempNewItemDesc !== '' ? alert('after input item, please press add button') : null
+              this.state.templateName.length < 4 ? alert('input template name(at least 3 characters)') : !this.state.chosenCategory ? alert('input category') : this.state.tempItems.length < 1 ? alert('add new item(at least 1 item)') : this.state.tempNewItemDesc !== '' ? alert('after input item, please press add button') : null
             }
           }}
         />
