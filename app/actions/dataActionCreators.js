@@ -83,10 +83,9 @@ export function addItem(lastId, newData) {
   }
 }
 
-export function modifyItem(targetId, data) {
+export function modifyItem(data) {
   return {
     type: types.MODIFY_ITEM,
-    targetId,
     data,
   }
 }

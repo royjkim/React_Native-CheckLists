@@ -42,7 +42,8 @@ export default class TemplateDetailsComponent extends React.Component {
         template: this.props.state.chosenTemplate.title,
         templateId: this.props.state.chosenTemplate.templateId
       },
-      dataSource_newItemAdded: this.props.state.dataSourceOfItemsOfChosenTemplate || []
+      modifyExistingItems: {},
+      dataSource_tempItems: this.props.state.dataSourceOfItemsOfChosenTemplate || []
     }
     this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
   }
@@ -103,7 +104,7 @@ export default class TemplateDetailsComponent extends React.Component {
           template: this.props.state.chosenTemplate.title,
           templateId: this.props.state.chosenTemplate.templateId
         },
-        dataSource_newItemAdded: this.props.state.dataSourceOfItemsOfChosenTemplate || []
+        dataSource_tempItems: this.props.state.dataSourceOfItemsOfChosenTemplate || []
       }
     );
     const saveAlertFn = () => {
@@ -133,9 +134,11 @@ export default class TemplateDetailsComponent extends React.Component {
         state.hasEmptyOnItemDesc = false,
         state.emptyRefs = '';
       });
-      state.navigatePrevent[route.__navigatorRouteID] && navigatePreventFn(route.__navigatorRouteID, false);
-      state.navigatePrevent[route.passProps.parentTab] && navigatePreventFn(route.passProps.parentTab, false);
-      addItem(state.lastId.items, this.state.prevItems.slice(state.itemsOfChosenTemplate.length));
+      // Below makes duplicate w/ componentDidUpdate.
+      // state.navigatePrevent[route.__navigatorRouteID] && navigatePreventFn(route.__navigatorRouteID, false);
+      // state.navigatePrevent[route.passProps.parentTab] && navigatePreventFn(route.passProps.parentTab, false);
+      Object.keys(this.state.modifyExistingItems).length > 0 && modifyItem(this.state.modifyExistingItems)
+      this.state.prevItems.length > this.state.tempItems.length && addItem(state.lastId.items, this.state.prevItems.slice(state.itemsOfChosenTemplate.length));
       alert('save complete');
       // this.props.navigator.pop()
     }
@@ -176,13 +179,18 @@ export default class TemplateDetailsComponent extends React.Component {
       state.tempItems.length < rowId ? state.newItem.desc = itemText : (state.tempItems[rowId] = {
         ...state.tempItems[rowId],
         desc: itemText
-      }), modifyItem(state.tempItems[rowId].itemId, itemText);
-      state.dataSource_newItemAdded = this.ds.cloneWithRows(state.tempItems);
+      }, this.setState({
+          modifyExistingItems: {
+            ...this.state.modifyExistingItems,
+            [state.tempItems[rowId].itemId]: itemText
+          }
+        })
+      );
+      state.dataSource_tempItems = this.ds.cloneWithRows(state.tempItems);
       state.changeValue = !isEqual(state.prevItems, state.tempItems);
       state.changeValue ? state.searchText = '' : null;
       state.hasEmptyOnItemDesc = emptyStatusBoolean;
       state.emptyRefs = `itemsTextInput_${rowId}`;
-      console.log('after - changeItemText - this.state : ', this.state)
     }
     const renderRowItems = (rowData, sectionId, rowId) => {
       // console.log('renderRowItems - rowData : ', rowData)
@@ -255,8 +263,8 @@ export default class TemplateDetailsComponent extends React.Component {
         }
         <List>
           <ListView
-            // dataSource={this.state.changeValue ?  this.state.dataSource_newItemAdded : state.dataSourceOfItemsOfChosenTemplate}
-            dataSource={this.state.dataSource_newItemAdded}
+            // dataSource={this.state.changeValue ?  this.state.dataSource_tempItems : state.dataSourceOfItemsOfChosenTemplate}
+            dataSource={this.state.dataSource_tempItems}
             enableEmptySections={true}
             renderRow={renderRowItems}
             style={{ maxHeight: 250 }}
@@ -440,7 +448,7 @@ export default class TemplateDetailsComponent extends React.Component {
                         ++state.newItem.itemId;
                         ++state.newItem.orderNum;
 
-                        state.dataSource_newItemAdded = this.ds.cloneWithRows(state.tempItems)
+                        state.dataSource_tempItems = this.ds.cloneWithRows(state.tempItems)
                         state.changeValue = !isEqual(state.prevItems, state.tempItems)
                       }),
                       alert('add completed')) : alert('input new item');

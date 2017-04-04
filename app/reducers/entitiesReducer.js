@@ -142,16 +142,24 @@ const addItem = (state, action) => {
   }
 }
 
-const modifyItem = (state, action) => ({
-  ...state,
-  items: {
-    ...state.items,
-    [action.targetId]: {
-      ...state.items[action.targetId],
-      desc: action.data
+const modifyItem = (state, action) => {
+  let tempData_items = { ...state.items };
+  for(let key in action.data) {
+    tempData_items = {
+      ...tempData_items,
+      [key]: {
+        ...tempData_items[key],
+        desc: action.data[key]
+      }
     }
   }
-})
+  return {
+    ...state,
+    items: {
+      ...tempData_items
+    }
+  }
+}
 
 const delItem = (state, action) => ({
 
