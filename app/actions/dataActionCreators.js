@@ -83,10 +83,33 @@ export function addItem(lastId, newData) {
   }
 }
 
-export function modifyItem(data) {
+export function modifyItem(data, templateId) {
+  console.log('actionCreators - parameter - data : ', data);
+  console.log('actionCreators - parameter - templateId : ', templateId);
+  return dispatch => {
+    for(let key in data) {
+      data[key] == '' && (delete data[key], dispatch(delItem(parseInt(key), parseInt(templateId))), console.log(`del request - key : ${key}, templateId : ${templateId}`))
+    }
+    return {
+      type: types.MODIFY_ITEM,
+      data,
+    }
+  }
+  // for(let key in data) {
+  //   data[key] == '' && (delete data[key], delItem(key, templateId), console.log(`del request - key : ${key}, templateId : ${templateId}`))
+  // }
+  // return {
+  //   type: types.MODIFY_ITEM,
+  //   data,
+  // }
+}
+
+export function delItem(targetItemId, targetTemplateId) {
   return {
-    type: types.MODIFY_ITEM,
-    data,
+    type: types.DEL_ITEM,
+    attr: 'items',
+    targetItemId,
+    targetTemplateId
   }
 }
 

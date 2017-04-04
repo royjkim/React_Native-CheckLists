@@ -13,12 +13,20 @@ const make_mapStateToProps = () => (state, ownProps) => ({
     instancesOfChosenTemplate: mySelectors.make_get_instancesOfChosenTemplate()(state.normalizeReducer, ownProps.route.passProps.chosenTemplate),
     itemsCustomized: state.normalizeReducer.entities.itemsCustomized,
     // itemsOfChosenTemplate: mySelectors.make_get_itemsOfChosenTemplate()(state.normalizeReducer, ownProps.route.passProps.chosenTemplate),
-    itemsOfChosenTemplate: mySelectors.make_get_itemsOfChosenTemplate()(state.normalizeReducer, state.normalizeReducer.entities.templates[ownProps.route.passProps.chosenTemplate.templateId]),
+    // itemsOfChosenTemplate: mySelectors.make_get_itemsOfChosenTemplate()(state.normalizeReducer, state.normalizeReducer.entities.templates[ownProps.route.passProps.chosenTemplate.templateId]),
+    itemsOfChosenTemplate: (() => mySelectors.make_get_itemsOfChosenTemplate()(state.normalizeReducer, state.normalizeReducer.entities.templates[ownProps.route.passProps.chosenTemplate.templateId]))(),
     navigatePrevent: state.configReducer.navigatePrevent,
     triedNavigateWhenPrevented: state.configReducer.triedNavigateWhenPrevented,
     lastId: state.normalizeReducer.lastId,
-    chosenTemplate: ownProps.route.passProps.chosenTemplate,
-    items: state.normalizeReducer.entities.items
+    chosenTemplate: { ...ownProps.route.passProps.chosenTemplate },
+    // items: state.normalizeReducer.entities.items,
+    // items: { ...state.normalizeReducer.entities.items }
+    last_orderNum: state.normalizeReducer.entities.items[ownProps.route.passProps.chosenTemplate.items.sort((data1, data2) => data1.orderNum - data2.orderNum).slice(-1)[0]].orderNum
+    // map(value => {
+    //   return [
+    //     ...state.normalizeReducer.entities.items[value]
+    //   ]
+    // }).sort((data1, data2) => data1.orderNum - data2.orderNum).slice(-1)[0].orderNum + 1,
   },
   route: ownProps.route,
   navigator: ownProps.navigator
@@ -40,6 +48,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
     dataSourceOfItemsOfChosenTemplate: mySelectors.make_get_dataSourceOfItemsOfChosenTemplate()(stateProps.state.itemsOfChosenTemplate),
     // badgeValueOfStatusOfEachInstanceOfChosenTemplate: mySelectors.make_get_badgeValueOfStatusOfEachInstanceOfChosenTemplate()(stateProps.state.itemsCustomized, stateProps.state.instancesOfChosenTemplate),
     itemsLengthOfChosenTemplate: stateProps.state.itemsOfChosenTemplate.length,
+    tempItems: [ ...stateProps.state.itemsOfChosenTemplate ]
   },
   ...dispatchProps
 })

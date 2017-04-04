@@ -63,11 +63,11 @@ export default class TemplateListsComponent extends React.Component {
         <SearchBar
           lightTheme
           round={true}
-          onChangeText={searchText => {
-            this.setState(state => ({
-              searchText_templateList: searchText
-            }))
-            searchBarText(searchText.trim(), 'templateList')
+          onChangeText={searchText_templateList => {
+            this.setState({
+              searchText_templateList
+            })
+            searchBarText(searchText_templateList.trim(), 'templateList')
           }}
           placeholder='Search Templates'
         />

@@ -453,7 +453,8 @@ const make_get_itemsOfChosenTemplate = () => createSelector(
     const currentAttr = 'make_get_itemsOfChosenTemplate'
     compareInputHistory(currentAttr, items, chosenTemplate, searchBarText)
     let tempResult = []
-    chosenTemplate.items.map(value => items[value].desc.toLowerCase().includes(searchBarText) ? tempResult.push(items[value]) : null)
+    // chosenTemplate.items.map(value => items[value].desc.toLowerCase().includes(searchBarText) ? tempResult.push(items[value]) : null)
+    chosenTemplate.items.map(value => items[value].desc.toLowerCase().includes(searchBarText) ? tempResult = tempResult.concat(items[value]) : null)
     tempResult.sort((data1, data2) => data1.orderNum - data2.orderNum)
     addResultHistory(currentAttr, tempResult)
     return tempResult

@@ -60,7 +60,7 @@ const addInstance = (state, action) => ({
   ...state,
   instances: {
     ...state.instances,
-    [action.newData.id]: { ...action.newDate }
+    [action.newData.id]: { ...action.newData }
   }
 })
 
@@ -76,7 +76,7 @@ const delTemplate = (state, action) => ({
 //   ...state,
 //   instanceList: {
 //     ...state.instanceList,
-//     [action.newData.id]: { ...action.newDate }
+//     [action.newData.id]: { ...action.newData }
 //   }
 // })
 
@@ -151,7 +151,8 @@ const modifyItem = (state, action) => {
         ...tempData_items[key],
         desc: action.data[key]
       }
-    }
+    };
+    // action.data[key] == '' ? delete tempData_items[key] : null
   }
   return {
     ...state,
@@ -161,9 +162,38 @@ const modifyItem = (state, action) => {
   }
 }
 
-const delItem = (state, action) => ({
-
-})
+const delItem = (state, action) => {
+  let tempData_items = { ...state.items };
+  delete tempData_items[action.targetItemId];
+  let tempData_itemsOfTemplate = [ ...state.templates[action.targetTemplateId].items ];
+  const targetIndexOfTemplateItems = tempData_itemsOfTemplate.findIndex(value => value == action.targetItemId);
+  // tempData_templates = {
+  //   ...tempData_templates,
+  //   [action.targetTemplateId]: {
+  //     ...tempData_templates[action.targetTemplateId],
+  //     items:
+  //   }
+  // }
+  tempData_itemsOfTemplate = [
+    ...tempData_itemsOfTemplate.slice(0, targetIndexOfTemplateItems),
+    ...tempData_itemsOfTemplate.slice(targetIndexOfTemplateItems + 1)
+  ]
+  return {
+    ...state,
+    items: {
+      ...tempData_items
+    },
+    templates: {
+      ...state.templates,
+      [action.targetTemplateId]: {
+        ...state.templates[action.targetTemplateId],
+        items: [
+          ...tempData_itemsOfTemplate,
+        ]
+      }
+    }
+  }
+}
 
 const addTemplateCategory = (state, action) => ({
   ...state,

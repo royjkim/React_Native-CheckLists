@@ -12,7 +12,9 @@ const logger = createLogger()
 
 export default function initializeStore() {
   const store = Reactotron.createStore(reducer, compose(applyMiddleware(thunk, logger)))
+  console.log('module.hot : ', module.hot)
   if(module.hot) {
+    console.log('module.hot is True')
     module.hot.accept(() => {
       const nextRootReducer = require('../reducers/reducer')
       store.replaceReducer(nextRootReducer)

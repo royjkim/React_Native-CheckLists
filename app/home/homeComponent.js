@@ -70,11 +70,11 @@ export default class HomeComponent extends React.Component {
         <SearchBar
           lightTheme
           round={true}
-          onChangeText={searchText => {
-            this.setState(state => ({
-              searchText_instanceList: searchText
-            }))
-            searchBarText(searchText.trim(), 'instanceList')
+          onChangeText={searchText_instanceList => {
+            this.setState({
+              searchText_instanceList
+            });
+            searchBarText(searchText_instanceList.trim(), 'instanceList')
           }}
           placeholder='Search Instances'
         />

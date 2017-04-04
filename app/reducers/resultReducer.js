@@ -59,7 +59,11 @@ const addItem = (state, action) => {
 }
 
 const delItem = (state, action) => ({
-
+  ...state,
+  [action.attr]: [
+    ...state.items.slice(0, action.targetItemId),
+    ...state.items.slice(action.targetItemId + 1)
+  ]
 })
 
 const addTemplateCategory = (state, action) => ({
