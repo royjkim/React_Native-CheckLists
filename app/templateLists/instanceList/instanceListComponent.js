@@ -7,6 +7,7 @@ import {
   Alert,
   TouchableOpacity,
   Modal,
+  KeyboardAvoidingView,
 } from 'react-native'
 import styles from '../../components/styles'
 import {
@@ -26,7 +27,9 @@ export default class InstanceListComponent extends React.Component {
     super(props)
     this.state = {
       searchText: '',
-      addNewInstanceModalVisible: false
+      addNewInstanceModalVisible: false,
+      chosenTemplateForAdd: '',
+      tempInstanceName: ''
     }
   }
 
@@ -36,6 +39,7 @@ export default class InstanceListComponent extends React.Component {
       navigator,
       state,
       searchBarText,
+      addInstance,
     } = this.props;
     const renderRowInstances = (rowData, sectionId) => <ListItem
       key={sectionId}
@@ -68,6 +72,14 @@ export default class InstanceListComponent extends React.Component {
     const renderRowTemplates = rowData => <ListItem
       key={rowData.templateId}
       title={rowData.title}
+      subtitle={rowData.title == route.passProps.chosenTemplate.title ? 'This current template.' : null}
+      onPress={() => {
+        this.setState({
+          chosenTemplateForAdd: rowData.title,
+          chosenTemplateForAddTemplateId: rowData.templateId
+        });
+        this.refs['tempInstanceName'].focus();
+      }}
     />
     return(
       <View
@@ -90,12 +102,12 @@ export default class InstanceListComponent extends React.Component {
           {this.state.searchText !== ''
             ? (
                 <FormLabel>
-                  ▼ {route.title} : {state.dataSourceInstancesOfChosenTemplate._dataBlob.s1.length}(searched)
+                  ▼ Instances of {route.title} : {state.dataSourceInstancesOfChosenTemplate._dataBlob.s1.length}(searched)
                 </FormLabel>
               )
             : (
                 <FormLabel>
-                  ▼ {route.title} : {state.dataSourceInstancesOfChosenTemplate._dataBlob.s1.length}
+                  ▼ Instances of {route.title} : {state.dataSourceInstancesOfChosenTemplate._dataBlob.s1.length}
                 </FormLabel>
               )
           }
@@ -125,20 +137,21 @@ export default class InstanceListComponent extends React.Component {
                     style={{
                       flex: 1,
                     }}
-                    onPress={() => this.setState({ addNewInstanceModalVisible: false })}
+                    onPress={() => this.setState({ addNewInstanceModalVisible: false, chosenTemplateForAdd: '', tempInstanceName: '' })}
                     >
                   </TouchableOpacity>
-                  <View
-                    style={{
+                  <KeyboardAvoidingView
+                    behavior='position'
+                    contentContainerStyle={{
                       flex: 0,
                       backgroundColor: 'white',
                       borderTopWidth: 1,
                       borderColor: '#86939D',
-                      paddingBottom: 30
+                      paddingBottom: 20
                     }}
                     >
                       <FormLabel>
-                        Choose Template.
+                        {this.state.chosenTemplateForAdd ? `Chosen Template : ${this.state.chosenTemplateForAdd}` : 'Choose Template from below list.'}
                       </FormLabel>
                       <List>
                         <ListView
@@ -148,10 +161,57 @@ export default class InstanceListComponent extends React.Component {
                           style={{ maxHeight: 200 }}
                         />
                       </List>
+                      <View
+                        style={{
+                          flex: 0,
+                          flexDirection: 'row',
+                          marginHorizontal: 10,
+                          marginVertical: 15
+                          // marginBottom: 15
+                        }}
+                        >
+                          <View
+                            style={{
+                              flex: 1,
+                              borderColor: '#C1C1C1',
+                              borderBottomWidth: 1,
+                              // marginBottom: 10
+                            }}
+                            >
+                            <TextInput
+                              ref='tempInstanceName'
+                              value={this.state.tempInstanceName}
+                              onChangeText={tempInstanceName => this.setState({ tempInstanceName })}
+                              placeholder={this.state.chosenTemplateForAdd ? 'input name for new instance.' : 'Choose Template First.'}
+                              editable={this.state.chosenTemplateForAdd !== ''}
+                              style={{
+                                flex: 1,
+                                color: this.state.tempInstanceName ? '#605E60' : '#9E9E9E',
+                                textAlign: 'center'
+                                // marginHorizontal: 10
+                              }}
+                            />
+                          </View>
+                          <Button
+                            title='Submit'
+                            backgroundColor='#159589'
+                            onPress={() => this.state.tempInstanceName == '' ? alert('input new category') : (this.setState({
+                              addNewInstanceModalVisible: false,
+                              tempInstanceName: '',
+                              chosenTemplateForAdd: ''
+                            }), addInstance(state.lastId, {
+                              instanceId: state.lastId.instances + 1,
+                              // items: [],
+                              name: this.state.tempInstanceName,
+                              template: this.state.chosenTemplateForAddTemplateId
+                            }))
+                            }
+                          />
+                      </View>
                       <View style={{ height: 10 }} />
                       <Button
                         icon={{ name: 'note-add' }}
-                        title='Add new template'
+                        title='Move to add new template'
                         backgroundColor='#339AED'
                         onPress={() => {
                           this.setState({ addNewInstanceModalVisible: false })
@@ -172,7 +232,7 @@ export default class InstanceListComponent extends React.Component {
                           })
                         }}
                       />
-                  </View>
+                  </KeyboardAvoidingView>
               </View>
             </Modal>
         </View>

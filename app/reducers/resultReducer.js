@@ -6,7 +6,7 @@ const addTemplate = (state, action) => ({
     ...state.templates,
     action.lastId + 1
   ],
-  items: state.items.concat(action.newData.items.filter(value => value.itemId))
+  items: state.items.concat(action.newData.items.map(value => value.itemId))
 })
 
 const delTemplate = (state, action) => ({
@@ -17,9 +17,20 @@ const addInstance = (state, action) => ({
   ...state,
   instances: [
     ...state.instances,
-    action.newData.id
+    action.newData.instanceId
   ]
 })
+
+const addItemsCustomized = (state, action) => {
+  console.log('resultReducer - state : ', state)
+  return {
+    ...state,
+    itemsCustomized: [
+      ...state.itemsCustomized,
+      ...action.newAddedItemsCustomized
+    ]
+  }
+}
 
 const deleteInstance = (state, action) => ({
 
@@ -62,6 +73,7 @@ export default function resultReducer(state, action) {
     [types.ADD_TEMPLATE]: addTemplate,
     [types.DELETE_TEMPLATE]: delTemplate,
     [types.ADD_INSTANCE]: addInstance,
+    [types.ADD_ITEMS_CUSTOMIZED]: addItemsCustomized,
     [types.DELETE_INSTANCE]: deleteInstance,
     [types.ADD_ITEM]: addItem,
     [types.DEL_ITEM]: delItem,

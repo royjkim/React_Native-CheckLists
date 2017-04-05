@@ -56,13 +56,36 @@ const addTemplate = (state, action) => {
   }
 }
 
-const addInstance = (state, action) => ({
-  ...state,
-  instances: {
-    ...state.instances,
-    [action.newData.id]: { ...action.newData }
+const addInstance = (state, action) => {
+  let tempData_itemsCustomized = { ...state.itemsCustomized };
+  let itemsCustomizedIdSetForInstanceItems = [];
+  state.templates[action.templateId].items.map(value => {
+    tempData_itemsCustomized[++action.lastId.itemsCustomized] = {
+      ...state.items[value],
+      instanceId: action.newData.instanceId,
+      itemsCustomizedId: action.lastId.itemsCustomized,
+      status: false
+    };
+    delete tempData_itemsCustomized[action.lastId.itemsCustomized].template;
+    delete tempData_itemsCustomized[action.lastId.itemsCustomized].templateId;
+    itemsCustomizedIdSetForInstanceItems.push(action.lastId.itemsCustomized);
+  })
+  return {
+    ...state,
+    instances: {
+      ...state.instances,
+      [action.newData.instanceId]: {
+        ...action.newData,
+        items: [
+          ...itemsCustomizedIdSetForInstanceItems
+        ]
+      }
+    },
+    itemsCustomized: {
+      ...tempData_itemsCustomized
+    }
   }
-})
+}
 
 const modifyTemplate = (state, action) => ({
   ...state,
@@ -94,16 +117,20 @@ const modifyInstance = (state, action) => ({
   }
 })
 
-const modifyItemsCustomized = (state, action) => ({
-  ...state,
-  itemsCustomized: {
-    ...state.itemsCustomized,
-    [action.targetData.itemCustomizedId]: {
-      ...action.targetData,
-      status: !action.targetData.status
+const modifyItemsCustomized = (state, action) => {
+  console.log('entitiesReducer - action.targetData.status : ', String(action.targetData.status))
+  console.log('entitiesReducer - !action.targetData.status : ', String(!action.targetData.status));
+  return {
+    ...state,
+    itemsCustomized: {
+      ...state.itemsCustomized,
+      [action.targetData.itemCustomizedId]: {
+        ...action.targetData,
+        status: !action.targetData.status
+      }
     }
   }
-})
+}
 
 const addItem = (state, action) => {
   const tempData_items = ((tempResult = {}) => {

@@ -96,7 +96,8 @@ export default class TemplateAddComponent extends React.Component {
 
           <View>
             <FormLabel>
-             Copy From Existing Templates({state.dataSourceTemplates._cachedRowCount})
+             {/* Choose Template, It'll be copied.({state.dataSourceTemplates._cachedRowCount}) */}
+             Choose Template, It'll be copied.
             </FormLabel>
             {/* <View
               style={{ alignSelf: 'flex-end' }}>

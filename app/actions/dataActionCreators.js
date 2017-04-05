@@ -9,13 +9,9 @@ export function addNewTemplate(lastId, newData) {
     type: types.ADD_TEMPLATE,
     attr: 'templates',
     lastId,
-    lastIndex: lastId - 1 < 0 ? 0 : lastId - 1,
+    lastIndex: lastId.templates - 1 < 0 ? 0 : lastId.templates - 1,
     newData
   }
-}
-
-function internalModifyTemplate() {
-
 }
 
 export function modifyTemplate(targetTemplateId, data) {
@@ -36,14 +32,37 @@ export function delTemplate() {
   }
 }
 
-function internal_addInstance() {
+export function addInstance(lastId, newData) {
+  // return {
+  //   type: types.ADD_INSTANCE,
+  //   attr: 'instances',
+  //   lastId,
+  //   newData,
+  //   templateId: newData.template
+  // }
+  return (dispatch, getState) => {
+    dispatch(internalAddInstance(lastId, newData));
+    const prevState = getState();
+    dispatch(addItemsCustomized(lastId, newData, prevState.normalizeReducer.entities.instances[newData.instanceId].items));
+    dispatch(lastIdPlus('instances', lastId, newData));
+  }
+};
 
-}
+const internalAddInstance = (lastId, newData) => ({
+  type: types.ADD_INSTANCE,
+  attr: 'instances',
+  lastId,
+  newData,
+  templateId: newData.template
+})
 
-export function addInstance(newData) {
+export function addItemsCustomized(lastId, newData, newAddedItemsCustomized) {
   return {
-    type: types.ADD_INSTANCE,
-    newData
+    type: types.ADD_ITEMS_CUSTOMIZED,
+    attr: 'itemsCustomized',
+    lastId: lastId.itemsCustomized,
+    newData,
+    newAddedItemsCustomized
   }
 }
 
@@ -115,14 +134,26 @@ export function delItem(targetItemId, targetTemplateId) {
   }
 }
 
+const internal_addTemplateCategory = (lastId, newData) => ({
+  type: types.ADD_TEMPLATE_CATEGORY,
+  // attr: 'templateCategories',
+  lastId,
+  lastIndex: lastId - 1 < 0 ? 0 : lastId - 1,
+  newData,
+})
+
 export function addTemplateCategory(lastId, newData) {
-  return {
-    type: types.ADD_TEMPLATE_CATEGORY,
-    attr: 'templateCategories',
-    lastId,
-    lastIndex: lastId - 1 < 0 ? 0 : lastId - 1,
-    newData,
+  return dispatch => {
+    dispatch(internal_addTemplateCategory(lastId, newData));
+    dispatch(lastIdPlus('templateCategories', lastId, newData));
   }
+  // return {
+  //   type: types.ADD_TEMPLATE_CATEGORY,
+  //   attr: 'templateCategories',
+  //   lastId,
+  //   lastIndex: lastId - 1 < 0 ? 0 : lastId - 1,
+  //   newData,
+  // }
 }
 
 export function normalizedDataInput(data) {
@@ -162,10 +193,11 @@ export function findLastId(result) {
   }
 }
 
-const lastIdPlus = (attr, lastId) => ({
+const lastIdPlus = (attr, lastId, newData) => ({
   type: types.LAST_ID_PLUS,
   attr,
-  lastId
+  lastId,
+  newData
 })
 
 export function navigatePrevent(__navigatorRouteID, statusBoolean) {

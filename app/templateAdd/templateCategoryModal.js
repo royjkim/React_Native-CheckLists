@@ -118,7 +118,7 @@ export default class TemplateCategoryModal extends React.Component {
                 title='Add'
                 onPress={() => {
                   if(this.state.newCategory) {
-                    addTemplateCategory(lastId.templateCategories, { title: this.state.newCategory })
+                    addTemplateCategory(lastId, { title: this.state.newCategory })
                     categoryChosen(this.state.newCategory)
                     closeFn()
                   } else {

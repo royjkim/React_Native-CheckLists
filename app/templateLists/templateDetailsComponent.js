@@ -41,6 +41,9 @@ export default class TemplateDetailsComponent extends React.Component {
         templateId: this.props.state.chosenTemplate.templateId
       },
       modifyExistingItems: { length: 0 },
+      tempTemplateTitle: this.props.route.passProps.chosenTemplate.title,
+      prevTemplateTitle: this.props.route.passProps.chosenTemplate.title,
+      changeValue_templateTitle: false,
       dataSource_tempItems: this.props.state.dataSourceOfItemsOfChosenTemplate || []
     };
     this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
@@ -56,14 +59,14 @@ export default class TemplateDetailsComponent extends React.Component {
           triedNavigateWhenPreventedFn = this.props.triedNavigateWhenPreventedFn;
 
     // Below is for when the item text changed , make redux navigate disable.
-    this.state.changeValue ? (navigatePrevent[__navigatorRouteID] || navigatePreventFn(__navigatorRouteID, true),
+    (this.state.changeValue || this.state.changeValue_templateTitle) ? (navigatePrevent[__navigatorRouteID] || navigatePreventFn(__navigatorRouteID, true),
       navigatePrevent[parentTab] || navigatePreventFn(parentTab, true))
         : (navigatePrevent[__navigatorRouteID] && navigatePreventFn(__navigatorRouteID, false),
           navigatePrevent[parentTab] && navigatePreventFn(parentTab, false));
 
     // Below is for alert let an user know 'save before navigate', then make redux 'alert completed'.
-    triedNavigateWhenPrevented[__navigatorRouteID] && (alert('press save button to save changed item'), triedNavigateWhenPreventedFn(__navigatorRouteID, false));
-    triedNavigateWhenPrevented[parentTab] && (alert('press save button to save changed item'), triedNavigateWhenPreventedFn(parentTab, false));
+    triedNavigateWhenPrevented[__navigatorRouteID] && (alert('press save button to save changes'), triedNavigateWhenPreventedFn(__navigatorRouteID, false));
+    triedNavigateWhenPrevented[parentTab] && (alert('press save button to save changes'), triedNavigateWhenPreventedFn(parentTab, false));
 
     this.state.addItemModalVisible && this.refs['newItemTempDescTextInput'].focus()
   }
@@ -76,7 +79,8 @@ export default class TemplateDetailsComponent extends React.Component {
       searchBarText,
       navigatePreventFn,
       addItem,
-      modifyItem
+      modifyItem,
+      modifyTemplate,
     } = this.props;
     const resetData = () => this.setState({
         searchText: '',
@@ -114,6 +118,7 @@ export default class TemplateDetailsComponent extends React.Component {
       )
     }
     const saveProcessFn = async () => {
+      this.state.changeValue_templateTitle && modifyTemplate(state.chosenTemplate.templateId, this.state.tempTemplateTitle);
       await this.setState(prevState => {
         prevState.changeValue = false;
         prevState.emptyItemsRowId.length > 0 && (
@@ -121,9 +126,11 @@ export default class TemplateDetailsComponent extends React.Component {
           ...prevState.tempItems.slice(0, value),
           ...prevState.tempItems.slice(value + 1)
         ]),
-        prevState.emptyItemsRowId = [],
+        prevState.emptyItemsRowId = []);
         prevState.dataSource_tempItems = this.ds.cloneWithRows(prevState.tempItems);
         prevState.prevItems = Object.freeze(cloneDeep(prevState.tempItems));
+        prevState.prevTemplateTitle = prevState.tempTemplateTitle;
+        prevState.changeValue_templateTitle = false;
       });
       this.state.modifyExistingItems.length > 0 && modifyItem(this.state.modifyExistingItems, route.passProps.chosenTemplate.templateId)
       this.state.prevItems.length < this.state.tempItems.length && addItem(state.lastId.items, this.state.tempItems.slice(state.itemsOfChosenTemplate.length));
@@ -229,22 +236,78 @@ export default class TemplateDetailsComponent extends React.Component {
           placeholder='Search Items'
           value={this.state.searchText}
         />)}
-        <FormLabel>
+        {/* <FormLabel>
           Template : {route.passProps.chosenTemplate.title}
-        </FormLabel>
+        </FormLabel> */}
+        <View
+          style={{
+            flexDirection: 'row',
+            marginHorizontal: 10,
+            marginVertical: 10
+          }}
+          >
+            <Text
+              style={{
+                color: '#86939D',
+                fontWeight: 'bold',
+                marginLeft: 8
+              }}
+              >
+              Template Name :
+            </Text>
+            <View
+              style={{
+                flex: 1,
+                borderColor: this.state.changeValue_templateTitle ? '#159589' : '#CBD2D9',
+                // '#C1C1C1' : '#FF2A1A',
+                borderBottomWidth: 1.5,
+                marginHorizontal: 10
+              }}
+              >
+              <TextInput
+                value={this.state.tempTemplateTitle}
+                onChangeText={templatTitleText => {
+                  templatTitleText == '' && Alert.alert(
+                    'Disable Delete',
+                    'Template name shouldn\'t be empty.',
+                    [
+                      { text: 'Confirm', onPress: () => {
+                        this.setState({
+                          tempTemplateTitle: this.state.prevTemplateTitle,
+                          changeValue_templateTitle: false
+                        });
+                        return null;
+                      }}
+                    ]
+                  );
+                  this.setState(prevState => {
+                    prevState.tempTemplateTitle = templatTitleText;
+                    prevState.changeValue_templateTitle = !(prevState.tempTemplateTitle === prevState.prevTemplateTitle);
+                  })
+                }}
+                placeholder={this.state.prevTemplateTitle}
+                style={{
+                  flex: 1,
+                  color: this.state.changeValue_templateTitle ? '#159589' : '#605E60',
+                  textAlign: 'center',
+                  // marginBottom: 2
+                }}
+              />
+            </View>
+        </View>
         {this.state.searchText !== ''
           ? (
               <FormLabel>
-                Category : {route.passProps.chosenTemplate.category}, Items({state.itemsLengthOfChosenTemplate}, searched)
+                Category : {route.passProps.chosenTemplate.category} / Items({state.itemsLengthOfChosenTemplate}, searched)
               </FormLabel>
             )
           : this.state.changeValue ? (
             <FormLabel>
-              Category : {route.passProps.chosenTemplate.category}, Items({this.state.tempItems.length}), new item added)
+              Category : {route.passProps.chosenTemplate.category} / Items({this.state.tempItems.length}), new item added)
             </FormLabel>
           ) : (
                 <FormLabel>
-                  Category : {route.passProps.chosenTemplate.category}, Items({this.state.prevItems.length})
+                  Category : {route.passProps.chosenTemplate.category} / Items({this.state.prevItems.length})
                 </FormLabel>
               )
         }
@@ -291,7 +354,7 @@ export default class TemplateDetailsComponent extends React.Component {
               </Text>
             </TouchableOpacity>
         </View>
-        {this.state.changeValue && (<View>
+        {(this.state.changeValue || this.state.changeValue_templateTitle) && (<View>
               <View
                 style={{ height: 10 }}
               />
@@ -330,7 +393,8 @@ export default class TemplateDetailsComponent extends React.Component {
                 parentTab: route.passProps.parentTab,
                 chosenTemplate: route.passProps.chosenTemplate
               },
-              title: `Instance List of ${route.title}`,
+              // title: `Instance List of ${route.title}`,
+              title: 'Instance List',
               component: InstanceListContainer,
             }
           )}

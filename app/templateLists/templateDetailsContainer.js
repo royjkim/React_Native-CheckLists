@@ -6,7 +6,8 @@ import {
   navigatePrevent,
   triedNavigateWhenPrevented,
   addItem,
-  modifyItem
+  modifyItem,
+  modifyTemplate
 } from '../actions/dataActionCreators'
 
 const make_mapStateToProps = () => (state, ownProps) => ({
@@ -31,7 +32,8 @@ const mapDispatchToProps = dispatch => ({
   navigatePreventFn: (__navigatorRouteID, statusBoolean) => dispatch(navigatePrevent(__navigatorRouteID, statusBoolean)),
   triedNavigateWhenPreventedFn: (parentTab, statusBoolean) => dispatch(triedNavigateWhenPrevented(parentTab, statusBoolean)),
   addItem: (lastId, newData) => dispatch(addItem(lastId, newData)),
-  modifyItem: (targetId, data) => dispatch(modifyItem(targetId, data))
+  modifyItem: (targetId, data) => dispatch(modifyItem(targetId, data)),
+  modifyTemplate: (targetTemplateId, data) => dispatch(modifyTemplate(targetTemplateId, data))
 })
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => ({
