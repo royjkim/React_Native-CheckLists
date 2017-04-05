@@ -37,7 +37,7 @@ export default class ItemsListsAllComponent extends React.Component {
     const renderRow = (rowData, sectionId) => <ListItem
       key={sectionId}
       title={rowData.desc}
-      subtitle={`orderNum : ${rowData.orderNum}`}
+      subtitle={`orderNum : ${rowData.orderNum} / itemId : ${rowData.itemId}`}
       hideChevron
     />
     const renderSectionHeader = (sectionData, sectionId) => {

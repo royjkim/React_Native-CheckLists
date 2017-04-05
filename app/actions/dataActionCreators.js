@@ -74,6 +74,7 @@ export function modifyItemsCustomized(targetData) {
 }
 
 export function addItem(lastId, newData) {
+  console.log('actionCreators - addItem - parameter - newData : ', newData)
   return {
     type: types.ADD_ITEM,
     newData,
@@ -83,25 +84,23 @@ export function addItem(lastId, newData) {
   }
 }
 
+function internal_modifyItem(data) {
+  return {
+    type: types.MODIFY_ITEM,
+    data,
+  }
+}
+
 export function modifyItem(data, templateId) {
   console.log('actionCreators - parameter - data : ', data);
   console.log('actionCreators - parameter - templateId : ', templateId);
+  delete data.length;
   return dispatch => {
     for(let key in data) {
       data[key] == '' && (delete data[key], dispatch(delItem(parseInt(key), parseInt(templateId))), console.log(`del request - key : ${key}, templateId : ${templateId}`))
     }
-    return {
-      type: types.MODIFY_ITEM,
-      data,
-    }
+    dispatch(internal_modifyItem(data));
   }
-  // for(let key in data) {
-  //   data[key] == '' && (delete data[key], delItem(key, templateId), console.log(`del request - key : ${key}, templateId : ${templateId}`))
-  // }
-  // return {
-  //   type: types.MODIFY_ITEM,
-  //   data,
-  // }
 }
 
 export function delItem(targetItemId, targetTemplateId) {

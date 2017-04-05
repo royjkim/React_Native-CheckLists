@@ -11,6 +11,7 @@ const ds = new ListView.DataSource(
 )
 
 const countTest = {
+  make_get_last_orderNum: 0,
   make_get_dataSourceTemplates: 0,
   make_get_dataSourceInstances: 0,
   make_get_dataSourceItems: 0,
@@ -39,6 +40,10 @@ const make_dataSource_cloneWithRows = (attr, data) => {
 }
 
 let dataInputHistory = {
+  make_get_last_orderNum: {
+    past: [],
+    // present: [], future: []
+  },
   make_get_dataSourceTemplates: {
     past: [],
     // present: [], future: []
@@ -114,6 +119,10 @@ let dataInputHistory = {
 }
 
 let dataResultHistory = {
+  make_get_last_orderNum: {
+    past: [],
+    // present: [], future: []
+  },
   make_get_dataSourceTemplates: {
     past: [],
     // present: [], future: []
@@ -220,6 +229,23 @@ const searchBarTextItemList = state => state.searchBarText.itemList.toLowerCase(
 
 const statusPicker = state => state.picker
 
+const make_get_last_orderNum = () => createSelector(
+  items,
+  (items, data) => data,
+  (items, chosenTemplate) => {
+    const currentAttr = 'make_get_last_orderNum';
+    compareInputHistory(currentAttr, items, chosenTemplate);
+    const SortedItemOfChosenTemplate = chosenTemplate.items.sort((data1, data2) => data2.orderNum - data1.orderNum);
+    SortedItemOfChosenTemplate.map(value => {
+      if(items.hasOwnProperty(value)) {
+        const tempResult = items[value].orderNum
+        addResultHistory(currentAttr, tempResult)
+        return tempResult
+      }
+    })
+  }
+)
+
 const make_get_dataSourceTemplates = () => createSelector(
   templates,
   searchBarTextTemplateList,
@@ -247,27 +273,46 @@ const make_get_dataSourceInstances = () => createSelector(
 )
 
 const make_get_dataSourceItems = () => createSelector(
+  templates,
   items,
   searchBarTextItemList,
-  (items, searchBarText) => {
+  (templates, items, searchBarText) => {
     const currentAttr = 'make_get_dataSourceItems'
-    compareInputHistory(currentAttr, items, searchBarText)
-    let tempResult_itemsSortByTemplates = {}
-    Object.values(items).map(value => {
-      if(value.desc.toLowerCase().includes(searchBarText)) {
-        tempResult_itemsSortByTemplates.hasOwnProperty(value.templateId) ? null : tempResult_itemsSortByTemplates[value.templateId] = []
-        tempResult_itemsSortByTemplates[value.templateId].push(value)
-      }
+    compareInputHistory(currentAttr, templates, items, searchBarText)
+    let tempResult = {}
+    Object.values(templates).map(value1 => {
+      tempResult[value1.templateId] = [];
+      value1.items.map(value2 => tempResult[value1.templateId].push(items[value2]));
+      tempResult[value1.templateId].sort((data1, data2) => data1.orderNum - data2.orderNum);
     })
-    for(let key in tempResult_itemsSortByTemplates) {
-      tempResult_itemsSortByTemplates[key].sort((data1, data2) => data1.orderNum - data2.orderNum)
-    }
-    // console.log(`tempResult_itemsSortByTemplates : ${JSON.stringify(tempResult_itemsSortByTemplates, null, 1)}`)
-    const tempResult_dataSourceItems = ds.cloneWithRowsAndSections(tempResult_itemsSortByTemplates, Object.keys(tempResult_itemsSortByTemplates))
+    const tempResult_dataSourceItems = ds.cloneWithRowsAndSections(tempResult, Object.keys(tempResult))
     addResultHistory(currentAttr, tempResult_dataSourceItems)
     return tempResult_dataSourceItems
   }
 )
+
+// const make_get_dataSourceItems = () => createSelector(
+//   items,
+//   searchBarTextItemList,
+//   (items, searchBarText) => {
+//     const currentAttr = 'make_get_dataSourceItems'
+//     compareInputHistory(currentAttr, items, searchBarText)
+//     let tempResult = {}
+//     Object.values(items).map(value => {
+//       if(value.desc.toLowerCase().includes(searchBarText)) {
+//         tempResult.hasOwnProperty(value.templateId) ? null : tempResult[value.templateId] = []
+//         tempResult[value.templateId].push(value)
+//       }
+//     })
+//     for(let key in tempResult) {
+//       tempResult[key].sort((data1, data2) => data1.orderNum - data2.orderNum)
+//     }
+//     // console.log(`tempResult : ${JSON.stringify(tempResult, null, 1)}`)
+//     const tempResult_dataSourceItems = ds.cloneWithRowsAndSections(tempResult, Object.keys(tempResult))
+//     addResultHistory(currentAttr, tempResult_dataSourceItems)
+//     return tempResult_dataSourceItems
+//   }
+// )
 
 const make_get_dataSourceOfItemsOfChosenTemplate = () => createSelector(
   data => data,
@@ -453,8 +498,8 @@ const make_get_itemsOfChosenTemplate = () => createSelector(
     const currentAttr = 'make_get_itemsOfChosenTemplate'
     compareInputHistory(currentAttr, items, chosenTemplate, searchBarText)
     let tempResult = []
-    // chosenTemplate.items.map(value => items[value].desc.toLowerCase().includes(searchBarText) ? tempResult.push(items[value]) : null)
-    chosenTemplate.items.map(value => items[value].desc.toLowerCase().includes(searchBarText) ? tempResult = tempResult.concat(items[value]) : null)
+    chosenTemplate.items.map(value => items[value].desc.toLowerCase().includes(searchBarText) ? tempResult.push(items[value]) : null)
+    // chosenTemplate.items.map(value => items[value].desc.toLowerCase().includes(searchBarText) ? tempResult = tempResult.concat(items[value]) : null)
     tempResult.sort((data1, data2) => data1.orderNum - data2.orderNum)
     addResultHistory(currentAttr, tempResult)
     return tempResult
@@ -504,6 +549,7 @@ const make_get_itemsCustomizedOfEachInstanceOfChosenTemplate = () => createSelec
 )
 
 const mySelectors = {
+  make_get_last_orderNum,
   make_get_dataSourceTemplates,
   make_get_dataSourceInstances,
   make_get_dataSourceItems,

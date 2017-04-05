@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   Modal,
   KeyboardAvoidingView,
-  ScrollView,
 } from 'react-native'
 import styles from '../components/styles'
 import {
@@ -19,7 +18,7 @@ import {
   SearchBar,
   Icon,
 } from 'react-native-elements'
-import { isEqual } from 'lodash'
+import { isEqual, cloneDeep } from 'lodash'
 
 import ChosenInstanceDetailsContainer from './instanceList/chosenInstanceDetails/chosenInstanceDetailsContainer'
 import InstanceListContainer from './instanceList/instanceListContainer'
@@ -29,54 +28,27 @@ export default class TemplateDetailsComponent extends React.Component {
     super(props)
     this.state = {
       searchText: '',
-      // prevItems: [],
-      // prevItems: [ ...this.props.state.itemsOfChosenTemplate ],
-      // tempItems: [ ...this.props.state.itemsOfChosenTemplate ],
-      // tempItems: (() => this.props.state.itemsOfChosenTemplate.map(value => value))(),
-      tempItems: [ ...this.props.state.tempItems ],
-      hasEmptyOnItemDesc: false,
+      tempItems: cloneDeep(this.props.state.itemsOfChosenTemplate),
+      prevItems: Object.freeze(cloneDeep(this.props.state.itemsOfChosenTemplate)),
       emptyItemsRowId: [],
       changeValue: false,
       addItemModalVisible: false,
       newItem: {
         desc: '',
         itemId: parseInt(this.props.state.lastId.items) + 1,
-        // orderNum: this.props.state.chosenTemplate.items.map(value => this.props.state.items[value]).sort((data1, data2) => data1.orderNum - data2.orderNum).slice(-1)[0].orderNum + 1,
         orderNum: parseInt(this.props.state.last_orderNum) + 1,
         template: this.props.state.chosenTemplate.title,
         templateId: this.props.state.chosenTemplate.templateId
       },
-      newItemDesc: ((tempResult = {}) => {
-        this.props.state.itemsOfChosenTemplate.map(value => tempResult[value.itemId] = value.desc)
-        return tempResult
-      })(),
-      modifyExistingItems: {},
+      modifyExistingItems: { length: 0 },
       dataSource_tempItems: this.props.state.dataSourceOfItemsOfChosenTemplate || []
-    }
+    };
     this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
   }
 
-  componentDidMount() {
-    console.log('componentDidMount - this.state : ', this.state)
-    console.log('componentDidMount - this.props : ', this.props)
-    console.log('itemsOfChosenTemplate : ', this.props.state.itemsOfChosenTemplate)
-    // console.log('this.props.state.items[8].desc : ', this.props.state.items[8].desc)
-    // this.setState({
-    //   prevItems: [
-    //     ...this.state.tempItems
-    //   ]
-    // })
-    console.log('this.props.state.itemsOfChosenTemplate === this.state.tempItems : ', this.props.state.itemsOfChosenTemplate === this.state.tempItems)
-    console.log('isEqual(this.props.state.itemsOfChosenTemplate, this.state.tempItems) : ', isEqual(this.props.state.itemsOfChosenTemplate, this.state.tempItems))
-  }
-
   componentDidUpdate() {
-    console.log(`componentDidUpdate - this.props : `, this.props)
-    console.log(`componentDidUpdate - this.state : `, this.state)
-    console.log(`componentDidUpdate - this.props.state.itemsOfChosenTemplate :`, this.props.state.itemsOfChosenTemplate)
-    console.log('this.props.state.itemsOfChosenTemplate === this.state.tempItems : ', this.props.state.itemsOfChosenTemplate === this.state.tempItems)
-    console.log('isEqual(this.props.state.itemsOfChosenTemplate, this.state.tempItems) : ', isEqual(this.props.state.itemsOfChosenTemplate, this.state.tempItems))
-    // console.log('this.props.state.items[8].desc : ', this.props.state.items[8].desc)
+    // console.log(`componentDidUpdate - this.props : `, this.props)
+    // console.log(`componentDidUpdate - this.state : `, this.state)
     const { navigatePrevent, triedNavigateWhenPrevented } = this.props.state,
           __navigatorRouteID = this.props.route.__navigatorRouteID,
           parentTab = this.props.route.passProps.parentTab,
@@ -84,23 +56,14 @@ export default class TemplateDetailsComponent extends React.Component {
           triedNavigateWhenPreventedFn = this.props.triedNavigateWhenPreventedFn;
 
     // Below is for when the item text changed , make redux navigate disable.
-    this.state.changeValue ?
-      navigatePrevent[__navigatorRouteID] ?
-        navigatePrevent[parentTab] ?
-          null : navigatePreventFn(parentTab, true)
-            : navigatePreventFn(__navigatorRouteID, true)
-              : navigatePrevent[__navigatorRouteID]
-                ? navigatePreventFn(__navigatorRouteID, false)
-                  : navigatePrevent[parentTab] ?
-                    navigatePreventFn(parentTab, false)
-                      : null
+    this.state.changeValue ? (navigatePrevent[__navigatorRouteID] || navigatePreventFn(__navigatorRouteID, true),
+      navigatePrevent[parentTab] || navigatePreventFn(parentTab, true))
+        : (navigatePrevent[__navigatorRouteID] && navigatePreventFn(__navigatorRouteID, false),
+          navigatePrevent[parentTab] && navigatePreventFn(parentTab, false));
 
     // Below is for alert let an user know 'save before navigate', then make redux 'alert completed'.
-    triedNavigateWhenPrevented[__navigatorRouteID] ?
-      (alert('press save button to save changed item'), triedNavigateWhenPreventedFn(__navigatorRouteID, false))
-        : triedNavigateWhenPrevented[parentTab] ?
-          (alert('press save button to save changed item'), triedNavigateWhenPreventedFn(parentTab, false))
-            : null
+    triedNavigateWhenPrevented[__navigatorRouteID] && (alert('press save button to save changed item'), triedNavigateWhenPreventedFn(__navigatorRouteID, false));
+    triedNavigateWhenPrevented[parentTab] && (alert('press save button to save changed item'), triedNavigateWhenPreventedFn(parentTab, false));
 
     this.state.addItemModalVisible && this.refs['newItemTempDescTextInput'].focus()
   }
@@ -115,42 +78,30 @@ export default class TemplateDetailsComponent extends React.Component {
       addItem,
       modifyItem
     } = this.props;
-    const prevItems = [ ...this.props.state.itemsOfChosenTemplate ];
-    // const resetData = () => this.setState(
-    //   {
-    //     searchText: '',
-    //     prevItems: [ ...this.props.state.itemsOfChosenTemplate ],
-    //     tempItems: [ ...this.props.state.itemsOfChosenTemplate ],
-    //     hasEmptyOnItemDesc: false,
-    //     emptyItemsRowId: [],
-    //     changeValue: false,
-    //     addItemModalVisible: false,
-    //     newItemDesc: '',
-    //     newItem: {
-    //       desc: '',
-    //       itemId: this.props.state.lastId.items + 1,
-    //       // Below need to be confirm, after new Items add, in the same page, if an user add new Items, below would be wrong.
-    //       orderNum: this.props.state.chosenTemplate.items.map(value => this.props.state.items[value]).sort((data1, data2) => data1.orderNum - data2.orderNum).slice(-1)[0].orderNum + 1,
-    //       template: this.props.state.chosenTemplate.title,
-    //       templateId: this.props.state.chosenTemplate.templateId
-    //     },
-    //     dataSource_tempItems: this.props.state.dataSourceOfItemsOfChosenTemplate || []
-    //   }
-    // );
+    const resetData = () => this.setState({
+        searchText: '',
+        tempItems: cloneDeep(this.props.state.itemsOfChosenTemplate),
+        prevItems: Object.freeze(cloneDeep(this.props.state.itemsOfChosenTemplate)),
+        emptyItemsRowId: [],
+        changeValue: false,
+        addItemModalVisible: false,
+        newItem: {
+          desc: '',
+          itemId: parseInt(this.props.state.lastId.items) + 1,
+          orderNum: parseInt(this.props.state.last_orderNum) + 1,
+          template: this.props.state.chosenTemplate.title,
+          templateId: this.props.state.chosenTemplate.templateId
+        },
+        modifyExistingItems: { length: 0 },
+        dataSource_tempItems: this.props.state.dataSourceOfItemsOfChosenTemplate || []
+      });
     const saveAlertFn = () => {
       this.state.emptyItemsRowId < this.state.tempItems ? Alert.alert(
         'Confirm Save',
-        'You make an existing item empty. If you want to delete it, press Save. Or press Cancel.',
+        'You make an existing item empty. If you want to delete it, press Save. Or press Cancel. Even though the item deleted, it won\'t be deleted neither on each instance.',
         [
           { text: 'Cancel'},
-          { text: 'Save', onPress: () => {
-            console.log('this.state.tempItemDesc : ', this.state.tempItemDesc)
-            let tempResult = this.state.tempItemDesc
-            for(let key in tempResult) {
-              tempResult[key].desc == '' && delete tempResult[key]
-            }
-            saveProcessFn(tempResult);
-          }}
+          { text: 'Save', onPress: () => saveProcessFn() }
         ]
       ) : Alert.alert(
         'Disable To Delete',
@@ -162,35 +113,24 @@ export default class TemplateDetailsComponent extends React.Component {
         ]
       )
     }
-    const saveProcessFn = async newItemDesc => {
-      await this.setState((prevState, tempResult = {}) => {
-        tempResult = {
-          changeValue: false,
-          tempItems: [
-            ...this.state.tempItems.slice(0, this.state.emptyItemsRowId),
-            ...this.state.tempItems.slice(this.state.emptyItemsRowId + 1)
-          ],
-          emptyItemsRowId: [],
-          hasEmptyOnItemDesc: false,
-        };
-        tempResult.dataSource_tempItems = this.ds.cloneWithRows(tempResult.tempItems);
-        return tempResult
-        // prevState.changeValue = false;
-        // prevState.tempItems = [
-        //   ...prevState.tempItems.slice(0, prevState.emptyItemsRowId),
-        //   ...prevState.tempItems.slice(prevState.emptyItemsRowId + 1)
-        // ];
-        // prevState.emptyItemsRowId = [];
-        // prevState.hasEmptyOnItemDesc = false,
-        // prevState.dataSource_tempItems = this.ds.cloneWithRows(prevState.tempItems);
+    const saveProcessFn = async () => {
+      await this.setState(prevState => {
+        prevState.changeValue = false;
+        prevState.emptyItemsRowId.length > 0 && (
+        console.log('before - prevState.emptyItemsRowId : ', prevState.emptyItemsRowId),
+        console.log('before - prevState.tempItems : ', prevState.tempItems),
+        prevState.emptyItemsRowId.map(value => prevState.tempItems = [
+          ...prevState.tempItems.slice(0, value),
+          ...prevState.tempItems.slice(value + 1)
+        ]),
+        prevState.emptyItemsRowId = [],
+        console.log('after - prevState.emptyItemsRowId : ', prevState.emptyItemsRowId),
+        console.log('after - prevState.tempItems : ', prevState.tempItems));
+        prevState.dataSource_tempItems = this.ds.cloneWithRows(prevState.tempItems);
+        prevState.prevItems = Object.freeze(cloneDeep(prevState.tempItems));
       });
-      // Below makes duplicate w/ componentDidUpdate.
-      // state.navigatePrevent[route.__navigatorRouteID] && navigatePreventFn(route.__navigatorRouteID, false);
-      // state.navigatePrevent[route.passProps.parentTab] && navigatePreventFn(route.passProps.parentTab, false);
-      console.log('this.state.modifyExistingItems : ', this.state.modifyExistingItems)
-      console.log('Object.keys(this.state.modifyExistingItems).length : ', Object.keys(this.state.modifyExistingItems).length)
-      Object.keys(this.state.modifyExistingItems).length > 0 && modifyItem(this.state.modifyExistingItems, route.passProps.chosenTemplate.templateId)
-      prevItems.length > this.state.tempItems.length && addItem(state.lastId.items, prevItems.slice(state.itemsOfChosenTemplate.length));
+      this.state.modifyExistingItems.length > 0 && modifyItem(this.state.modifyExistingItems, route.passProps.chosenTemplate.templateId)
+      this.state.prevItems.length < this.state.tempItems.length && addItem(state.lastId.items, this.state.tempItems.slice(state.itemsOfChosenTemplate.length));
       alert('save complete');
       // this.props.navigator.pop()
     }
@@ -222,10 +162,31 @@ export default class TemplateDetailsComponent extends React.Component {
         }
       )}
     />;
-
+    const changeItemText = (itemText, rowId, target_itemId, emptyStatusBoolean) => prevState => {
+      emptyStatusBoolean && (prevState.emptyItemsRowId = [
+        ...prevState.emptyItemsRowId,
+        rowId
+      ]);
+      prevState.emptyItemsRowId.length >= prevState.tempItems.length ? Alert.alert(
+        'Disable Delete Item',
+        'Each template has more than 1 item.',
+        [
+          { text: 'Confirm', onPress: () => this.setState(prevState => {
+            prevState.tempItems[rowId].desc = prevState.prevItems[rowId].desc;
+            itemText = prevState.prevItems[rowId].desc;
+            prevState.emptyItemsRowId.pop();
+            prevState.modifyExistingItems.hasOwnProperty(target_itemId) && (prevState.modifyExistingItems[target_itemId] = itemText);
+          })
+          }
+        ]
+      ) : rowId > prevState.tempItems.length || (prevState.modifyExistingItems[target_itemId] = itemText, ++prevState.modifyExistingItems.length);
+      // Below is for handing on existing data.
+      prevState.tempItems[rowId].desc = itemText;
+      prevState.dataSource_tempItems = this.ds.cloneWithRows(prevState.tempItems);
+      !isEqual(this.state.prevItems, prevState.tempItems) ? (prevState.changeValue = true, prevState.searchText = '') : prevState.changeValue = false;
+    };
     const renderRowItems = (rowData, sectionId, rowId) => {
-      // console.log('renderRowItems - rowData : ', rowData)
-      const compareResult = this.state.tempItems[rowId] == prevItems[rowId]
+      const compareResult = isEqual(this.state.tempItems[rowId], this.state.prevItems[rowId]);
       return (
         <View
           key={rowData.itemId}
@@ -241,79 +202,9 @@ export default class TemplateDetailsComponent extends React.Component {
           }}
           >
               <TextInput
-                // value={rowData.desc}
-                value={this.state.newItemDesc[rowData.itemId]}
-                // onChangeText={itemText => changeItemText(itemText, rowId, rowData.itemId, itemText == '')}
-                onChangeText={itemText => {
-                  const emptyStatusBoolean = itemText == '',
-                        target_itemId = rowData.itemId;
-                  // emptyStatusBoolean && this.setState({
-                  //   hasEmptyOnItemDesc: emptyStatusBoolean,
-                  //   emptyItemsRowId: [
-                  //     ...this.state.emptyItemsRowId,
-                  //     rowId
-                  //   ]
-                  // })
-                  let tempdata_tempItems = [ ...this.state.tempItems ];
-                  tempdata_tempItems[rowId].desc = itemText
-                  this.setState({
-                    newItemDesc: {
-                      ...this.state.newItemDesc,
-                      [rowData.itemId]: itemText
-                    },
-                    tempItems: [
-                      ...tempdata_tempItems
-                    ],
-                    dataSource_tempItems: this.ds.cloneWithRows(tempdata_tempItems)
-                  })
-                  !isEqual(prevItems, this.state.tempItems) ? this.setState({
-                    changeValue: true,
-                    searchText: ''
-                  }) : this.setState({ changeValue: false });
-                  console.log('prevItems === this.state.tempItems : ', prevItems === this.state.tempItems);
-                  console.log('isEqual(prevItems, this.state.tempItems) : ', isEqual(prevItems, this.state.tempItems));
-                  console.log('changeItemText - this.state : ', this.state)
-                  //
-                  // this.setState(prevState => {
-                  //   prevState.hasEmptyOnItemDesc = emptyStatusBoolean;
-                  //   prevState.hasEmptyOnItemDesc ? prevState.emptyItemsRowId = [
-                  //     ...prevState.emptyItemsRowId,
-                  //     rowId
-                  //   ] : null;
-                  //   // prevState.emptyItemsRowId.length >= prevState.tempItems.length && Alert.alert(
-                  //   //   'Disable Delete Item',
-                  //   //   'Each template has more than 1 item.',
-                  //   //   [
-                  //   //     { text: 'Confirm', onPress: () => () => {
-                  //   //       prevState.newItemDesc[target_itemId] = prevItems[rowId].desc
-                  //   //       return prevState
-                  //   //       }
-                  //   //     }
-                  //   //   ]
-                  //   // );
-                  //   // If all items is empty, below should not run.
-                  //   // console.log('prevItems === this.state.tempItems : ', prevItems === this.state.tempItems);
-                  //   // console.log('isEqual(prevItems, this.state.tempItems) : ', isEqual(prevItems, this.state.tempItems));
-                  //
-                  //   console.log('before - prevItems : ', prevItems)
-                  //   // console.log('before - prevState.tempItems : ', prevState.tempItems)
-                  //
-                  //   // prevState.tempItems[rowId].desc = itemText;
-                  //   prevState.newItemDesc[target_itemId] = itemText
-                  //   prevState.tempItems.map(value => {
-                  //     (value.itemId == target_itemId) && (value.desc = itemText);
-                  //   })
-                  //   console.log('after - prevItems : ', prevItems)
-                  //   // console.log('after - prevState.tempItems : ', prevState.tempItems)
-                  //   prevState.dataSource_tempItems = this.ds.cloneWithRows(prevState.tempItems);
-                  //   !isEqual(prevItems, prevState.tempItems) ? (prevState.changeValue = true, prevState.searchText = '') : prevState.changeValue = false;
-                  //   console.log('prevItems === prevState.tempItems : ', prevItems === prevState.tempItems);
-                  //   console.log('isEqual(prevItems, prevState.tempItems) : ', isEqual(prevItems, prevState.tempItems));
-                  //   console.log('changeItemText - prevState : ', prevState)
-                  //   return prevState
-                  // })
-                }}
-                placeholder={this.state.tempItems[rowId].desc}
+                value={this.state.tempItems[rowId].desc}
+                onChangeText={itemText => this.setState(changeItemText(itemText, rowId, rowData.itemId, itemText == ''))}
+                placeholder={this.state.prevItems[rowId].desc}
                 placeholderTextColor='#D2D8C9'
                 style={{
                   // flex: 1,
@@ -330,18 +221,18 @@ export default class TemplateDetailsComponent extends React.Component {
     };
     return(
       <View style={styles.bodyContainerOnSideMenu}>
-        {!this.state.changeValue ? (<SearchBar
+        {this.state.changeValue || (<SearchBar
           lightTheme
           round={true}
           onChangeText={searchText => {
             this.setState({
               searchText
-            })
-            searchBarText(searchText, 'itemsOfChosenTemplate')
+            });
+            searchBarText(searchText, 'itemsOfChosenTemplate');
           }}
           placeholder='Search Items'
           value={this.state.searchText}
-        />) : null}
+        />)}
         <FormLabel>
           Template : {route.passProps.chosenTemplate.title}
         </FormLabel>
@@ -357,13 +248,12 @@ export default class TemplateDetailsComponent extends React.Component {
             </FormLabel>
           ) : (
                 <FormLabel>
-                  Category : {route.passProps.chosenTemplate.category}, Items({prevItems.length})
+                  Category : {route.passProps.chosenTemplate.category}, Items({this.state.prevItems.length})
                 </FormLabel>
               )
         }
         <List>
           <ListView
-            // dataSource={this.state.changeValue ?  this.state.dataSource_tempItems : state.dataSourceOfItemsOfChosenTemplate}
             dataSource={this.state.dataSource_tempItems}
             enableEmptySections={true}
             renderRow={renderRowItems}
@@ -405,9 +295,7 @@ export default class TemplateDetailsComponent extends React.Component {
               </Text>
             </TouchableOpacity>
         </View>
-        {this.state.changeValue
-          ? (
-            <View>
+        {this.state.changeValue && (<View>
               <View
                 style={{ height: 10 }}
               />
@@ -415,7 +303,7 @@ export default class TemplateDetailsComponent extends React.Component {
                 icon={{ name: 'check' }}
                 title='Save'
                 backgroundColor='#159589'
-                onPress={() => this.state.hasEmptyOnItemDesc ? saveAlertFn() : saveProcessFn() }
+                onPress={() => this.state.emptyItemsRowId.length > 0 ? saveAlertFn() : saveProcessFn() }
               />
               <View
                 style={{ height: 10 }}
@@ -426,8 +314,7 @@ export default class TemplateDetailsComponent extends React.Component {
                 onPress={() => resetData()}
               />
             </View>
-            )
-          : null}
+            )}
         <View style={{ height: 10 }}/>
         <Button
           title={`Show Instances of this templates(${state.instancesOfChosenTemplate.length})`}
@@ -452,17 +339,6 @@ export default class TemplateDetailsComponent extends React.Component {
             }
           )}
         />
-        <ScrollView>
-          <Text>
-            this.state.newItemDesc : {JSON.stringify(this.state.newItemDesc, null, 1)}
-            {'\n'}
-            this.props.state.itemsOfChosenTemplate[1] : {JSON.stringify(this.props.state.itemsOfChosenTemplate[1], null, 1)}
-            {'\n'}
-            {/* this.state.prevItems : {JSON.stringify(this.state.prevItems, null, 1)} */}
-            {/* {'\n'} */}
-            this.props.state.dataSourceOfItemsOfChosenTemplate._dataBlob.s1[1].desc : {this.props.state.dataSourceOfItemsOfChosenTemplate._dataBlob.s1[1].desc}
-          </Text>
-        </ScrollView>
         <Modal
           animationType={'slide'}
           transparent={true}
@@ -535,17 +411,9 @@ export default class TemplateDetailsComponent extends React.Component {
                     <TextInput
                       ref='newItemTempDescTextInput'
                       value={this.state.newItem.desc}
-                      onChangeText={newItemText => this.setState((prevState, tempResult = {}) => {
-                        tempResult = {
-                          newItem: {
-                            ...this.state.newItem,
-                            desc: newItemText,
-                          },
-                          changeValue: !isEqual(prevItems, this.state.tempItems)
-                        }
-                        return tempResult
-                        // prevState.newItem.desc = newItemText;
-                        // prevState.changeValue = !isEqual(prevItems, prevState.tempItems);
+                      onChangeText={newItemText => this.setState(prevState => {
+                        prevState.newItem.desc = newItemText;
+                        prevState.changeValue = !isEqual(prevState.prevItems, prevState.tempItems);
                       })}
                       style={{
                         flex: 1,
@@ -558,36 +426,19 @@ export default class TemplateDetailsComponent extends React.Component {
                   <Button
                     title='Add'
                     onPress={() => {
-                      this.state.newItem.desc !== '' ? (this.setState((prevState, tempResult = {}) => {
-                        tempResult = {
-                          tempItems: [
-                            ...this.state.tempItems,
-                            {
-                              ...this.state.newItem
-                            }
-                          ],
-                          newItem: {
-                            ...this.state.newItem,
-                            itemId: this.state.newItem.itemId + 1,
-                            orderNum: this.state.newItem.orderNum + 1,
-                            desc: ''
-                          }
-                        }
-                        tempResult.dataSource_tempItems = this.ds.cloneWithRows(tempResult.tempItems)
-                        tempResult.changeValue = !isEqual(prevItems, tempResult.tempItems)
-                        return tempResult
-                        // prevState.tempItems = [
-                        //   ...prevState.tempItems,
-                        //   { ...prevState.newItem }
-                        // ];
-                        // prevState.newItem.desc = '';
-                        // ++prevState.newItem.itemId;
-                        // ++prevState.newItem.orderNum;
+                      this.state.newItem.desc !== '' ? (this.setState(prevState => {
+                        prevState.tempItems = [
+                          ...prevState.tempItems,
+                          { ...prevState.newItem }
+                        ];
+                        prevState.newItem.desc = '';
+                        ++prevState.newItem.itemId;
+                        ++prevState.newItem.orderNum;
 
-                        // prevState.dataSource_tempItems = this.ds.cloneWithRows(prevState.tempItems)
-                        // prevState.changeValue = !isEqual(prevItems, prevState.tempItems)
-                      }),
-                      alert('add completed')) : alert('input new item');
+                        prevState.dataSource_tempItems = this.ds.cloneWithRows(prevState.tempItems)
+                        prevState.changeValue = !isEqual(prevItems, prevState.tempItems)
+                      }), alert('add completed'))
+                        : alert('input new item');
                       this.refs['newItemTempDescTextInput'].focus();
                     }}
                   />
