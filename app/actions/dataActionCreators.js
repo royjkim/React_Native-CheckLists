@@ -18,9 +18,11 @@ function internalModifyTemplate() {
 
 }
 
-export function modifyTemplate() {
+export function modifyTemplate(targetTemplateId, data) {
   return {
-    type: types.MODIFY_TEMPLATE
+    type: types.MODIFY_TEMPLATE,
+    targetTemplateId,
+    data
   }
 }
 
@@ -59,10 +61,11 @@ function internal_modifyInstance() {
 
 }
 
-export function modifyInstance(targetData) {
-  console.log(`actionCreators - modifyInstance - targetInstance : ${JSON.stringify(targetInstance, null, 1)}`)
+export function modifyInstance(targetInstanceId, data) {
   return {
-    type: types.MODIFY_INSTANCE
+    type: types.MODIFY_INSTANCE,
+    targetInstanceId,
+    data
   }
 }
 

@@ -1,4 +1,11 @@
-import { modifyItemsCustomized, chooseCategory, navigatePrevent, triedNavigateWhenPrevented } from '../../../actions/dataActionCreators'
+import {
+  modifyItemsCustomized,
+  chooseCategory,
+  navigatePrevent,
+  triedNavigateWhenPrevented,
+  modifyTemplate,
+  modifyInstance
+} from '../../../actions/dataActionCreators';
 import ChosenInstanceDetailsComponent from './chosenInstanceDetailsComponent'
 import { connect } from 'react-redux'
 import mySelectors from '../../../container/selectors'
@@ -20,8 +27,10 @@ const make_mapStateToProps = () => (state, ownProps) => ({
 const mapDispatchToProps = dispatch => ({
   modifyItemsCustomized: targetData => dispatch(modifyItemsCustomized(targetData)),
   chooseCategory: category => dispatch(chooseCategory(category)),
-  navigatePrevent: (routeTitle, statusBoolean) => dispatch(navigatePrevent(routeTitle, statusBoolean)),
-  triedNavigateWhenPrevented: (__navigatorRouteID, statusBoolean) => dispatch(triedNavigateWhenPrevented(__navigatorRouteID, statusBoolean))
+  navigatePreventFn: (routeTitle, statusBoolean) => dispatch(navigatePrevent(routeTitle, statusBoolean)),
+  triedNavigateWhenPreventedFn: (__navigatorRouteID, statusBoolean) => dispatch(triedNavigateWhenPrevented(__navigatorRouteID, statusBoolean)),
+  modifyTemplate: (targetTemplateId, data) => dispatch(modifyTemplate(targetTemplateId, data)),
+  modifyInstance: (targetInstanceId, data) => dispatch(modifyInstance(targetInstanceId, data))
 })
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => ({

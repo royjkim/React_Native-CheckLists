@@ -117,15 +117,11 @@ export default class TemplateDetailsComponent extends React.Component {
       await this.setState(prevState => {
         prevState.changeValue = false;
         prevState.emptyItemsRowId.length > 0 && (
-        console.log('before - prevState.emptyItemsRowId : ', prevState.emptyItemsRowId),
-        console.log('before - prevState.tempItems : ', prevState.tempItems),
         prevState.emptyItemsRowId.map(value => prevState.tempItems = [
           ...prevState.tempItems.slice(0, value),
           ...prevState.tempItems.slice(value + 1)
         ]),
         prevState.emptyItemsRowId = [],
-        console.log('after - prevState.emptyItemsRowId : ', prevState.emptyItemsRowId),
-        console.log('after - prevState.tempItems : ', prevState.tempItems));
         prevState.dataSource_tempItems = this.ds.cloneWithRows(prevState.tempItems);
         prevState.prevItems = Object.freeze(cloneDeep(prevState.tempItems));
       });

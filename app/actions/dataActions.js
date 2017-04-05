@@ -1,6 +1,6 @@
 const ADD_TEMPLATE = 'addNewTemplate',
-      MODIFY_TEMPLATE = 'modifyExistingTemplate',
-      DELETE_TEMPLATE = 'deleteExistingTemplate',
+      MODIFY_TEMPLATE = 'modifyTemplate',
+      DELETE_TEMPLATE = 'deleteTemplate',
       ADD_INSTANCE = 'addInstance',
       DELETE_INSTANCE = 'deleteInstance',
       MODIFY_INSTANCE = 'modifyInstance',

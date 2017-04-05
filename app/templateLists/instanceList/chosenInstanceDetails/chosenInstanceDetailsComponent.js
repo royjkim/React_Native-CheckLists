@@ -7,7 +7,7 @@ import {
   Modal,
   TouchableOpacity,
   TextInput,
-  ScrollView,
+  Alert,
 } from 'react-native'
 import {
   List,
@@ -36,47 +36,33 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
   }
 
   componentDidUpdate() {
-    const __navigatorRouteID = this.props.route.__navigatorRouteID
-    !this.state.saveButtonVisible ?
-      this.state.changeValue_instanceName || this.state.changeValue_templateTitle ?
-        this.setState({ saveButtonVisible: true }) : null
-          : null
+    const __navigatorRouteID = this.props.route.__navigatorRouteID,
+          parentTab = this.props.route.passProps.parentTab,
+          navigatePrevent = this.props.state.navigatePrevent,
+          triedNavigateWhenPrevented = this.props.state.triedNavigateWhenPrevented,
+          navigatePreventFn = this.props.navigatePreventFn,
+          triedNavigateWhenPreventedFn = this.props.triedNavigateWhenPreventedFn;
+
+    !this.state.saveButtonVisible && (this.state.changeValue_instanceName || this.state.changeValue_templateTitle) && this.setState({ saveButtonVisible: true });
 
     // Below is for changeValue of 'instanceName or templateTitle', make redux navigate prevent & hide save button.
-    this.state.changeValue_instanceName || this.state.changeValue_templateTitle ?
-      this.props.state.navigatePrevent[__navigatorRouteID] ?
-        this.props.state.navigatePrevent[this.props.route.passProps.parentTab] ?
-          null : this.props.navigatePrevent(this.props.route.passProps.parentTab, true)
-          : this.props.state.navigatePrevent[this.props.route.passProps.parentTab] ?
-              this.props.navigatePrevent(__navigatorRouteID, true) : (this.props.navigatePrevent(__navigatorRouteID, true) , this.props.navigatePrevent(this.props.route.passProps.parentTab, true))
-                : this.state.saveButtonVisible ?
-                  this.setState({ saveButtonVisible: false }) : null
+    (this.state.changeValue_instanceName || this.state.changeValue_templateTitle) && (navigatePrevent[__navigatorRouteID] || navigatePreventFn(__navigatorRouteID, true),
+      navigatePrevent[parentTab] || navigatePreventFn(parentTab, true));
 
     // Below is for when the value of 'instanceName or templateTitle' restored , make redux navigate able.
-    !this.state.changeValue_instanceName && !this.state.changeValue_templateTitle ?
-      this.props.state.navigatePrevent[__navigatorRouteID] ?
-        this.props.state.navigatePrevent[this.props.route.passProps.parentTab] ?
-          (this.props.navigatePrevent(__navigatorRouteID, false), this.props.navigatePrevent(this.props.route.passProps.parentTab), false)
-          : this.props.navigatePrevent(__navigatorRouteID, false)
-            : null
-              : null
+    (!this.state.changeValue_instanceName && !this.state.changeValue_templateTitle) && (navigatePrevent[__navigatorRouteID] && navigatePreventFn(__navigatorRouteID, false),
+      navigatePrevent[parentTab] && navigatePreventFn(parentTab, false), (this.state.saveButtonVisible && this.setState({ saveButtonVisible: false })));
 
     // Below is for alert let an user know 'save before navigate', then make redux 'alert completed'.
-    this.props.state.triedNavigateWhenPrevented[this.props.route.passProps.parentTab] || this.props.state.triedNavigateWhenPrevented[__navigatorRouteID] ?
-      this.props.state.triedNavigateWhenPrevented[__navigatorRouteID] ?
+      triedNavigateWhenPrevented[__navigatorRouteID] && (
         this.state.changeValue_instanceName ?
-          (alert('press save button to save changed instance name.'), this.props.triedNavigateWhenPrevented(__navigatorRouteID, false))
-            : this.state.changeValue_templateTitle ?
-              (alert('press save button to save changed template name.'), this.props.triedNavigateWhenPrevented(__navigatorRouteID, false))
-                : null
-                  : this.props.state.triedNavigateWhenPrevented[this.props.route.passProps.parentTab] ?
-                      this.state.changeValue_instanceName ?
-                        (alert('press save button to save changed instance name.'), this.props.triedNavigateWhenPrevented(this.props.route.passProps.parentTab, false))
-                        : this.state.changeValue_templateTitle ?
-                          (alert('press save button to save changed template name.'), this.props.triedNavigateWhenPrevented(this.props.route.passProps.parentTab, false))
-                            : null
-                              : null
-                                : null
+          (alert('press save button to save changed instance name.'), triedNavigateWhenPreventedFn(__navigatorRouteID, false))
+            : this.state.changeValue_templateTitle && (alert('press save button to save changed template name.'), this.props.triedNavigateWhenPreventedFn(__navigatorRouteID, false)));
+
+      triedNavigateWhenPrevented[parentTab] && (
+        this.state.changeValue_templateTitle ?
+          (alert('press save button to save changed template name.'), triedNavigateWhenPreventedFn(parentTab, false))
+            : this.state.changeValue_instanceName && (alert('press save button to save changed instance name.'), triedNavigateWhenPreventedFn(parentTab, false)));
   }
   render() {
     const {
@@ -85,8 +71,9 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
       state,
       modifyItemsCustomized,
       chooseCategory,
-      navigatePrevent,
-      triedNavigateWhenPrevented
+      navigatePreventFn,
+      modifyTemplate,
+      modifyInstance,
     } = this.props
     const { chosenInstance } = route.passProps
     const renderRow = (rowData, sectionId) => (
@@ -113,24 +100,41 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
 
     // Below is for change the 'this state of instanceName and templateTitle & changeValue_instanceName and changeValue_templateTitle'.
     const changeCommon = (newValue, attr) => {
+      if(newValue == '') {
+        Alert.alert(
+          'Disable Delete',
+          `${attr == 'instanceName' ? 'Instance Name shouldn\'t be empty.' : 'Template Name shouldn\'t be empty.'}`,
+          [
+            {
+              text: 'Confirm', onPress: () => {
+                this.setState({
+                  [attr]: attr == 'instanceName' ? this.state.prev_instanceName : this.state.prev_templateTitle,
+                  [`changeValue_${attr}`]: false
+                });
+                return null
+              }
+            }
+          ]
+        );
+      };
       return prevState => {
-        let tempResult = {}
+        let tempResult = {};
 
-        newValue !== prevState[attr] ? tempResult = {
+        newValue !== prevState[attr] && (tempResult = {
           [attr]: newValue
-        } : null
+        });
 
-        newValue !== prevState[`prev_${attr}`] ? prevState[`changeValue_${attr}`] ? tempResult = {
+        newValue !== prevState[`prev_${attr}`] && prevState[`changeValue_${attr}`] ? tempResult = {
           [attr]: newValue,
         } : tempResult = {
           [attr]: newValue,
           [`changeValue_${attr}`]: true
-        } : null
+        };
 
-        newValue == prevState[`prev_${attr}`] ? prevState[`changeValue_${attr}`] ? tempResult = {
+        newValue == prevState[`prev_${attr}`] && prevState[`changeValue_${attr}`] && (tempResult = {
           ...tempResult,
           [`changeValue_${attr}`]: false
-        } : null : null
+        });
         return tempResult
       }
     }
@@ -164,7 +168,7 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
               <TextInput
                 value={this.state.instanceName}
                 onChangeText={instanceName => this.setState(changeCommon(instanceName, 'instanceName'))}
-                placeholder='(at least 3 characters.)'
+                placeholder={this.state.prev_instanceName}
                 style={{
                   flex: 1,
                   color: this.state.changeValue_instanceName ? '#159589' : '#605E60',
@@ -201,7 +205,7 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
               <TextInput
                 value={this.state.templateTitle}
                 onChangeText={templateTitle => this.setState(changeCommon(templateTitle, 'templateTitle'))}
-                placeholder='(at least 3 characters.)'
+                placeholder={this.state.prev_templateTitle}
                 style={{
                   flex: 1,
                   color: this.state.changeValue_templateTitle ? '#159589' : '#605E60',
@@ -221,9 +225,9 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
           backgroundColor='#6296F9'
           onPress={() => this.setState({ modalPickerVisible: true })}
         />
-        {state.dataSourceItemsCustomizedOfChosenInstance._cachedRowCount !== state.countsOfStatusCompleted.total ? <FormLabel>
+        {state.dataSourceItemsCustomizedOfChosenInstance._cachedRowCount !== state.countsOfStatusCompleted.total && <FormLabel>
           Filter : {state.statusPicker}({state.dataSourceItemsCustomizedOfChosenInstance._cachedRowCount})
-        </FormLabel> : null}
+        </FormLabel>}
         <List>
           <ListView
             dataSource={state.dataSourceItemsCustomizedOfChosenInstance}
@@ -232,13 +236,14 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
           />
         </List>
         <View style={{ height: 10 }} />
-        {this.state.saveButtonVisible ? (
-          <View>
+        {this.state.saveButtonVisible && (<View>
             <Button
               icon={{ name: 'check' }}
               title='Save'
               backgroundColor='#159589'
               onPress={() => {
+                this.state.changeValue_templateTitle && modifyTemplate(state.chosenTemplate.templateId, this.state.templateTitle);
+                this.state.changeValue_instanceName && modifyInstance(route.passProps.chosenInstance.instanceId, this.state.instanceName);
                 this.setState({
                   saved: true,
                   prev_templateTitle: this.state.templateTitle,
@@ -246,8 +251,8 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
                   changeValue_instanceName: false,
                   changeValue_templateTitle: false
                 })
-                state.navigatePrevent[route.__navigatorRouteID] ? navigatePrevent(route.__navigatorRouteID, false) : null
-                state.navigatePrevent[route.passProps.parentTab] ? navigatePrevent(route.passProps.parentTab, false) : null
+                state.navigatePrevent[route.__navigatorRouteID] && navigatePreventFn(route.__navigatorRouteID, false);
+                state.navigatePrevent[route.passProps.parentTab] && navigatePreventFn(route.passProps.parentTab, false);
                 alert('save complete')
               }}
             />
@@ -260,7 +265,7 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
               onPress={() => resetData()}
             />
           </View>
-        ) : null }
+        )}
         <Modal
           animationType={'slide'}
           visible={this.state.modalPickerVisible}

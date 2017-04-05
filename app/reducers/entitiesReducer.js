@@ -65,41 +65,33 @@ const addInstance = (state, action) => ({
 })
 
 const modifyTemplate = (state, action) => ({
-
+  ...state,
+  templates: {
+    ...state.templates,
+    [action.targetTemplateId]: {
+      ...state.templates[action.targetTemplateId],
+      title: action.data
+    }
+  }
 })
 
 const delTemplate = (state, action) => ({
 
 })
 
-// const addInstance = (state, action) => ({
-//   ...state,
-//   instanceList: {
-//     ...state.instanceList,
-//     [action.newData.id]: { ...action.newData }
-//   }
-// })
-
-// this.normalizedData : {
-//   "entities": {
-//     "instanceList": {
-//       "1": {
-//         "id": 1,
-//         "name": "Jack",
-//         "template": "GoingFishing"
-//       },
-//       "2": {
-//         "id": 2,
-//         "name": "Jack",
-//         "template": "StayHome"
-//       },
-
 const deleteInstance = (state, action) => ({
 
 })
 
 const modifyInstance = (state, action) => ({
-
+  ...state,
+  instances: {
+    ...state.instances,
+    [action.targetInstanceId]: {
+      ...state.instances[action.targetInstanceId],
+      name: action.data
+    }
+  }
 })
 
 const modifyItemsCustomized = (state, action) => ({
