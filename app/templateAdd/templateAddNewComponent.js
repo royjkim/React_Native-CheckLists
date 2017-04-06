@@ -36,8 +36,8 @@ export default class TemplateAddNewComponent extends React.Component {
       tempNewItemDesc: '',
       newItem: {
         desc: '',
-        // itemId: this.props.state.lastId.items,
-        itemId: 0,
+        itemId: this.props.state.lastId.items + 1,
+        // itemId: 0,
         orderNum: 0,
         // templateId: this.props.state.lastId.templates + 1
         templateId: 0
@@ -63,7 +63,7 @@ export default class TemplateAddNewComponent extends React.Component {
         prevState.chosenCategory = chosenTemplate.category || '';
         prevState.newItem = {
           desc: '',
-          itemId: this.props.state.lastId.items,
+          itemId: this.props.state.lastId.items + 1,
           orderNum: tempSorted_newItems.length > 0 ? tempSorted_newItems[0].orderNum : 0,
           templateId: this.props.state.lastId.templates + 1
         };
@@ -73,11 +73,13 @@ export default class TemplateAddNewComponent extends React.Component {
         //   })).sort((data1, data2) => data2.orderNum - data1.orderNum)
         // ];
         prevState.prevItems = Object.freeze([
-          ...chosenTemplate.items.map(value => ({
+          ...chosenTemplate.items.map((value, index) => ({
             ...this.props.state.items[value],
+            itemId: prevState.newItem.itemId + index,
             templateId: this.props.state.items[value].templateId + 1
           })).sort((data1, data2) => data2.orderNum - data1.orderNum)
         ]);
+        prevState.newItem.itemId = prevState.prevItems.slice(-1)[0].itemId + 1;
         // prevState.tempItems = [ ...prevState.prevItems ];
         prevState.tempItems = cloneDeep(prevState.prevItems);
       })
@@ -173,7 +175,7 @@ export default class TemplateAddNewComponent extends React.Component {
       <ListItem
         key={rowData.itemId}
         title={String(rowData.desc || 'none')}
-        subtitle={`orderNum : ${String(rowData.orderNum)}, templateId : ${rowData.templateId}`}
+        subtitle={`orderNum : ${String(rowData.orderNum)}, templateId : ${rowData.templateId}, itemId: ${rowData.itemId}`}
         onPress={() => deleteAlert(rowData, rowId)}
         hideChevron
       />
@@ -288,10 +290,12 @@ export default class TemplateAddNewComponent extends React.Component {
               onPress={() => {
                 this.state.tempNewItemDesc !== '' && this.setState(prevState => {
                   const addedLengthBetweenPrevItemsTempItems = prevState.prevItems.length - prevState.tempItems.length;
+                  console.log('prevState.prevItems : ', prevState.prevItems)
+                  console.log('prevState.newItem : ', prevState.newItem)
                   prevState.newItem = {
                     desc: prevState.tempNewItemDesc,
                     // itemId: addedLengthBetweenPrevItemsTempItems == 0 ? state.lastId.items + 1 : state.lastId.items + 1 + addedLengthBetweenPrevItemsTempItems,
-                    itemId: prevState.newItem.itemId + 1,
+                    itemId: prevState.newItem.itemId,
                     orderNum: prevState.newItem.orderNum + 1,
                     templateId: state.lastId.templates + 1
                   };
@@ -302,12 +306,14 @@ export default class TemplateAddNewComponent extends React.Component {
                       desc: prevState.tempNewItemDesc
                     }
                   ];
-                  prevState.newItem = {
-                    desc: '',
-                    itemId: prevState.newItem.itemId + 1,
-                    orderNum: prevState.newItem.orderNum,
-                    templateId: state.lastId.templates + 1,
-                  };
+                  prevState.newItem.desc = '';
+                  ++prevState.newItem.itemId;
+                  // prevState.newItem = {
+                  //   desc: '',
+                  //   itemId: prevState.newItem.itemId + 1,
+                  //   orderNum: prevState.newItem.orderNum,
+                  //   templateId: state.lastId.templates + 1,
+                  // };
                   prevState.tempNewItemDesc = '';
                   prevState.tempItems.sort((data1, data2) => data2.orderNum - data1.orderNum);
                   prevState.dataSourceNewAddedItems = this.ds.cloneWithRows(prevState.tempItems);
@@ -334,8 +340,8 @@ export default class TemplateAddNewComponent extends React.Component {
                 items: this.state.tempItems,
                 templateId: state.lastId.templates + 1,
                 title: this.state.templateName
-              }
-              addTemplate(state.lastId, newData),
+              };
+              addTemplate(state.lastId, newData);
               state.navigatePrevent[route.__navigatorRouteID] && navigatePreventFn(route.__navigatorRouteID, false);
               state.navigatePrevent[route.passProps.parentTab] && navigatePreventFn(route.passProps.parentTab, false);
               alert('save complete', navigator.replacePreviousAndPop({

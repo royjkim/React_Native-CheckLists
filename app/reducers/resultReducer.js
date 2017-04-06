@@ -45,13 +45,20 @@ const deleteInstance = (state, action) => ({
 const addItem = (state, action) => {
   // Below need to be modified, to
   // const itemId =  action.newData.map(value => value.itemId)
+
+  let tempData_items = [];
+
+  action.newData instanceof Array && (tempData_items = action.newData.map(value => value.itemId));
+  action.newData instanceof Object && (tempData_items = action.newData.items.map(value => value.itemId));
+
   return {
     ...state,
-    items: [
-      ...state.items,
-      // action.newData.itemId
-      ...action.newData.map(value => value.itemId)
-    ]
+    // items: [
+    //   ...state.items,
+    //   // action.newData.itemId
+    //   ...action.newData.map(value => value.itemId)
+    // ]
+    items: state.items.concat(tempData_items)
   }
 }
 

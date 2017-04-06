@@ -1,16 +1,24 @@
 import types from './dataActions'
 
-function internaladdTemplate() {
-
-}
+const internal_addTemplate = (lastId, newData) => ({
+  type: types.ADD_TEMPLATE,
+  lastId,
+  lastIndex: lastId.templates - 1 < 0 ? 0 : lastId.templates - 1,
+  newData
+})
 
 export function addTemplate(lastId, newData) {
-  return {
-    type: types.ADD_TEMPLATE,
-    attr: 'templates',
-    lastId,
-    lastIndex: lastId.templates - 1 < 0 ? 0 : lastId.templates - 1,
-    newData
+  // return {
+  //   type: types.ADD_TEMPLATE,
+  //   attr: 'templates',
+  //   lastId,
+  //   lastIndex: lastId.templates - 1 < 0 ? 0 : lastId.templates - 1,
+  //   newData
+  // }
+  return dispatch => {
+    dispatch(internal_addTemplate(lastId, newData));
+    dispatch(lastIdPlus('templates', lastId, newData));
+    dispatch(addItem(lastId, newData));
   }
 }
 
@@ -128,14 +136,25 @@ export function modifyItemsCustomized(targetData) {
   }
 }
 
+const internal_addItem = (lastId, newData) => ({
+  type: types.ADD_ITEM,
+  newData,
+  lastId,
+  // templateId: newData[0].templateId
+  templateId: newData instanceof Array ? newData[0].templateId : newData.templateId
+})
+
 export function addItem(lastId, newData) {
-  console.log('actionCreators - addItem - parameter - newData : ', newData)
-  return {
-    type: types.ADD_ITEM,
-    newData,
-    attr: 'items',
-    lastId,
-    templateId: newData[0].templateId
+  // return {
+  //   type: types.ADD_ITEM,
+  //   newData,
+  //   attr: 'items',
+  //   lastId,
+  //   templateId: newData[0].templateId
+  // }
+  return dispatch => {
+    dispatch(internal_addItem(lastId, newData));
+    dispatch(lastIdPlus('items', lastId, newData))
   }
 }
 
@@ -169,7 +188,6 @@ export function delItem(targetItemId, targetTemplateId) {
 
 const internal_addTemplateCategory = (lastId, newData) => ({
   type: types.ADD_TEMPLATE_CATEGORY,
-  // attr: 'templateCategories',
   lastId,
   lastIndex: lastId - 1 < 0 ? 0 : lastId - 1,
   newData,
@@ -178,6 +196,7 @@ const internal_addTemplateCategory = (lastId, newData) => ({
 export function addTemplateCategory(lastId, newData) {
   return dispatch => {
     dispatch(internal_addTemplateCategory(lastId, newData));
+    dispatch(addItem(lastId, newData));
     dispatch(lastIdPlus('templateCategories', lastId, newData));
   }
   // return {

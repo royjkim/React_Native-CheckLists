@@ -10,23 +10,6 @@ const initialState = {
 }
 
 const addTemplate = (state, action) => {
-  let temp_items = {};
-      // temp_itemsCustomized = {},
-      // prevLastIdItems = action.lastId.items;
-      // prevLastIdItemsCustomized = action.lastId.itemsCustomized;
-  // console.log(`action.newData.items : `, action.newData.items);
-  action.newData.items.map(value => {
-    temp_items[value.itemId] = {
-      ...value,
-      template: action.newData.title
-    }
-  //   // temp_itemsCustomized[++prevLastIdItemsCustomized] = {
-  //   //   ...value,
-  //   //   instanceId: null,
-  //   //   itemsCustomizedId: prevLastIdItemsCustomized,
-  //   //   status: false
-  //   // }
-  })
   return {
     ...state,
     templates: {
@@ -34,15 +17,12 @@ const addTemplate = (state, action) => {
       [action.lastId.templates + 1]: {
         ...action.newData,
         items: action.newData.items.map(value => value.itemId)
-        // items: [
-        //   ...action.newData.items.map(value => value.itemId)
-        // ]
       }
-    },
-    items: {
-      ...state.items,
-      ...temp_items
     }
+    // items: {
+    //   ...state.items,
+    //   ...temp_items
+    // }
     // items: {
     //   ...state.items,
     //   [action.lastId.items + 1]: {
@@ -190,10 +170,58 @@ const modifyItemsCustomized = (state, action) => {
 }
 
 const addItem = (state, action) => {
-  const tempData_items = ((tempResult = {}) => {
-    action.newData.map(value => tempResult[value.itemId] = value)
-    return tempResult
-  })()
+  // console.log('reducer - action.newData : ', action.newData);
+  // (action.newData instanceof Array) ? const tempData_items = ((tempResult = {}) => {
+  //   action.newData.map(value => tempResult[value.itemId] = value);
+  //   return tempResult
+  // })() : null
+
+  let tempData_items = {},
+      tempData_itemsInTemplates = [];
+
+  console.log('action.newData instanceof Array : ', action.newData instanceof Array);
+  console.log('action.newData instanceof Object : ', action.newData instanceof Object);
+
+  if(action.newData instanceof Array) {
+    console.log('when instanceof Array is True');
+    tempData_items = ((tempResult = {}) => {
+      action.newData.map(value => {
+        tempResult[value.itemId] = value;
+        tempData_itemsInTemplates.push(value.itemId);
+      });
+      return tempResult
+    })();
+  };
+
+  let temp_items = {},
+      temp_itemsInTemplates = [];
+  if(action.newData instanceof Object) {
+    console.log('when instanceof Object is True');
+    temp_items = ((tempResult = {}) => {
+      action.newData.items.map(value => {
+        temp_items[value.itemId] = {
+          ...value,
+          template: action.newData.title
+        };
+        temp_itemsInTemplates.push(value.itemid);
+      });
+    })();
+  }
+  //   ...action.newData.map(value => value.itemId)
+
+  // action.newData instanceof Object && (const temp_items = ((tempResult = {}) => {
+  //   action.newData.items.map(value => {
+  //     temp_items[value.itemId] = {
+  //       ...value,
+  //       template: action.newData.title
+  //     }
+  //   });
+  // })(););
+  console.log('temp_items : ', temp_items)
+  const result_items = tempData_items || temp_items || {};
+  const result_itemsInTemplates = tempData_itemsInTemplates || temp_itemsInTemplates || [];
+  console.log('result_items : ', result_items);
+
   // const tempData_itemsOftemplates = action.newData.map(value => value.itemId)
   return {
     ...state,
@@ -203,16 +231,18 @@ const addItem = (state, action) => {
       //   ...action.newData
       // }
       // ...action.newData.map(value => [value.itemId]: value)
-      ...tempData_items
+      // ...tempData_items
+      ...result_items
     },
     templates: {
       ...state.templates,
       [action.templateId]: {
         ...state.templates[action.templateId],
-        items: [
-          ...state.templates[action.templateId].items,
-          ...action.newData.map(value => value.itemId)
-        ]
+        // items: [
+        //   ...state.templates[action.templateId].items,
+        //   ...action.newData.map(value => value.itemId)
+        // ]
+        items: state.templates[action.templateId].items.concat(result_itemsInTemplates)
       }
     }
   }
