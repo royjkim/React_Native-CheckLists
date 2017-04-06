@@ -17,7 +17,7 @@ const make_mapStateToProps = () => (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => ({
   searchBarText: (searchText, attr) => dispatch(searchBarText(searchText, attr)),
-  navigatePopToTopRequest: (targetTab, statusBoolean) => dispatch(navigatePopToTopRequest(targetTab, statusBoolean))
+  navigatePopToTopRequestFn: (targetTab, statusBoolean) => dispatch(navigatePopToTopRequest(targetTab, statusBoolean))
 })
 
 export default connect(make_mapStateToProps, mapDispatchToProps)(TemplateListsComponent)

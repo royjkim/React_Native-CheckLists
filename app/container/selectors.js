@@ -203,7 +203,8 @@ const compareInputHistory = (attr, args) => {
   const tempResult_compareInputHistory = isEqual(args, prevData);
   tempResult_compareInputHistory || addInputHistory(attr, args)
   // console.log(`isEqual - ${attr} : ${tempResult_compareInputHistory}`);
-  const loadResultHistoryOrNot = (resultOfcompareInputHistory, currentAttr) => (resultOfcompareInputHistory ? () => loadResultHistory(attr) : console.log(`run - ${currentAttr} - ${addCount(currentAttr)}`))
+  // const loadResultHistoryOrNot = (resultOfcompareInputHistory, currentAttr) => (resultOfcompareInputHistory ? () => loadResultHistory(attr) : console.log(`run - ${currentAttr} - ${addCount(currentAttr)}`))
+  const loadResultHistoryOrNot = (resultOfcompareInputHistory, currentAttr) => (resultOfcompareInputHistory ? () => {console.log(`run - ${currentAttr} - ${addCount(currentAttr)}`); return loadResultHistory(attr); } : console.log(`run - ${currentAttr} - ${addCount(currentAttr)}`))
   return loadResultHistoryOrNot(tempResult_compareInputHistory, attr)
 }
 const addInputHistory = (attr, args) => dataInputHistory[attr].past.push(args)
@@ -252,7 +253,7 @@ const make_get_dataSourceTemplates = () => createSelector(
   (templates, searchBarText) => {
     const currentAttr = 'make_get_dataSourceTemplates'
     compareInputHistory(currentAttr, templates, searchBarText)
-    return make_dataSource_cloneWithRows(currentAttr, Object.values(templates).filter(value => value.title.toLowerCase().includes(searchBarText)))
+    return make_dataSource_cloneWithRows(currentAttr, Object.values(templates).filter(value => value.title.toLowerCase().includes(searchBarText)).sort((data1, data2) => data2.templateId - data1.templateId))
   }
 )
 
@@ -485,6 +486,8 @@ const make_get_itemsCustomizedOfChosenInstance = () => createSelector(
       })
       tempResult.sort((data1, data2) => data1.orderNum - data2.orderNum);
     })
+    console.log('selector - chosenInstance : ', chosenInstance);
+    console.log('selector - tempResult : ', tempResult);
     addResultHistory(currentAttr, tempResult)
     return tempResult
   }

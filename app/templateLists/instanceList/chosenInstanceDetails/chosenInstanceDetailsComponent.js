@@ -79,7 +79,8 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
     const renderRow = (rowData, sectionId) => (
       <View>
         <CheckBox
-          title={rowData.desc}
+          // title={rowData.desc}
+          title={`${rowData.desc}, orderNum : ${rowData.orderNum}`}
           checked={rowData.status}
           onPress={() => modifyItemsCustomized(rowData)}
         />

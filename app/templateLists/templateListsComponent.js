@@ -24,13 +24,17 @@ export default class TemplateListsComponent extends React.Component {
     }
   }
 
-  shouldComponentUpdate(nextProps) {
-    let tempResult = true
-    nextProps.state.navigatePopToTopRequest.templateList ? (this.props.navigatePopToTopRequest('templateList', false), tempResult = false, this.props.navigator.popToTop()) : null
-    return tempResult
+  // shouldComponentUpdate(nextProps) {
+  //   let tempResult = true
+  //   nextProps.state.navigatePopToTopRequest.templateList ? (this.props.navigatePopToTopRequestFn('templateList', false), tempResult = false, this.props.navigator.popToTop()) : null
+  //   return tempResult
+  // }
+
+  componentDidUpdate() {
+    this.props.state.navigatePopToTopRequest[this.props.route.passProps.parentTab] && (this.props.navigatePopToTopRequestFn(this.props.route.passProps.parentTab, false), this.props.navigator.popToTop());
   }
   render() {
-    const { route, navigator, state, searchBarText } = this.props
+    const { route, navigator, state, searchBarText } = this.props;
     const renderRow = (rowData, sectionID) => <ListItem
       key={sectionID}
       title={rowData.title}
@@ -58,6 +62,19 @@ export default class TemplateListsComponent extends React.Component {
         }
       )}
     />
+    const renderRowTemp = rowData => (
+      <View
+        style={{
+          // borderTopWidth: 1,
+          borderBottomWidth: 1
+        }}>
+        <Text>
+          title : {rowData.title}
+          {'\n'}
+          subtitle : {`Category(${rowData.category}), Instances(${(state.badgeValueOfInstancesOfChosenTemplates.hasOwnProperty(rowData.templateId) ? state.badgeValueOfInstancesOfChosenTemplates[rowData.templateId] : 0)}), Items(${state.templates[rowData.templateId].items.length})`}
+        </Text>
+      </View>
+    )
     return(
       <View style={styles.bodyContainer}>
         <SearchBar
@@ -88,6 +105,7 @@ export default class TemplateListsComponent extends React.Component {
             dataSource={state.dataSourceTemplates}
             renderRow={renderRow}
             enableEmptySections={true}
+            removeClippedSubviews={false}
           />
         </List>
       </View>

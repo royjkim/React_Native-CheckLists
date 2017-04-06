@@ -8,10 +8,17 @@ const findLastId = (state, action) => ({
   templates: action.result.templates.slice(-1)[0]
 })
 
-const lastIdPlus = (state, action) => ({
-  ...state,
-  [action.attr]: action.lastId[action.attr] + (action.newData.length ? action.newData.length : 0)
-})
+const lastIdPlus = (state, action) => {
+  const lengthMapper = {
+    itemsCustomized: action.newData.items.length
+  };
+  const resultMapper = lengthMapper.hasOwnProperty(action.attr) ? lengthMapper[action.attr] : action.newData.length ? action.newData.length : 1;
+  return {
+    ...state,
+    // [action.attr]: action.lastId[action.attr] + (action.newData.length ? action.newData.length : 1)
+    [action.attr]: action.lastId[action.attr] + parseInt(resultMapper)
+  }
+}
 
 const lastIdPlusAddTemplate = (state, action) => ({
   ...state,

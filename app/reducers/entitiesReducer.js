@@ -23,7 +23,7 @@ const addTemplate = (state, action) => {
   //   // temp_itemsCustomized[++prevLastIdItemsCustomized] = {
   //   //   ...value,
   //   //   instanceId: null,
-  //   //   itemCustomizedId: prevLastIdItemsCustomized,
+  //   //   itemsCustomizedId: prevLastIdItemsCustomized,
   //   //   status: false
   //   // }
   })
@@ -57,33 +57,17 @@ const addTemplate = (state, action) => {
 }
 
 const addInstance = (state, action) => {
-  let tempData_itemsCustomized = { ...state.itemsCustomized };
-  let itemsCustomizedIdSetForInstanceItems = [];
-  state.templates[action.templateId].items.map(value => {
-    tempData_itemsCustomized[++action.lastId.itemsCustomized] = {
-      ...state.items[value],
-      instanceId: action.newData.instanceId,
-      itemsCustomizedId: action.lastId.itemsCustomized,
-      status: false
-    };
-    delete tempData_itemsCustomized[action.lastId.itemsCustomized].template;
-    delete tempData_itemsCustomized[action.lastId.itemsCustomized].templateId;
-    itemsCustomizedIdSetForInstanceItems.push(action.lastId.itemsCustomized);
-  })
   return {
     ...state,
     instances: {
       ...state.instances,
       [action.newData.instanceId]: {
-        ...action.newData,
-        items: [
-          ...itemsCustomizedIdSetForInstanceItems
-        ]
+        ...action.newData
       }
     },
-    itemsCustomized: {
-      ...tempData_itemsCustomized
-    }
+    // itemsCustomized: {
+    //   ...tempData_itemsCustomized
+    // }
   }
 }
 
@@ -117,19 +101,92 @@ const modifyInstance = (state, action) => ({
   }
 })
 
+// export function addItemsCustomized(lastId, newData, newAddedItemsCustomized) {
+//   return {
+//     type: types.ADD_ITEMS_CUSTOMIZED,
+//     attr: 'itemsCustomized',
+//     lastId: lastId.itemsCustomized,
+//     newData,
+//     newAddedItemsCustomized
+//   }
+// }
+const addItemsCustomized = (state, action) => {
+  // let tempData_itemsCustomized = { ...state.itemsCustomized },
+  let tempData_newAddedItemsCustomized = {};
+
+  state.templates[action.newData.templateId].items.map(value => {
+    // tempData_itemsCustomized[++action.lastId] = {
+    //   ...state.items[value],
+    //   instanceId: action.newData.instanceId,
+    //   itemsCustomizedId: action.lastId,
+    //   status: false
+    // };
+    tempData_newAddedItemsCustomized[++action.lastId] = {
+      // ...tempData_itemsCustomized[action.lastId]
+      ...state.items[value],
+      instanceId: action.newData.instanceId,
+      itemsCustomizedId: action.lastId,
+      status: false
+    }
+    tempData_newAddedItemsCustomized.hasOwnProperty(action.lastId) && (delete tempData_newAddedItemsCustomized[action.lastId].template, delete tempData_newAddedItemsCustomized[action.lastId].templateId);
+  })
+  let tempData_instances = { ...state.instances };
+  for(let key in tempData_newAddedItemsCustomized) {
+    tempData_instances[action.newData.instanceId].items.push(tempData_newAddedItemsCustomized[key].itemsCustomizedId)
+  };
+  return {
+      ...state,
+      // instances: {
+      //   ...state.instances,
+      //   [action.newData.instanceId]: {
+      //     ...state.instances[action.newData.instanceId],
+      //     items: [
+      //       ...state.instances[action.newData.instanceId].items,
+      //       ...tempData_itemsCustomized.map(value => value.itemsCustomizedId)
+      //     ]
+      //   }
+      // },
+      instances: {
+        ...tempData_instances
+      },
+      itemsCustomized: {
+        ...state.itemsCustomized,
+        ...tempData_newAddedItemsCustomized
+        // ...tempData_itemsCustomized
+      }
+}
+}
+
 const modifyItemsCustomized = (state, action) => {
   console.log('entitiesReducer - action.targetData.status : ', String(action.targetData.status))
   console.log('entitiesReducer - !action.targetData.status : ', String(!action.targetData.status));
-  return {
+  const tempBoolean = !action.targetData.status;
+  console.log('tempBoolean : ', String(tempBoolean));
+  let tempResult = {
     ...state,
     itemsCustomized: {
       ...state.itemsCustomized,
-      [action.targetData.itemCustomizedId]: {
+      [action.targetData.itemsCustomizedId]: {
         ...action.targetData,
-        status: !action.targetData.status
+        // status: !action.targetData.status
+        status: tempBoolean
       }
     }
-  }
+  };
+  // tempResult.itemsCustomized[action.targetData.itemsCustomizedId].status = tempBoolean;
+  console.log('tempResult : ', tempResult);
+  console.log('tempResult.itemsCustomized[action.targetData.itemsCustomizedId].status : ', String(tempResult.itemsCustomized[action.targetData.itemsCustomizedId].status));
+  return tempResult
+  // return {
+  //   ...state,
+  //   itemsCustomized: {
+  //     ...state.itemsCustomized,
+  //     [action.targetData.itemsCustomizedId]: {
+  //       ...action.targetData,
+  //       status: !action.targetData.status
+  //     }
+  //   }
+  // }
 }
 
 const addItem = (state, action) => {
@@ -243,6 +300,7 @@ export default function resultReducer(state = initialState, action) {
     [types.ADD_INSTANCE]: addInstance,
     [types.DELETE_INSTANCE]: deleteInstance,
     [types.MODIFY_INSTANCE]: modifyInstance,
+    [types.ADD_ITEMS_CUSTOMIZED]: addItemsCustomized,
     [types.MODIFY_ITEMS_CUSTOMIZED]: modifyItemsCustomized,
     [types.ADD_ITEM]: addItem,
     [types.MODIFY_ITEM]: modifyItem,

@@ -95,6 +95,7 @@ export default class HomeComponent extends React.Component {
             dataSource={state.dataSourceForAllInstances}
             renderRow={renderRow}
             enableEmptySections={true}
+            removeClippedSubviews={false}
           />
         </List>
         <View style={{ height: 5 }} />

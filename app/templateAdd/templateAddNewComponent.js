@@ -17,10 +17,12 @@ import {
   List,
   ListItem,
   Icon,
-} from 'react-native-elements'
+} from 'react-native-elements';
 import { isEqual, cloneDeep } from 'lodash';
-import TemplateCategoryModal from './templateCategoryModal'
-import ItemsInputedListModalContainer from './itemsInputedListModalContainer'
+import TemplateCategoryModal from './templateCategoryModal';
+import ItemsInputedListModalContainer from './itemsInputedListModalContainer';
+import InstanceListContainer from '../templateLists/instanceList/instanceListContainer';
+
 
 export default class TemplateAddNewComponent extends React.Component {
 
@@ -34,11 +36,11 @@ export default class TemplateAddNewComponent extends React.Component {
       tempNewItemDesc: '',
       newItem: {
         desc: '',
-        itemId: this.props.state.lastId.items,
-        // itemId: 0,
+        // itemId: this.props.state.lastId.items,
+        itemId: 0,
         orderNum: 0,
-        templateId: this.props.state.lastId.templates + 1
-        // templateId: 0
+        // templateId: this.props.state.lastId.templates + 1
+        templateId: 0
       },
       tempItems: [],
       prevItems: [],
@@ -61,16 +63,23 @@ export default class TemplateAddNewComponent extends React.Component {
         prevState.chosenCategory = chosenTemplate.category || '';
         prevState.newItem = {
           desc: '',
-          itemId: this.props.state.lastId.items + 1,
+          itemId: this.props.state.lastId.items,
           orderNum: tempSorted_newItems.length > 0 ? tempSorted_newItems[0].orderNum : 0,
           templateId: this.props.state.lastId.templates + 1
         };
-        prevState.prevItems = [
+        // prevState.prevItems = [
+        //   ...chosenTemplate.items.map(value => ({
+        //     ...this.props.state.items[value],
+        //   })).sort((data1, data2) => data2.orderNum - data1.orderNum)
+        // ];
+        prevState.prevItems = Object.freeze([
           ...chosenTemplate.items.map(value => ({
             ...this.props.state.items[value],
+            templateId: this.props.state.items[value].templateId + 1
           })).sort((data1, data2) => data2.orderNum - data1.orderNum)
-        ];
-        prevState.tempItems = [ ...prevState.prevItems ];
+        ]);
+        // prevState.tempItems = [ ...prevState.prevItems ];
+        prevState.tempItems = cloneDeep(prevState.prevItems);
       })
     }
     this.setState(prevState => {
@@ -114,8 +123,7 @@ export default class TemplateAddNewComponent extends React.Component {
       navigator,
       state,
       addTemplateCategory,
-      addNewTemplate,
-      addItem,
+      addTemplate,
       navigatePreventFn,
     } = this.props
     const categoryModalToggle = () => this.setState({ categoryListModalVisible: !this.state.categoryListModalVisible })
@@ -279,9 +287,11 @@ export default class TemplateAddNewComponent extends React.Component {
               title='Add'
               onPress={() => {
                 this.state.tempNewItemDesc !== '' && this.setState(prevState => {
+                  const addedLengthBetweenPrevItemsTempItems = prevState.prevItems.length - prevState.tempItems.length;
                   prevState.newItem = {
                     desc: prevState.tempNewItemDesc,
-                    itemId: prevState.tempItems.length == 0 ? state.lastId.items + 1 : state.lastId.items + 1 + prevState.tempItems.length,
+                    // itemId: addedLengthBetweenPrevItemsTempItems == 0 ? state.lastId.items + 1 : state.lastId.items + 1 + addedLengthBetweenPrevItemsTempItems,
+                    itemId: prevState.newItem.itemId + 1,
                     orderNum: prevState.newItem.orderNum + 1,
                     templateId: state.lastId.templates + 1
                   };
@@ -318,17 +328,37 @@ export default class TemplateAddNewComponent extends React.Component {
                 prevState.changeValue = false;
                 prevState.prevItems = Object.freeze(cloneDeep(prevState.tempItems));
               });
-              addNewTemplate(state.lastId, {
+              const newData = {
                 additionalInfo: 'addable',
                 category: this.state.chosenCategory,
                 items: this.state.tempItems,
                 templateId: state.lastId.templates + 1,
                 title: this.state.templateName
-              }),
-              // addItem(state.lastId.items, this.state.tempItems.slice(0, this.state.prevItems.length))
+              }
+              addTemplate(state.lastId, newData),
               state.navigatePrevent[route.__navigatorRouteID] && navigatePreventFn(route.__navigatorRouteID, false);
               state.navigatePrevent[route.passProps.parentTab] && navigatePreventFn(route.passProps.parentTab, false);
-              alert('save complete', navigator.pop())
+              alert('save complete', navigator.replacePreviousAndPop({
+                passProps: {
+                  leftButton: {
+                    title: 'back',
+                    component: ''
+                  },
+                  rightButton: {
+                    title: '',
+                    component: ''
+                  },
+                  parentTab: route.passProps.parentTab,
+                  chosenTemplate: {
+                    ...newData,
+                    items: [
+                      ...newData.items.map(value => value.itemId)
+                    ]
+                  },
+                },
+                title: 'Instance List',
+                component: InstanceListContainer
+              }));
             } else {
               this.state.templateName.length < 4 ? alert('input template name(at least 3 characters)') : !this.state.chosenCategory ? alert('input category') : this.state.tempItems.length < 1 ? alert('add new item(at least 1 item)') : this.state.tempNewItemDesc !== '' ? alert('after input item, please press add button') : null
             }

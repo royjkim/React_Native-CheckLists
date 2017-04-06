@@ -1,10 +1,10 @@
 import types from './dataActions'
 
-function internalAddNewTemplate() {
+function internaladdTemplate() {
 
 }
 
-export function addNewTemplate(lastId, newData) {
+export function addTemplate(lastId, newData) {
   return {
     type: types.ADD_TEMPLATE,
     attr: 'templates',
@@ -32,6 +32,17 @@ export function delTemplate() {
   }
 }
 
+const internalAddInstance = (lastId, newData) => ({
+  type: types.ADD_INSTANCE,
+  attr: 'instances',
+  lastId,
+  newData
+  // newData: {
+  //   ...newData,
+  //   templateId: newData.template
+  // }
+})
+
 export function addInstance(lastId, newData) {
   // return {
   //   type: types.ADD_INSTANCE,
@@ -40,31 +51,53 @@ export function addInstance(lastId, newData) {
   //   newData,
   //   templateId: newData.template
   // }
+
+  newData.templateId = newData.template;
   return (dispatch, getState) => {
     dispatch(internalAddInstance(lastId, newData));
-    const prevState = getState();
-    dispatch(addItemsCustomized(lastId, newData, prevState.normalizeReducer.entities.instances[newData.instanceId].items));
+
+
+    dispatch(addItemsCustomized(lastId, newData, true));
+    const prevState = getState(),
+          newAddedItemsCustomized = prevState.normalizeReducer.entities.instances[newData.instanceId].items;
+    dispatch(addInstanceThenAddOnResult(lastId, newData, newAddedItemsCustomized));
     dispatch(lastIdPlus('instances', lastId, newData));
+    dispatch(lastIdPlus('itemsCustomized', lastId, newData));
   }
 };
 
-const internalAddInstance = (lastId, newData) => ({
-  type: types.ADD_INSTANCE,
-  attr: 'instances',
-  lastId,
-  newData,
-  templateId: newData.template
+const internal_addItemsCustomized = (lastId, newData) => ({
+  type: types.ADD_ITEMS_CUSTOMIZED,
+  attr: 'itemsCustomized',
+  lastId: lastId.itemsCustomized,
+  newData
+  // newAddedItemsCustomized
 })
 
-export function addItemsCustomized(lastId, newData, newAddedItemsCustomized) {
-  return {
-    type: types.ADD_ITEMS_CUSTOMIZED,
-    attr: 'itemsCustomized',
-    lastId: lastId.itemsCustomized,
-    newData,
-    newAddedItemsCustomized
+export function addItemsCustomized(lastId, newData, preventBoolean) {
+  return dispatch => {
+    dispatch(internal_addItemsCustomized(lastId, newData));
+    preventBoolean || dispatch(lastIdPlus('itemsCustomized', lastId, newData));
   }
+  // return {
+  //   type: types.ADD_ITEMS_CUSTOMIZED,
+  //   attr: 'itemsCustomized',
+  //   lastId: lastId.itemsCustomized,
+  //   newData: {
+  //     ...newData,
+  //     templateId: newData.template
+  //   },
+  //   newAddedItemsCustomized
+  // }
 }
+
+const addInstanceThenAddOnResult = (lastId, newData, newAddedItemsCustomized) => ({
+  type: types.ADD_INSTANCE_THEN_ADD_ON_RESULT,
+  attr: 'itemsCustomized',
+  lastId,
+  newData,
+  newAddedItemsCustomized
+})
 
 function internal_delInstance() {
 

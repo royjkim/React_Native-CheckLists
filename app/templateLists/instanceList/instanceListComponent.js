@@ -28,7 +28,8 @@ export default class InstanceListComponent extends React.Component {
     this.state = {
       searchText: '',
       addNewInstanceModalVisible: false,
-      chosenTemplateForAdd: '',
+      chosenTemplateForAdd: this.props.route.passProps.chosenTemplate.title,
+      chosenTemplateForAddTemplateId: this.props.route.passProps.chosenTemplate.templateId,
       tempInstanceName: ''
     }
   }
@@ -72,7 +73,7 @@ export default class InstanceListComponent extends React.Component {
     const renderRowTemplates = rowData => <ListItem
       key={rowData.templateId}
       title={rowData.title}
-      subtitle={rowData.title == route.passProps.chosenTemplate.title ? 'This current template.' : null}
+      subtitle={rowData.title == route.passProps.chosenTemplate.title ? 'This is current template.' : null}
       onPress={() => {
         this.setState({
           chosenTemplateForAdd: rowData.title,
@@ -181,6 +182,7 @@ export default class InstanceListComponent extends React.Component {
                             <TextInput
                               ref='tempInstanceName'
                               value={this.state.tempInstanceName}
+                              autoFocus={true}
                               onChangeText={tempInstanceName => this.setState({ tempInstanceName })}
                               placeholder={this.state.chosenTemplateForAdd ? 'input name for new instance.' : 'Choose Template First.'}
                               editable={this.state.chosenTemplateForAdd !== ''}
@@ -201,7 +203,7 @@ export default class InstanceListComponent extends React.Component {
                               chosenTemplateForAdd: ''
                             }), addInstance(state.lastId, {
                               instanceId: state.lastId.instances + 1,
-                              // items: [],
+                              items: [],
                               name: this.state.tempInstanceName,
                               template: this.state.chosenTemplateForAddTemplateId
                             }))
