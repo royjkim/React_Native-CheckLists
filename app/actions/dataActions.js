@@ -19,6 +19,8 @@ const ADD_TEMPLATE = 'addTemplate',
       NAVIGATE_POP_TO_TOP_REQUEST = 'navigatePopToTopRequest',
       FIND_LAST_ID = 'findLastId',
       LAST_ID_PLUS = 'lastIdPlus',
+      LAST_ID_PLUS_MULTI = 'lastIdPlusMulti',
+      LAST_ID_PLUS_ONE_BY_ONE = 'lastIdPlusOneByOne',
       NAVIGATE_PREVENT = 'navigatePrevent',
       TRIED_NAVIGATE_WHEN_PREVENTED = 'triedNavigateWhenPrevented';
 
@@ -44,6 +46,8 @@ const types = {
   NAVIGATE_POP_TO_TOP_REQUEST,
   FIND_LAST_ID,
   LAST_ID_PLUS,
+  LAST_ID_PLUS_MULTI,
+  LAST_ID_PLUS_ONE_BY_ONE,
   NAVIGATE_PREVENT,
   TRIED_NAVIGATE_WHEN_PREVENTED,
 }

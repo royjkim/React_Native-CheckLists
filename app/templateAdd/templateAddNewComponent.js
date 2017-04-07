@@ -59,7 +59,8 @@ export default class TemplateAddNewComponent extends React.Component {
         templateId: this.props.state.lastId.templates + 1
       })).sort((data1, data2) => data2.orderNum - data1.orderNum)
       this.setState(prevState => {
-        prevState.templateName = chosenTemplate.title || '';
+        // prevState.templateName = chosenTemplate.title || '';
+        prevState.templateName = '';
         prevState.chosenCategory = chosenTemplate.category || '';
         prevState.newItem = {
           desc: '',
@@ -155,7 +156,13 @@ export default class TemplateAddNewComponent extends React.Component {
                 ...prevState.tempItems.slice(0, rowId),
                 ...prevState.tempItems.slice(rowId + 1)
               ];
-              --prevState.newItem.orderNum;
+              const lastOrderNumerOfTempItems = prevState.tempItems.length;
+              prevState.tempItems.map((value, index) => {
+                value.itemId = state.lastId.items + 1 + index;
+                value.orderNum = lastOrderNumerOfTempItems - index;
+              });
+              prevState.newItem.itemId = prevState.tempItems.slice(-1)[0].itemId + 1;
+              prevState.newItem.orderNum = prevState.prevItems.length + 1;
               prevState.dataSourceNewAddedItems = this.ds.cloneWithRows(prevState.tempItems)
             }) : Alert.alert(
               'Delete Disable',
@@ -201,20 +208,22 @@ export default class TemplateAddNewComponent extends React.Component {
             <View
               style={{
                 flex: 1,
-                borderColor: this.state.templateName.length > 3 ? '#C1C1C1' : '#FF2A1A',
+                borderColor: this.state.templateName.length > 0 ? '#C1C1C1' : '#FF2A1A',
                 borderBottomWidth: 1.5,
                 marginHorizontal: 10
               }}
               >
               <TextInput
                 value={this.state.templateName}
-                onChangeText={templateName => this.setState({ templateName })}
-                placeholder='(at leat 3 characters)'
+                onChangeText={templateName => templateName !== '' && (this.setState({ templateName }))}
+                // placeholder='(at leat 3 characters)'
+                placeholder={route.passProps.chosenTemplate.title || ''}
+                autoFocus={true}
                 style={{
                   flex: 1,
                   color: this.state.templateName ? '#605E60' : '#FF2A1A',
                   textAlign: 'center',
-                  marginBottom: 2
+                  // marginBottom: 2
                 }}
               />
             </View>
@@ -276,8 +285,11 @@ export default class TemplateAddNewComponent extends React.Component {
             }}
             >
             <FormInput
+              ref='newItemFormInput'
+              textInputRef='newItemText'
               value={this.state.tempNewItemDesc}
               placeholder='input item'
+              placeholderTextColor='#FF7F7C'
               onChangeText={tempNewItemDesc => this.setState({ tempNewItemDesc })}
             />
           </View>
@@ -290,8 +302,6 @@ export default class TemplateAddNewComponent extends React.Component {
               onPress={() => {
                 this.state.tempNewItemDesc !== '' && this.setState(prevState => {
                   const addedLengthBetweenPrevItemsTempItems = prevState.prevItems.length - prevState.tempItems.length;
-                  console.log('prevState.prevItems : ', prevState.prevItems)
-                  console.log('prevState.newItem : ', prevState.newItem)
                   prevState.newItem = {
                     desc: prevState.tempNewItemDesc,
                     // itemId: addedLengthBetweenPrevItemsTempItems == 0 ? state.lastId.items + 1 : state.lastId.items + 1 + addedLengthBetweenPrevItemsTempItems,
@@ -327,7 +337,7 @@ export default class TemplateAddNewComponent extends React.Component {
           title='Save'
           backgroundColor='#159588'
           onPress={() => {
-            if(this.state.templateName.length > 3 && this.state.chosenCategory && this.state.tempItems.length > 0 && this.state.tempNewItemDesc == '') {
+            if(this.state.templateName.length > 0 && this.state.chosenCategory && this.state.tempItems.length > 0 && this.state.tempNewItemDesc == '') {
               // this.setState({ save: true, changeValue: false })
               this.setState(prevState => {
                 prevState.save = true;
@@ -400,6 +410,7 @@ export default class TemplateAddNewComponent extends React.Component {
               closeFn={categoryModalToggle.bind(this)}
               categoryChosen={categoryChosen.bind(this)}
               addTemplateCategory={addTemplateCategory}
+              chosenCategory={this.state.chosenCategory}
               lastId={state.lastId}
               dataSourceTemplateCategories={state.dataSourceTemplateCategories}
             />

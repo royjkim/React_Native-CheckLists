@@ -105,7 +105,9 @@ export default class TemplateCategoryModal extends React.Component {
                 <TextInput
                   value={this.state.newCategory}
                   onChangeText={newCategory => this.setState({ newCategory })}
-                  placeholder='input new category'
+                  // placeholder='input new category'
+                  placeholder={this.props.chosenCategory}
+                  autoFocus={true}
                   style={{
                     flex: 1,
                     color: this.state.newCategory ? '#605E60' : '#9E9E9E',

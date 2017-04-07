@@ -1,5 +1,23 @@
 import types from './dataActions'
 
+// Below is for after adding new template(including items), check if the uniqueId is overlapped or not.
+const checkIdOverlapOrNot = (attr, lastId, newData, requestAction) => {
+
+  const requestActionMapper = {
+    addTemplate: (attr, lastId, newData) => newData.templateId > lastId[attr] ? newData : newData = {
+      ...newData,
+      templateId: newData.templateId + 1
+    },
+    addItem: (attr, lastId, newData) => newData[attr][0].itemId > lastId[attr] ? newData : newData[attr].map((value, index) => value.itemId = lastId[attr] + 1 + index),
+    addTemplateCategory: (attr, lastId, newData) => {
+      newData.id = lastId[attr] + 1
+      return newData
+    }
+  };
+
+  return requestActionMapper.hasOwnProperty(requestAction) ? requestActionMapper[requestAction](attr, lastId, newData) : newData
+}
+
 const internal_addTemplate = (lastId, newData) => ({
   type: types.ADD_TEMPLATE,
   lastId,
@@ -15,9 +33,12 @@ export function addTemplate(lastId, newData) {
   //   lastIndex: lastId.templates - 1 < 0 ? 0 : lastId.templates - 1,
   //   newData
   // }
+  newData = checkIdOverlapOrNot('templates', lastId, newData, 'addTemplate');
   return dispatch => {
     dispatch(internal_addTemplate(lastId, newData));
-    dispatch(lastIdPlus('templates', lastId, newData));
+    // dispatch(lastIdPlus('templates', lastId, newData));
+    // dispatch(lastIdPlusMulti('templates', lastId, newData));
+    dispatch(lastIdPlusOneByOne('templates', lastId, newData));
     dispatch(addItem(lastId, newData));
   }
 }
@@ -152,9 +173,11 @@ export function addItem(lastId, newData) {
   //   lastId,
   //   templateId: newData[0].templateId
   // }
+  newData = checkIdOverlapOrNot('items', lastId, newData, 'addItem');
   return dispatch => {
     dispatch(internal_addItem(lastId, newData));
-    dispatch(lastIdPlus('items', lastId, newData))
+    // dispatch(lastIdPlus('items', lastId, newData));
+    dispatch(lastIdPlusMulti('items', lastId, newData));
   }
 }
 
@@ -189,15 +212,17 @@ export function delItem(targetItemId, targetTemplateId) {
 const internal_addTemplateCategory = (lastId, newData) => ({
   type: types.ADD_TEMPLATE_CATEGORY,
   lastId,
-  lastIndex: lastId - 1 < 0 ? 0 : lastId - 1,
-  newData,
+  // lastIndex: lastId.templateCategories - 1 < 0 ? 0 : lastId.templateCategories - 1,
+  newData
 })
 
 export function addTemplateCategory(lastId, newData) {
+  newData = checkIdOverlapOrNot('templateCategories', lastId, newData, 'addTemplateCategory');
   return dispatch => {
     dispatch(internal_addTemplateCategory(lastId, newData));
-    dispatch(addItem(lastId, newData));
-    dispatch(lastIdPlus('templateCategories', lastId, newData));
+    // dispatch(addItem(lastId, newData));
+    // dispatch(lastIdPlus('templateCategories', lastId, newData));
+    dispatch(lastIdPlusOneByOne('templateCategories', lastId, newData));
   }
   // return {
   //   type: types.ADD_TEMPLATE_CATEGORY,
@@ -247,6 +272,20 @@ export function findLastId(result) {
 
 const lastIdPlus = (attr, lastId, newData) => ({
   type: types.LAST_ID_PLUS,
+  attr,
+  lastId,
+  newData
+})
+
+const lastIdPlusMulti = (attr, lastId, newData) => ({
+  type: types.LAST_ID_PLUS_MULTI,
+  attr,
+  lastId,
+  newData
+})
+
+const lastIdPlusOneByOne = (attr, lastId, newData) => ({
+  type: types.LAST_ID_PLUS_ONE_BY_ONE,
   attr,
   lastId,
   newData

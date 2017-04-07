@@ -176,36 +176,40 @@ const addItem = (state, action) => {
   //   return tempResult
   // })() : null
 
-  let tempData_items = {},
-      tempData_itemsInTemplates = [];
+  let tempData_items;
+      // tempData_itemsInTemplates;
 
   console.log('action.newData instanceof Array : ', action.newData instanceof Array);
   console.log('action.newData instanceof Object : ', action.newData instanceof Object);
 
   if(action.newData instanceof Array) {
     console.log('when instanceof Array is True');
+    tempData_items = {};
+    // tempData_itemsInTemplates = [];
     tempData_items = ((tempResult = {}) => {
       action.newData.map(value => {
         tempResult[value.itemId] = value;
-        tempData_itemsInTemplates.push(value.itemId);
+        // tempData_itemsInTemplates.push(value.itemId);
       });
       return tempResult
     })();
   };
 
-  let temp_items = {},
-      temp_itemsInTemplates = [];
+  let temp_items;
+      // temp_itemsInTemplates;
   if(action.newData instanceof Object) {
     console.log('when instanceof Object is True');
-    temp_items = ((tempResult = {}) => {
+    // temp_items = ((tempResult = {}) => {
+    temp_items = {};
+    // temp_itemsInTemplates = [];
       action.newData.items.map(value => {
         temp_items[value.itemId] = {
           ...value,
           template: action.newData.title
         };
-        temp_itemsInTemplates.push(value.itemid);
+        // temp_itemsInTemplates.push(value.itemid);
       });
-    })();
+    // })();
   }
   //   ...action.newData.map(value => value.itemId)
 
@@ -219,7 +223,7 @@ const addItem = (state, action) => {
   // })(););
   console.log('temp_items : ', temp_items)
   const result_items = tempData_items || temp_items || {};
-  const result_itemsInTemplates = tempData_itemsInTemplates || temp_itemsInTemplates || [];
+  // const result_itemsInTemplates = tempData_itemsInTemplates || temp_itemsInTemplates || [];
   console.log('result_items : ', result_items);
 
   // const tempData_itemsOftemplates = action.newData.map(value => value.itemId)
@@ -234,17 +238,17 @@ const addItem = (state, action) => {
       // ...tempData_items
       ...result_items
     },
-    templates: {
-      ...state.templates,
-      [action.templateId]: {
-        ...state.templates[action.templateId],
-        // items: [
-        //   ...state.templates[action.templateId].items,
-        //   ...action.newData.map(value => value.itemId)
-        // ]
-        items: state.templates[action.templateId].items.concat(result_itemsInTemplates)
-      }
-    }
+    // templates: {
+    //   ...state.templates,
+    //   [action.templateId]: {
+    //     ...state.templates[action.newData.templateId],
+    //     // items: [
+    //     //   ...state.templates[action.templateId].items,
+    //     //   ...action.newData.map(value => value.itemId)
+    //     // ]
+    //     items: state.templates[action.newData.templateId].items.concat(result_itemsInTemplates)
+    //   }
+    // }
   }
 }
 
@@ -305,8 +309,8 @@ const addTemplateCategory = (state, action) => ({
   ...state,
   templateCategories: {
     ...state.templateCategories,
-    [action.lastId + 1]: {
-      id: action.lastId + 1,
+    [action.newData.templateCategoriesId]: {
+      id: action.newData.templateCategoriesId,
       ...action.newData
     }
   }

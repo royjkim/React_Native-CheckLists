@@ -292,29 +292,6 @@ const make_get_dataSourceItems = () => createSelector(
   }
 )
 
-// const make_get_dataSourceItems = () => createSelector(
-//   items,
-//   searchBarTextItemList,
-//   (items, searchBarText) => {
-//     const currentAttr = 'make_get_dataSourceItems'
-//     compareInputHistory(currentAttr, items, searchBarText)
-//     let tempResult = {}
-//     Object.values(items).map(value => {
-//       if(value.desc.toLowerCase().includes(searchBarText)) {
-//         tempResult.hasOwnProperty(value.templateId) ? null : tempResult[value.templateId] = []
-//         tempResult[value.templateId].push(value)
-//       }
-//     })
-//     for(let key in tempResult) {
-//       tempResult[key].sort((data1, data2) => data1.orderNum - data2.orderNum)
-//     }
-//     // console.log(`tempResult : ${JSON.stringify(tempResult, null, 1)}`)
-//     const tempResult_dataSourceItems = ds.cloneWithRowsAndSections(tempResult, Object.keys(tempResult))
-//     addResultHistory(currentAttr, tempResult_dataSourceItems)
-//     return tempResult_dataSourceItems
-//   }
-// )
-
 const make_get_dataSourceOfItemsOfChosenTemplate = () => createSelector(
   data => data,
   itemsOfChosenTemplate => {
@@ -420,7 +397,6 @@ const make_get_badgeValueOfStatusOfEachInstanceOfChosenTemplate = () => createSe
       }
     }
     addResultHistory(currentAttr, tempResult_for_badgeValueOfCompletedOrNot)
-    // console.log('tempResult_for_badgeValueOfCompletedOrNot : ', tempResult_for_badgeValueOfCompletedOrNot)
     return tempResult_for_badgeValueOfCompletedOrNot
   }
 )
@@ -466,7 +442,6 @@ const make_get_badgeValueOfStatusOfAllInstances = () => createSelector(
       })
       addFn(temp_object_ListOfitemsCustomizedOfChosenInstance, targetItemsCustomized.instanceId, targetItemsCustomized.status)
     }
-    // console.log(`temp_object_ListOfitemsCustomizedOfChosenInstance : ${JSON.stringify(temp_object_ListOfitemsCustomizedOfChosenInstance, null, 1)}`)
     addResultHistory(currentAttr, temp_object_ListOfitemsCustomizedOfChosenInstance)
     return temp_object_ListOfitemsCustomizedOfChosenInstance
   }
@@ -486,8 +461,6 @@ const make_get_itemsCustomizedOfChosenInstance = () => createSelector(
       })
       tempResult.sort((data1, data2) => data1.orderNum - data2.orderNum);
     })
-    console.log('selector - chosenInstance : ', chosenInstance);
-    console.log('selector - tempResult : ', tempResult);
     addResultHistory(currentAttr, tempResult)
     return tempResult
   }
@@ -545,7 +518,6 @@ const make_get_itemsCustomizedOfEachInstanceOfChosenTemplate = () => createSelec
       (tempResult.hasOwnProperty(value1.instanceId) ? null : tempResult[value1.instanceId] = [])
       tempResult[value1.instanceId] = temp_array_itemsCustomizedOfEachInstanceOfChosenTemplate
     })
-    // console.log('tempResult : ', tempResult)
     addResultHistory(currentAttr, tempResult)
     return tempResult
   }
