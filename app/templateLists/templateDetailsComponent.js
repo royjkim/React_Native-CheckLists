@@ -40,7 +40,7 @@ export default class TemplateDetailsComponent extends React.Component {
         template: this.props.state.chosenTemplate.title,
         templateId: this.props.state.chosenTemplate.templateId
       },
-      modifyExistingItems: { length: 0 },
+      modifyExistingItems: {},
       tempTemplateTitle: this.props.route.passProps.chosenTemplate.title,
       prevTemplateTitle: this.props.route.passProps.chosenTemplate.title,
       changeValue_templateTitle: false,
@@ -52,6 +52,7 @@ export default class TemplateDetailsComponent extends React.Component {
   componentDidUpdate() {
     // console.log(`componentDidUpdate - this.props : `, this.props)
     // console.log(`componentDidUpdate - this.state : `, this.state)
+
     const { navigatePrevent, triedNavigateWhenPrevented } = this.props.state,
           __navigatorRouteID = this.props.route.__navigatorRouteID,
           parentTab = this.props.route.passProps.parentTab,
@@ -96,7 +97,7 @@ export default class TemplateDetailsComponent extends React.Component {
           template: this.props.state.chosenTemplate.title,
           templateId: this.props.state.chosenTemplate.templateId
         },
-        modifyExistingItems: { length: 0 },
+        modifyExistingItems: {},
         dataSource_tempItems: this.props.state.dataSourceOfItemsOfChosenTemplate || []
       });
     const saveAlertFn = () => {
@@ -122,17 +123,14 @@ export default class TemplateDetailsComponent extends React.Component {
       await this.setState(prevState => {
         prevState.changeValue = false;
         prevState.emptyItemsRowId.length > 0 && (
-        prevState.emptyItemsRowId.map(value => prevState.tempItems = [
-          ...prevState.tempItems.slice(0, value),
-          ...prevState.tempItems.slice(value + 1)
-        ]),
+        prevState.emptyItemsRowId.map(value => delete prevState.tempItems[value]),
         prevState.emptyItemsRowId = []);
         prevState.dataSource_tempItems = this.ds.cloneWithRows(prevState.tempItems);
         prevState.prevItems = Object.freeze(cloneDeep(prevState.tempItems));
         prevState.prevTemplateTitle = prevState.tempTemplateTitle;
         prevState.changeValue_templateTitle = false;
       });
-      this.state.modifyExistingItems.length > 0 && modifyItem(this.state.modifyExistingItems, route.passProps.chosenTemplate.templateId)
+      Object.keys(this.state.modifyExistingItems).length > 0 && modifyItem(this.state.modifyExistingItems, route.passProps.chosenTemplate.templateId)
       this.state.prevItems.length < this.state.tempItems.length && addItem(state.lastId.items, this.state.tempItems.slice(state.itemsOfChosenTemplate.length));
       alert('save complete');
       // this.props.navigator.pop()
@@ -166,10 +164,7 @@ export default class TemplateDetailsComponent extends React.Component {
       )}
     />;
     const changeItemText = (itemText, rowId, target_itemId, emptyStatusBoolean) => prevState => {
-      emptyStatusBoolean && (prevState.emptyItemsRowId = [
-        ...prevState.emptyItemsRowId,
-        rowId
-      ]);
+      emptyStatusBoolean && (prevState.emptyItemsRowId.push(rowId));
       prevState.emptyItemsRowId.length >= prevState.tempItems.length ? Alert.alert(
         'Disable Delete Item',
         'Each template has more than 1 item.',
@@ -182,7 +177,7 @@ export default class TemplateDetailsComponent extends React.Component {
           })
           }
         ]
-      ) : rowId > prevState.tempItems.length || (prevState.modifyExistingItems[target_itemId] = itemText, ++prevState.modifyExistingItems.length);
+      ) : rowId > prevState.tempItems.length || (prevState.modifyExistingItems[target_itemId] = itemText);
       // Below is for handing on existing data.
       prevState.tempItems[rowId].desc = itemText;
       prevState.dataSource_tempItems = this.ds.cloneWithRows(prevState.tempItems);
@@ -268,16 +263,14 @@ export default class TemplateDetailsComponent extends React.Component {
                 value={this.state.tempTemplateTitle}
                 onChangeText={templatTitleText => {
                   templatTitleText == '' && Alert.alert(
-                    'Disable Delete',
+                    'Delete Disable',
                     'Template name shouldn\'t be empty.',
                     [
-                      { text: 'Confirm', onPress: () => {
-                        this.setState({
+                      { text: 'Confirm', onPress: () => this.setState({
                           tempTemplateTitle: this.state.prevTemplateTitle,
                           changeValue_templateTitle: false
-                        });
-                        return null;
-                      }}
+                        })
+                      }
                     ]
                   );
                   this.setState(prevState => {

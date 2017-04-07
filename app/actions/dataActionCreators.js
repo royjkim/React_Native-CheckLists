@@ -190,13 +190,14 @@ function internal_modifyItem(data) {
 
 export function modifyItem(data, templateId) {
   console.log('actionCreators - parameter - data : ', data);
+  console.log(`actionCreators - parameter - data : ${JSON.stringify(data, null, 1)}`);
   console.log('actionCreators - parameter - templateId : ', templateId);
-  delete data.length;
+  // delete data.length;
   return dispatch => {
     for(let key in data) {
       data[key] == '' && (delete data[key], dispatch(delItem(parseInt(key), parseInt(templateId))), console.log(`del request - key : ${key}, templateId : ${templateId}`))
     }
-    dispatch(internal_modifyItem(data));
+    Object.keys(data).length > 0 && dispatch(internal_modifyItem(data));
   }
 }
 

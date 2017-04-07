@@ -137,37 +137,16 @@ const addItemsCustomized = (state, action) => {
 }
 }
 
-const modifyItemsCustomized = (state, action) => {
-  console.log('entitiesReducer - action.targetData.status : ', String(action.targetData.status))
-  console.log('entitiesReducer - !action.targetData.status : ', String(!action.targetData.status));
-  const tempBoolean = !action.targetData.status;
-  console.log('tempBoolean : ', String(tempBoolean));
-  let tempResult = {
-    ...state,
-    itemsCustomized: {
-      ...state.itemsCustomized,
-      [action.targetData.itemsCustomizedId]: {
-        ...action.targetData,
-        // status: !action.targetData.status
-        status: tempBoolean
-      }
+const modifyItemsCustomized = (state, action) => ({
+  ...state,
+  itemsCustomized: {
+    ...state.itemsCustomized,
+    [action.targetData.itemsCustomizedId]: {
+      ...action.targetData,
+      status: !action.targetData.status
     }
-  };
-  // tempResult.itemsCustomized[action.targetData.itemsCustomizedId].status = tempBoolean;
-  console.log('tempResult : ', tempResult);
-  console.log('tempResult.itemsCustomized[action.targetData.itemsCustomizedId].status : ', String(tempResult.itemsCustomized[action.targetData.itemsCustomizedId].status));
-  return tempResult
-  // return {
-  //   ...state,
-  //   itemsCustomized: {
-  //     ...state.itemsCustomized,
-  //     [action.targetData.itemsCustomizedId]: {
-  //       ...action.targetData,
-  //       status: !action.targetData.status
-  //     }
-  //   }
-  // }
-}
+  }
+})
 
 const addItem = (state, action) => {
   // console.log('reducer - action.newData : ', action.newData);
@@ -221,11 +200,8 @@ const addItem = (state, action) => {
   //     }
   //   });
   // })(););
-  console.log('temp_items : ', temp_items)
   const result_items = tempData_items || temp_items || {};
   // const result_itemsInTemplates = tempData_itemsInTemplates || temp_itemsInTemplates || [];
-  console.log('result_items : ', result_items);
-
   // const tempData_itemsOftemplates = action.newData.map(value => value.itemId)
   return {
     ...state,
@@ -255,15 +231,19 @@ const addItem = (state, action) => {
 const modifyItem = (state, action) => {
   let tempData_items = { ...state.items };
   for(let key in action.data) {
-    tempData_items = {
-      ...tempData_items,
-      [key]: {
-        ...tempData_items[key],
-        desc: action.data[key]
-      }
+    tempData_items[key] = {
+      ...tempData_items[key],
+      desc: action.data[key]
     };
+  };
+    // tempData_items = {
+    //   ...tempData_items,
+    //   [key]: {
+    //     ...tempData_items[key],
+    //     desc: action.data[key]
+    //   }
+    // };
     // action.data[key] == '' ? delete tempData_items[key] : null
-  }
   return {
     ...state,
     items: {

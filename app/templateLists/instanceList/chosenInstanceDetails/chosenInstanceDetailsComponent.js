@@ -198,7 +198,7 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
             <View
               style={{
                 flex: 1,
-                borderColor: this.state.templateTitle.length > 3 ? '#C1C1C1' : '#FF2A1A',
+                borderColor: this.state.templateTitle.length > 0 ? '#C1C1C1' : '#FF2A1A',
                 borderBottomWidth: 1.5,
                 marginHorizontal: 10
               }}
