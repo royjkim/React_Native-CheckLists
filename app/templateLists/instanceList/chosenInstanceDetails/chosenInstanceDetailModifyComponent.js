@@ -94,30 +94,55 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
       modifyInstance,
     } = this.props
     const { chosenInstance } = route.passProps;
-    const changeItemText = (tempItemText, rowData, rowId, emptyStatusBoolean) => prevState => {
-      emptyStatusBoolean && (Object.keys(prevState.tempItems).length > 1 ? Alert.alert(
+    const changeItemText = (tempItemText, rowData, rowId, emptyStatusBoolean) => {
+      const commonFn = () => this.setState(prevState => {
+        console.log('common function')
+        prevState.tempItems.hasOwnProperty(rowData.itemCustomizedId) && (prevState.tempItems[rowData.itemCustomizedId].desc = tempItemText);
+
+        prevState.changeValue_items = !isEqual(prevState.tempItems, prevState.prevItems);
+        prevState.changeValue_items && (prevState.dataSourceItemsCustomizedOfChosenInstance = this.ds.cloneWithRows(prevState.tempItems), console.log(`prevState.dataSourceItemsCustomizedOfChosenInstance._dataBlob.s1 : ${JSON.stringify(prevState.dataSourceItemsCustomizedOfChosenInstance._dataBlob.s1, null, 1)}`));
+      });
+      emptyStatusBoolean ? (Object.keys(this.state.tempItems).length > 1 ? Alert.alert(
         'Confirm Save',
         'You are making an existing item empty. If you want to delete it, press Save. Or press Cancel. Even though the item deleted, it won\'t be deleted neither on parent template.',
         [
           { text: 'Cancel' },
-          { text: 'Save', onPress: () => delete prevState.tempItems[rowData.itemCustomizedId] }
+          // { text: 'Save', onPress: () => delete prevState.tempItems[rowData.itemCustomizedId] }
+          { text: 'Save', onPress: () => {
+              this.setState(prevState => {
+                delete prevState.tempItems[rowData.itemCustomizedId];
+                prevState.changeValue_items = !isEqual(prevState.tempItems, prevState.prevItems);
+                prevState.changeValue_items && (prevState.dataSourceItemsCustomizedOfChosenInstance = this.ds.cloneWithRows(prevState.tempItems), console.log(`prevState.dataSourceItemsCustomizedOfChosenInstance._dataBlob.s1 : ${JSON.stringify(prevState.dataSourceItemsCustomizedOfChosenInstance._dataBlob.s1, null, 1)}`));
+              }, console.log('delete - alert'));
+            }
+          }
         ]
       ) : Alert.alert(
         'Delete Disable',
         // 'Template should have at least 1 item.',
         `Template should have at least 1 item. emptyStatusBoolean : ${String(emptyStatusBoolean)}, tempItemText : ${tempItemText}`,
         [
+          // { text: 'Confirm', onPress: () => {
+          //     prevState.tempItems[rowData.itemCustomizedId].desc = prevState.prevItems[rowData.itemCustomizedId].desc;
+          //     tempItemText = prevState.prevItems[rowData.itemCustomizedId].desc;
+          //   }
+          // }
           { text: 'Confirm', onPress: () => {
-              prevState.tempItems[rowData.itemCustomizedId].desc = prevState.prevItems[rowData.itemCustomizedId].desc;
-              tempItemText = prevState.prevItems[rowData.itemCustomizedId].desc;
-            }
+            this.setState({
+              tempItems: {
+                ...this.state.tempItems,
+                [rowData.itemCustomizedId]: {
+                  ...this.state.tempItems[rowData.itemCustomizedId],
+                  desc: this.state.prevItems[rowData.itemCustomizedId].desc
+                }
+              }
+            }, console.log('confirm - alert'));
+            tempItemText = this.state.prevItems[rowData.itemCustomizedId].desc;
+            commonFn();
+          }
           }
         ]
-      ));
-      prevState.tempItems.hasOwnProperty(rowData.itemCustomizedId) && (prevState.tempItems[rowData.itemCustomizedId].desc = tempItemText);
-
-      prevState.changeValue_items = !isEqual(prevState.tempItems, prevState.prevItems);
-      prevState.changeValue_items && (prevState.dataSourceItemsCustomizedOfChosenInstance = this.ds.cloneWithRows(prevState.tempItems), console.log(`prevState.dataSourceItemsCustomizedOfChosenInstance._dataBlob.s1 : ${JSON.stringify(prevState.dataSourceItemsCustomizedOfChosenInstance._dataBlob.s1, null, 1)}`));
+      )) : commonFn();
 
     }
     const renderRow = (rowData, sectionId, rowId) => {
@@ -133,7 +158,8 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
           <TextInput
             value={this.state.tempItems[rowData.itemCustomizedId].desc}
             // value={rowData.desc}
-            onChangeText={tempItemText => this.setState(changeItemText(tempItemText, rowData, rowId, tempItemText == ''))}
+            onChangeText={tempItemText => changeItemText(tempItemText, rowData, rowId, tempItemText == '')}
+            placeholder={this.state.prevItems[rowData.itemCustomizedId].desc}
             style={{
               height: 30,
               textAlign: 'center',
@@ -354,10 +380,6 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
             tempItems : {JSON.stringify(this.state.tempItems, null, 1)}
           </Text>
         </ScrollView>
-        <Button
-          title='forceUpdate'
-          onPress={() => this.forceUpdate(alert('forceUpdate'))}
-        />
         <View style={{ height: 10 }} />
         {this.state.saveButtonVisible && (
           <View>
