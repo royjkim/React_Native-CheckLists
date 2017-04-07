@@ -147,7 +147,8 @@ export default class TemplateAddNewComponent extends React.Component {
       rowId = parseInt(rowId)
       Alert.alert(
         'Delete Confirm',
-        'Do you want to delete this item?',
+        // 'Do you want to delete this item?',
+        `Do you want to delete ${chosen_rowData.desc}?`,
         [
           { text: 'Cancel' },
           { text: 'Delete', onPress: () => {

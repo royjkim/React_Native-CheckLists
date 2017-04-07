@@ -19,6 +19,8 @@ import {
 } from 'react-native-elements'
 import styles from '../../../components/styles'
 
+import ChosenInstanceDetailModifyContainer from './chosenInstanceDetailModifyContainer'
+
 export default class ChosenInstanceDetailsComponent extends React.Component {
   constructor(props) {
     super(props)
@@ -223,7 +225,7 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
         <Button
           icon={{ name: 'sort', size: 22 }}
           title='Item Sort'
-          backgroundColor='#6296F9'
+          backgroundColor='#159588'
           onPress={() => this.setState({ modalPickerVisible: true })}
         />
         {state.dataSourceItemsCustomizedOfChosenInstance._cachedRowCount !== state.countsOfStatusCompleted.total && <FormLabel>
@@ -267,6 +269,27 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
             />
           </View>
         )}
+        <View style={{ height: 10 }}/>
+        <Button
+          title='Item Edit'
+          backgroundColor='#6296F9'
+          onPress={() => navigator.push({
+              passProps: {
+                leftButton: {
+                  title: 'back',
+                  component: ''
+                },
+                rightButton: {
+                  title: '',
+                  component: ''
+                },
+                parentTab: route.passProps.parentTab,
+                chosenInstance: route.passProps.chosenInstance
+              },
+              title: 'Instance Edit',
+              component: ChosenInstanceDetailModifyContainer,
+          })}
+        />
         <Modal
           animationType={'slide'}
           visible={this.state.modalPickerVisible}

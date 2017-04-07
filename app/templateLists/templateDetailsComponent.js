@@ -103,7 +103,7 @@ export default class TemplateDetailsComponent extends React.Component {
     const saveAlertFn = () => {
       this.state.emptyItemsRowId < this.state.tempItems ? Alert.alert(
         'Confirm Save',
-        'You make an existing item empty. If you want to delete it, press Save. Or press Cancel. Even though the item deleted, it won\'t be deleted neither on each instance.',
+        'You are making an existing item empty. If you want to delete it, press Save. Or press Cancel. Even though the item deleted, it won\'t be deleted neither on each instance.',
         [
           { text: 'Cancel'},
           { text: 'Save', onPress: () => saveProcessFn() }

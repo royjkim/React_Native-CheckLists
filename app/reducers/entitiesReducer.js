@@ -141,7 +141,7 @@ const modifyItemsCustomized = (state, action) => ({
   ...state,
   itemsCustomized: {
     ...state.itemsCustomized,
-    [action.targetData.itemsCustomizedId]: {
+    [action.targetData.itemCustomizedId]: {
       ...action.targetData,
       status: !action.targetData.status
     }
