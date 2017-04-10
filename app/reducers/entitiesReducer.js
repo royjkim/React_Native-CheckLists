@@ -137,7 +137,29 @@ const addItemsCustomized = (state, action) => {
 }
 }
 
-const modifyItemsCustomized = (state, action) => ({
+const modifyItemsCustomized = (state, action) => {
+  let tempData_itemsCustomized = { ...state.itemsCustomized };
+  for(let key in action.targetData) {
+    tempData_itemsCustomized[action.targetData[key].itemCustomizedId] = {
+      ...action.targetData[key],
+      status: state.itemsCustomized[action.targetData[key].itemCustomizedId].status
+    }
+  };
+  return {
+    ...state,
+    itemsCustomized: {
+      ...state.itemsCustomized,
+      ...tempData_itemsCustomized
+      // ...action.targetData,
+      // [action.targetData.itemCustomizedId]: {
+      //   ...action.targetData,
+      //   status: !action.targetData.status
+      // }
+    }
+  }
+}
+
+const changeStatusOfItemsCustomized = (state, action) => ({
   ...state,
   itemsCustomized: {
     ...state.itemsCustomized,
@@ -316,6 +338,7 @@ export default function resultReducer(state = initialState, action) {
     [types.MODIFY_INSTANCE]: modifyInstance,
     [types.ADD_ITEMS_CUSTOMIZED]: addItemsCustomized,
     [types.MODIFY_ITEMS_CUSTOMIZED]: modifyItemsCustomized,
+    [types.CHANGE_STATUS_OF_ITEMS_CUSTOMIZED]: changeStatusOfItemsCustomized,
     [types.ADD_ITEM]: addItem,
     [types.MODIFY_ITEM]: modifyItem,
     [types.DEL_ITEM]: delItem,

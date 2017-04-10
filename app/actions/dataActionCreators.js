@@ -157,6 +157,13 @@ export function modifyItemsCustomized(targetData) {
   }
 }
 
+export function changeStatusOfItemsCustomized(targetData) {
+  return {
+    type: types.CHANGE_STATUS_OF_ITEMS_CUSTOMIZED,
+    targetData
+  }
+}
+
 const internal_addItem = (lastId, newData) => ({
   type: types.ADD_ITEM,
   newData,

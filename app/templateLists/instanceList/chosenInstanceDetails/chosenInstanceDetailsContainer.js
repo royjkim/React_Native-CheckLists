@@ -1,5 +1,5 @@
 import {
-  modifyItemsCustomized,
+  changeStatusOfItemsCustomized,
   chooseCategory,
   navigatePrevent,
   triedNavigateWhenPrevented,
@@ -25,7 +25,7 @@ const make_mapStateToProps = () => (state, ownProps) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  modifyItemsCustomized: targetData => dispatch(modifyItemsCustomized(targetData)),
+  changeStatusOfItemsCustomized: targetData => dispatch(changeStatusOfItemsCustomized(targetData)),
   chooseCategory: category => dispatch(chooseCategory(category)),
   navigatePreventFn: (routeTitle, statusBoolean) => dispatch(navigatePrevent(routeTitle, statusBoolean)),
   triedNavigateWhenPreventedFn: (__navigatorRouteID, statusBoolean) => dispatch(triedNavigateWhenPrevented(__navigatorRouteID, statusBoolean)),

@@ -1,10 +1,11 @@
 import {
-  modifyItemsCustomized,
+  changeStatusOfItemsCustomized,
   chooseCategory,
   navigatePrevent,
   triedNavigateWhenPrevented,
   modifyTemplate,
-  modifyInstance
+  modifyInstance,
+  modifyItemsCustomized
 } from '../../../actions/dataActionCreators';
 import ChosenInstanceDetailModifyComponent from './chosenInstanceDetailModifyComponent'
 import { connect } from 'react-redux'
@@ -24,12 +25,13 @@ const make_mapStateToProps = () => (state, ownProps) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  modifyItemsCustomized: targetData => dispatch(modifyItemsCustomized(targetData)),
+  changeStatusOfItemsCustomized: targetData => dispatch(changeStatusOfItemsCustomized(targetData)),
   chooseCategory: category => dispatch(chooseCategory(category)),
   navigatePreventFn: (routeTitle, statusBoolean) => dispatch(navigatePrevent(routeTitle, statusBoolean)),
   triedNavigateWhenPreventedFn: (__navigatorRouteID, statusBoolean) => dispatch(triedNavigateWhenPrevented(__navigatorRouteID, statusBoolean)),
   modifyTemplate: (targetTemplateId, data) => dispatch(modifyTemplate(targetTemplateId, data)),
-  modifyInstance: (targetInstanceId, data) => dispatch(modifyInstance(targetInstanceId, data))
+  modifyInstance: (targetInstanceId, data) => dispatch(modifyInstance(targetInstanceId, data)),
+  modifyItemsCustomized: targetData => dispatch(modifyItemsCustomized(targetData))
 })
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => ({

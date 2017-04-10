@@ -28,14 +28,14 @@ export default class InstanceListsAllComponent extends React.Component {
   }
 
   render() {
-    const { route, navigator, state, modifyItemsCustomized, searchBarText } = this.props
+    const { route, navigator, state, changeStatusOfItemsCustomized, searchBarText } = this.props
     const renderRow = (rowData, sectionId, rowId) => <ListItem
       key={rowId}
       // title={rowData.desc}
       title={<CheckBox
         title={rowData.desc}
         checked={rowData.status}
-        onPress={() => modifyItemsCustomized(rowData)}
+        onPress={() => changeStatusOfItemsCustomized(rowData)}
         />
       }
       // subtitle={`instanceId : ${rowData.instanceId}`}

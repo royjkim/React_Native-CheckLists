@@ -71,7 +71,7 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
       route,
       navigator,
       state,
-      modifyItemsCustomized,
+      changeStatusOfItemsCustomized,
       chooseCategory,
       navigatePreventFn,
       modifyTemplate,
@@ -84,7 +84,7 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
           // title={rowData.desc}
           title={`${rowData.desc}, orderNum : ${rowData.orderNum}`}
           checked={rowData.status}
-          onPress={() => modifyItemsCustomized(rowData)}
+          onPress={() => changeStatusOfItemsCustomized(rowData)}
         />
       </View>
     )
