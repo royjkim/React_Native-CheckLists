@@ -12,7 +12,8 @@ const checkIdOverlapOrNot = (attr, lastId, newData, requestAction) => {
     addTemplateCategory: (attr, lastId, newData) => {
       newData.id = lastId[attr] + 1
       return newData
-    }
+    },
+    addItemsCustomized: (attr, lastId, newData) => newData[0].itemCustomizedId > lastId[attr] ? newData : newData.map((value, index) => value.itemCustomizedId = lastId[attr] + 1 + index)
   };
 
   return requestActionMapper.hasOwnProperty(requestAction) ? requestActionMapper[requestAction](attr, lastId, newData) : newData
@@ -80,32 +81,32 @@ export function addInstance(lastId, newData) {
   //   newData,
   //   templateId: newData.template
   // }
-
   newData.templateId = newData.template;
   return (dispatch, getState) => {
     dispatch(internalAddInstance(lastId, newData));
-
-
-    dispatch(addItemsCustomized(lastId, newData, true));
-    const prevState = getState(),
-          newAddedItemsCustomized = prevState.normalizeReducer.entities.instances[newData.instanceId].items;
-    dispatch(addInstanceThenAddOnResult(lastId, newData, newAddedItemsCustomized));
+    dispatch(addItemsCustomizedWhenAddInstance(lastId, newData, true));
+    // const prevState = getState()
+    //       newAddedItemsCustomized = prevState.normalizeReducer.entities.instances[newData.instanceId].items;
+    // dispatch(addInstanceThenAddOnResult(lastId, newData, newAddedItemsCustomized));
     dispatch(lastIdPlus('instances', lastId, newData));
     dispatch(lastIdPlus('itemsCustomized', lastId, newData));
   }
 };
 
-const internal_addItemsCustomized = (lastId, newData) => ({
-  type: types.ADD_ITEMS_CUSTOMIZED,
-  attr: 'itemsCustomized',
-  lastId: lastId.itemsCustomized,
-  newData
-  // newAddedItemsCustomized
-})
-
-export function addItemsCustomized(lastId, newData, preventBoolean) {
+const internal_addItemsCustomizedWhenAddInstance = (lastId, newData) => {
+  return {
+    // type: types.ADD_ITEMS_CUSTOMIZED,
+    type: types.ADD_ITEMS_CUSTOMIZED_WHEN_ADD_INSTNACE,
+    attr: 'itemsCustomized',
+    lastId: lastId.itemsCustomized,
+    newData
+    // newAddedItemsCustomized
+  }
+}
+// ADD_ITEMS_CUSTOMIZED_WHEN_ADD_INSTNACE = 'addItemsCustomizedWhenAddInstance',
+export function addItemsCustomizedWhenAddInstance(lastId, newData, preventBoolean) {
   return dispatch => {
-    dispatch(internal_addItemsCustomized(lastId, newData));
+    dispatch(internal_addItemsCustomizedWhenAddInstance(lastId, newData));
     preventBoolean || dispatch(lastIdPlus('itemsCustomized', lastId, newData));
   }
   // return {
@@ -120,13 +121,29 @@ export function addItemsCustomized(lastId, newData, preventBoolean) {
   // }
 }
 
-const addInstanceThenAddOnResult = (lastId, newData, newAddedItemsCustomized) => ({
-  type: types.ADD_INSTANCE_THEN_ADD_ON_RESULT,
-  attr: 'itemsCustomized',
-  lastId,
-  newData,
-  newAddedItemsCustomized
+// const addInstanceThenAddOnResult = (lastId, newData, newAddedItemsCustomized) => ({
+//   type: types.ADD_INSTANCE_THEN_ADD_ON_RESULT,
+//   attr: 'itemsCustomized',
+//   lastId,
+//   newData,
+//   newAddedItemsCustomized
+// })
+
+const internal_addItemsCustomized = (lastId, newData) => ({
+  type: types.ADD_ITEMS_CUSTOMIZED,
+  lastId: lastId.itemsCustomized,
+  newData
 })
+
+export function addItemsCustomized(lastId, newData) {
+  newData = checkIdOverlapOrNot('itemsCustomized', lastId, newData, 'addItemsCustomized');
+  return dispatch => {
+    dispatch(internal_addItemsCustomized(lastId, newData));
+    dispatch(lastIdPlusMulti('itemsCustomized', lastId, {
+      items: [ ...newData ]
+    }));
+  }
+}
 
 function internal_delInstance() {
 
@@ -196,13 +213,10 @@ function internal_modifyItem(data) {
 }
 
 export function modifyItem(data, templateId) {
-  console.log('actionCreators - parameter - data : ', data);
-  console.log(`actionCreators - parameter - data : ${JSON.stringify(data, null, 1)}`);
-  console.log('actionCreators - parameter - templateId : ', templateId);
   // delete data.length;
   return dispatch => {
     for(let key in data) {
-      data[key] == '' && (delete data[key], dispatch(delItem(parseInt(key), parseInt(templateId))), console.log(`del request - key : ${key}, templateId : ${templateId}`))
+      data[key] == '' && (delete data[key], dispatch(delItem(parseInt(key), parseInt(templateId))))
     }
     Object.keys(data).length > 0 && dispatch(internal_modifyItem(data));
   }

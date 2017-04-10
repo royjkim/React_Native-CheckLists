@@ -36,20 +36,18 @@ const addTemplate = (state, action) => {
   }
 }
 
-const addInstance = (state, action) => {
-  return {
-    ...state,
-    instances: {
-      ...state.instances,
-      [action.newData.instanceId]: {
-        ...action.newData
-      }
-    },
-    // itemsCustomized: {
-    //   ...tempData_itemsCustomized
-    // }
-  }
-}
+const addInstance = (state, action) => ({
+  ...state,
+  instances: {
+    ...state.instances,
+    [action.newData.instanceId]: {
+      ...action.newData
+    }
+  },
+  // itemsCustomized: {
+  //   ...tempData_itemsCustomized
+  // }
+})
 
 const modifyTemplate = (state, action) => ({
   ...state,
@@ -90,29 +88,55 @@ const modifyInstance = (state, action) => ({
 //     newAddedItemsCustomized
 //   }
 // }
-const addItemsCustomized = (state, action) => {
+
+const addItemsCustomized = (state, action)  => {
+  const chosenInstanceId = action.newData[0].instanceId;
+  let tempData_itemsCustomized = {},
+      tempData_instances = { ...state.instances },
+      tempData_itemsArray_OfInstance = state.instances[chosenInstanceId].items;
+  action.newData.map(value => {
+    tempData_itemsCustomized[value.itemCustomizedId] = {
+      ...value
+    };
+    tempData_itemsArray_OfInstance.push(value.itemCustomizedId);
+  });
+  tempData_instances[chosenInstanceId].items = tempData_itemsArray_OfInstance;
+  return {
+    ...state,
+    instances: {
+      ...tempData_instances
+    },
+    itemsCustomized: {
+      ...state.itemsCustomized,
+      ...tempData_itemsCustomized
+    },
+  }
+};
+
+const addItemsCustomizedWhenAddInstance = (state, action) => {
   // let tempData_itemsCustomized = { ...state.itemsCustomized },
   let tempData_newAddedItemsCustomized = {};
-
+  let lastId = action.lastId;
   state.templates[action.newData.templateId].items.map(value => {
     // tempData_itemsCustomized[++action.lastId] = {
     //   ...state.items[value],
     //   instanceId: action.newData.instanceId,
-    //   itemsCustomizedId: action.lastId,
+    //   itemCustomizedId: action.lastId,
     //   status: false
     // };
-    tempData_newAddedItemsCustomized[++action.lastId] = {
+    tempData_newAddedItemsCustomized[++lastId] = {
       // ...tempData_itemsCustomized[action.lastId]
       ...state.items[value],
       instanceId: action.newData.instanceId,
-      itemsCustomizedId: action.lastId,
+      itemCustomizedId: lastId,
       status: false
-    }
-    tempData_newAddedItemsCustomized.hasOwnProperty(action.lastId) && (delete tempData_newAddedItemsCustomized[action.lastId].template, delete tempData_newAddedItemsCustomized[action.lastId].templateId);
+    };
+    tempData_newAddedItemsCustomized.hasOwnProperty(lastId) && (delete tempData_newAddedItemsCustomized[lastId].template,
+      delete tempData_newAddedItemsCustomized[lastId].templateId);
   })
   let tempData_instances = { ...state.instances };
   for(let key in tempData_newAddedItemsCustomized) {
-    tempData_instances[action.newData.instanceId].items.push(tempData_newAddedItemsCustomized[key].itemsCustomizedId)
+    tempData_instances[action.newData.instanceId].items.push(tempData_newAddedItemsCustomized[key].itemCustomizedId)
   };
   return {
       ...state,
@@ -337,6 +361,7 @@ export default function resultReducer(state = initialState, action) {
     [types.DELETE_INSTANCE]: deleteInstance,
     [types.MODIFY_INSTANCE]: modifyInstance,
     [types.ADD_ITEMS_CUSTOMIZED]: addItemsCustomized,
+    [types.ADD_ITEMS_CUSTOMIZED_WHEN_ADD_INSTNACE]: addItemsCustomizedWhenAddInstance,
     [types.MODIFY_ITEMS_CUSTOMIZED]: modifyItemsCustomized,
     [types.CHANGE_STATUS_OF_ITEMS_CUSTOMIZED]: changeStatusOfItemsCustomized,
     [types.ADD_ITEM]: addItem,

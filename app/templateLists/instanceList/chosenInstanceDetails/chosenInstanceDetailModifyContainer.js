@@ -5,7 +5,8 @@ import {
   triedNavigateWhenPrevented,
   modifyTemplate,
   modifyInstance,
-  modifyItemsCustomized
+  modifyItemsCustomized,
+  addItemsCustomized
 } from '../../../actions/dataActionCreators';
 import ChosenInstanceDetailModifyComponent from './chosenInstanceDetailModifyComponent'
 import { connect } from 'react-redux'
@@ -31,7 +32,8 @@ const mapDispatchToProps = dispatch => ({
   triedNavigateWhenPreventedFn: (__navigatorRouteID, statusBoolean) => dispatch(triedNavigateWhenPrevented(__navigatorRouteID, statusBoolean)),
   modifyTemplate: (targetTemplateId, data) => dispatch(modifyTemplate(targetTemplateId, data)),
   modifyInstance: (targetInstanceId, data) => dispatch(modifyInstance(targetInstanceId, data)),
-  modifyItemsCustomized: targetData => dispatch(modifyItemsCustomized(targetData))
+  modifyItemsCustomized: targetData => dispatch(modifyItemsCustomized(targetData)),
+  addItemsCustomized: (lastId, newData) => dispatch(addItemsCustomized(lastId, newData))
 })
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => ({
@@ -44,7 +46,8 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
     itemsCustomizedObjectOfChosenInstance: ((tempResult = {}) => {
       stateProps.state.itemsCustomizedOfChosenInstance.map(value => tempResult[value.itemCustomizedId] = { ...value })
       return tempResult
-    })()
+    })(),
+    lastOrderNum: stateProps.state.itemsCustomizedOfChosenInstance.slice(-1)[0].orderNum
   },
   ...dispatchProps
 })

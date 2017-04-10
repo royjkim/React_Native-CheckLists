@@ -85,6 +85,7 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
       modifyTemplate,
       modifyInstance,
       modifyItemsCustomized,
+      addItemsCustomized,
     } = this.props
     const { chosenInstance } = route.passProps;
     const changeItemText = (tempItemText, rowData, rowId, emptyStatusBoolean) => {
@@ -128,11 +129,11 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
         value={this.state.tempItems[rowData.itemCustomizedId].desc}
         // value={rowData.desc}
         onChangeText={tempItemText => changeItemText(tempItemText, rowData, rowId, tempItemText == '')}
-        placeholder={this.state.prevItems[rowData.itemCustomizedId].desc}
+        placeholder={this.state.prevItems.hasOwnProperty(rowData.itemCustomizedId) ? this.state.prevItems[rowData.itemCustomizedId].desc : this.state.tempItems[rowData.itemCustomizedId].desc}
         style={{
           height: 30,
           textAlign: 'center',
-          color: this.state.tempItems[rowData.itemCustomizedId].desc == this.state.prevItems[rowData.itemCustomizedId].desc ? '#605E60' : '#FF2A1A',
+          color: this.state.prevItems.hasOwnProperty(rowData.itemCustomizedId) ? this.state.tempItems[rowData.itemCustomizedId].desc == this.state.prevItems[rowData.itemCustomizedId].desc ? '#605E60' : '#159588' : '#159588',
         }}
       />
     </View>
@@ -299,30 +300,38 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
               backgroundColor='#159588'
               onPress={() => {
                 this.state.tempNewItemDesc !== '' && this.setState(prevState => {
-                  prevState.newItem = {
+                  const addUniqueCount = Object.keys(prevState.tempItems).length - Object.keys(prevState.prevItems).length
+                  prevState.newItemCustomized = {
                     desc: prevState.tempNewItemDesc,
-                    itemId: prevState.newItem.itemId,
-                    orderNum: prevState.newItem.orderNum + 1,
-                    templateId: state.lastId.templates + 1
+                    instanceId: route.passProps.chosenInstance.instanceId,
+                    itemCustomizedId: state.lastId.itemsCustomized + 1 + addUniqueCount,
+                    itemId: 999,
+                    orderNum: state.lastOrderNum + 1 + addUniqueCount,
+                    templateId: state.chosenTemplate.templateId,
+                    status: false,
                   };
-                  prevState.tempItems = [
-                    ...prevState.tempItems,
-                    {
-                      ...prevState.newItem,
-                      desc: prevState.tempNewItemDesc
-                    }
-                  ];
-                  prevState.newItem.desc = '';
-                  ++prevState.newItem.itemId;
-                  // prevState.newItem = {
+                  // prevState.tempItems = [
+                  //   ...prevState.tempItems,
+                  //   {
+                  //     ...prevState.newItemCustomized,
+                  //     desc: prevState.tempNewItemDesc
+                  //   }
+                  // ];
+                  prevState.tempItems[prevState.newItemCustomized.itemCustomizedId] = {
+                    ...prevState.newItemCustomized
+                  };
+                  prevState.newItemCustomized.desc = '';
+                  ++prevState.newItemCustomized.itemCustomizedId;
+                  // prevState.newItemCustomized = {
                   //   desc: '',
-                  //   itemId: prevState.newItem.itemId + 1,
-                  //   orderNum: prevState.newItem.orderNum,
+                  //   itemId: prevState.newItemCustomized.itemId + 1,
+                  //   orderNum: prevState.newItemCustomized.orderNum,
                   //   templateId: state.lastId.templates + 1,
                   // };
                   prevState.tempNewItemDesc = '';
-                  prevState.tempItems.sort((data1, data2) => data2.orderNum - data1.orderNum);
+                  // prevState.tempItems.sort((data1, data2) => data2.orderNum - data1.orderNum);
                   // prevState.dataSourceNewAddedItems = this.ds.cloneWithRows(prevState.tempItems);
+                  prevState.changeValue_items = !isEqual(prevState.prevItems, prevState.tempItems);
                   prevState.dataSourceItemsCustomizedOfChosenInstance = this.ds.cloneWithRows(prevState.tempItems);
                 })
               }}
@@ -355,11 +364,16 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
                   //   delete prevState.tempItems[key]
                     prevState.modifyExistingItems[key].desc = prevState.modifyExistingItems[key].desc.trim();
                   };
-                  modifyItemsCustomized(prevState.modifyExistingItems);
+                  Object.keys(prevState.modifyExistingItems).length > 0 && modifyItemsCustomized(prevState.modifyExistingItems);
                   prevState.modifyExistingItems = {};
+                  let tempData_newAddedItemsCustomized = [];
                   for(let key in prevState.tempItems) {
                     prevState.tempItems[key].desc = prevState.tempItems[key].desc.trim();
+                    // key in prevState.prevItems || addItemsCustomized(state.lastId, prevState.tempItems[key]);
+                    key in prevState.prevItems || tempData_newAddedItemsCustomized.push(prevState.tempItems[key]);
                   }
+                  tempData_newAddedItemsCustomized.sort((data1, data2) => data1.itemCustomizedId - data2.itemCustomizedId);
+                  tempData_newAddedItemsCustomized.length > 0 && addItemsCustomized(state.lastId, tempData_newAddedItemsCustomized);
                   prevState.prevItems = Object.freeze((cloneDeep(prevState.tempItems)));
                   prevState.changeValue_items = false;
                   prevState.dataSourceItemsCustomizedOfChosenInstance = this.ds.cloneWithRows(prevState.tempItems);

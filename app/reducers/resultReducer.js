@@ -21,20 +21,28 @@ const addInstance = (state, action) => ({
   ]
 })
 
-const addInstanceThenAddOnResult = (state, action) => ({
+// const addInstanceThenAddOnResult = (state, action) => ({
+//   ...state,
+//   [action.attr]: state[action.attr].concat(action.newAddedItemsCustomized)
+// })
+
+const addItemsCustomized = (state, action) => ({
   ...state,
-  [action.attr]: state[action.attr].concat(action.newAddedItemsCustomized)
+  itemsCustomized: state.itemsCustomized.concat(Object.values(action.newData).map(value => value.itemCustomizedId))
 })
 
-const addItemsCustomized = (state, action) => {
-  console.log('resultReducer - state : ', state)
+const addItemsCustomizedWhenAddInstance = (state, action) => {
   return {
     ...state,
     // itemsCustomized: [
     //   ...state.itemsCustomized,
     //   ...action.newAddedItemsCustomized
     // ],
-    itemsCustomized: state.itemsCustomized.concat(action.newData)
+    itemsCustomized: state.itemsCustomized.concat(action.newData.items)
+    // itemsCustomized: [
+    //   ...state.itemsCustomized,
+    //   ...action.newData.items,
+    // ]
   }
 }
 
@@ -86,8 +94,9 @@ export default function resultReducer(state, action) {
     [types.ADD_TEMPLATE]: addTemplate,
     [types.DELETE_TEMPLATE]: delTemplate,
     [types.ADD_INSTANCE]: addInstance,
-    [types.ADD_INSTANCE_THEN_ADD_ON_RESULT]: addInstanceThenAddOnResult,
+    // [types.ADD_INSTANCE_THEN_ADD_ON_RESULT]: addInstanceThenAddOnResult,
     [types.ADD_ITEMS_CUSTOMIZED]: addItemsCustomized,
+    [types.ADD_ITEMS_CUSTOMIZED_WHEN_ADD_INSTNACE]: addItemsCustomizedWhenAddInstance,
     [types.DELETE_INSTANCE]: deleteInstance,
     [types.ADD_ITEM]: addItem,
     [types.DEL_ITEM]: delItem,

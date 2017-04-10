@@ -236,6 +236,7 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
             dataSource={state.dataSourceItemsCustomizedOfChosenInstance}
             renderRow={renderRow}
             enableEmptySections={true}
+            style={{ maxHeight: 200 }}
           />
         </List>
         <View style={{ height: 10 }} />
@@ -305,7 +306,9 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
                 flex: 0,
                 justifyContent: 'flex-end',
                 marginBottom: 30,
-                backgroundColor: 'white'
+                backgroundColor: 'white',
+                borderTopWidth: 1,
+                borderColor: '#C1C1C1'
               }}>
               <Picker
                 selectedValue={state.statusPicker}
