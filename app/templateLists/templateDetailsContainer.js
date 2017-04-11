@@ -7,26 +7,34 @@ import {
   triedNavigateWhenPrevented,
   addItem,
   modifyItem,
-  modifyTemplate
+  modifyTemplate,
+  delTemplate,
 } from '../actions/dataActionCreators'
 
-const make_mapStateToProps = () => (state, ownProps) => ({
-  state: {
-    instancesOfChosenTemplate: mySelectors.make_get_instancesOfChosenTemplate()(state.normalizeReducer, ownProps.route.passProps.chosenTemplate),
-    itemsCustomized: state.normalizeReducer.entities.itemsCustomized,
-    // itemsOfChosenTemplate: mySelectors.make_get_itemsOfChosenTemplate()(state.normalizeReducer, ownProps.route.passProps.chosenTemplate),
-    itemsOfChosenTemplate: mySelectors.make_get_itemsOfChosenTemplate()(state.normalizeReducer, state.normalizeReducer.entities.templates[ownProps.route.passProps.chosenTemplate.templateId]),
-    // itemsOfChosenTemplate: (() => mySelectors.make_get_itemsOfChosenTemplate()(state.normalizeReducer, state.normalizeReducer.entities.templates[ownProps.route.passProps.chosenTemplate.templateId]))(),
-    navigatePrevent: state.configReducer.navigatePrevent,
-    triedNavigateWhenPrevented: state.configReducer.triedNavigateWhenPrevented,
-    lastId: state.normalizeReducer.lastId,
-    chosenTemplate: ownProps.route.passProps.chosenTemplate,
-    last_orderNum: mySelectors.make_get_last_orderNum()(state.normalizeReducer, ownProps.route.passProps.chosenTemplate),
-    existOrNot_chosenTemplate: state.normalizeReducer.entities.templates.hasOwnProperty(ownProps.route.passProps.chosenTemplate.templateId)
-  },
-  route: ownProps.route,
-  navigator: ownProps.navigator
-})
+const make_mapStateToProps = () => (state, ownProps) => {
+  const normalizeReducer = state.normalizeReducer,
+        { entities, lastId } = normalizeReducer,
+        { configReducer } = state,
+        { chosenTemplate } = ownProps.route.passProps,
+        templateExistOrNot = entities.templates.hasOwnProperty(chosenTemplate.templateId);
+
+  return {
+    state: {
+      instancesOfChosenTemplate: templateExistOrNot ? mySelectors.make_get_instancesOfChosenTemplate()(normalizeReducer, chosenTemplate) : [],
+      itemsCustomized: entities.itemsCustomized,
+      itemsOfChosenTemplate: templateExistOrNot ? mySelectors.make_get_itemsOfChosenTemplate()(normalizeReducer, entities.templates[chosenTemplate.templateId]) : [],
+      navigatePrevent: configReducer.navigatePrevent,
+      triedNavigateWhenPrevented: configReducer.triedNavigateWhenPrevented,
+      lastId,
+      chosenTemplate: chosenTemplate,
+      last_orderNum: templateExistOrNot ? mySelectors.make_get_last_orderNum()(normalizeReducer, chosenTemplate) : 0,
+      existOrNot_chosenTemplate: templateExistOrNot
+      // existOrNot_chosenTemplate: entities.templates.hasOwnProperty(chosenTemplate.templateId)
+    },
+    route: ownProps.route,
+    navigator: ownProps.navigator
+  }
+}
 
 const mapDispatchToProps = dispatch => ({
   searchBarText: (searchText, attr) => dispatch(searchBarText(searchText, attr)),
@@ -34,18 +42,16 @@ const mapDispatchToProps = dispatch => ({
   triedNavigateWhenPreventedFn: (parentTab, statusBoolean) => dispatch(triedNavigateWhenPrevented(parentTab, statusBoolean)),
   addItem: (lastId, newData) => dispatch(addItem(lastId, newData)),
   modifyItem: (targetId, data) => dispatch(modifyItem(targetId, data)),
-  modifyTemplate: (targetTemplateId, data) => dispatch(modifyTemplate(targetTemplateId, data))
+  modifyTemplate: (targetTemplateId, data) => dispatch(modifyTemplate(targetTemplateId, data)),
+  delTemplate: targetData => dispatch(delTemplate(targetData))
 })
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => ({
   ...ownProps,
   state: {
     ...stateProps.state,
-    // dataSourceInstancesOfChosenTemplate: mySelectors.make_get_dataSourceInstancesOfChosenTemplate()(stateProps.state.instancesOfChosenTemplate),
     dataSourceOfItemsOfChosenTemplate: mySelectors.make_get_dataSourceOfItemsOfChosenTemplate()(stateProps.state.itemsOfChosenTemplate),
-    // badgeValueOfStatusOfEachInstanceOfChosenTemplate: mySelectors.make_get_badgeValueOfStatusOfEachInstanceOfChosenTemplate()(stateProps.state.itemsCustomized, stateProps.state.instancesOfChosenTemplate),
     itemsLengthOfChosenTemplate: stateProps.state.itemsOfChosenTemplate.length,
-    // tempItems: stateProps.state.itemsOfChosenTemplate
   },
   ...dispatchProps
 })

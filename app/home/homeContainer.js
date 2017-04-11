@@ -5,19 +5,25 @@ import { searchBarText, navigatePopToTopRequest, triedNavigateWhenPrevented } fr
 
 import mySelectors from '../container/selectors'
 
-const make_mapStateToProps = () => (state, ownProps) => ({
-  state: {
-    dataSourceForAllInstances: mySelectors.make_get_dataSourceInstances()(state.normalizeReducer),
-    badgeValueOfStatusOfAllInstances: mySelectors.make_get_badgeValueOfStatusOfAllInstances()(state.normalizeReducer),
-    instances: state.normalizeReducer.entities.instances,
-    templates: state.normalizeReducer.entities.templates,
-    navigatePrevent: state.configReducer.navigatePrevent,
-    navigatePopToTopRequest: state.configReducer.navigatePopToTopRequest,
-    triedNavigateWhenPrevented: state.configReducer.triedNavigateWhenPrevented
-  },
-  route: ownProps.route,
-  navigator: ownProps.navigator
-})
+const make_mapStateToProps = () => (state, ownProps) => {
+  const configReducer = state.configReducer,
+        normalizeReducer = state.normalizeReducer,
+        entities = normalizeReducer.entities;
+
+  return {
+    state: {
+      dataSourceForAllInstances: mySelectors.make_get_dataSourceInstances()(normalizeReducer),
+      badgeValueOfStatusOfAllInstances: mySelectors.make_get_badgeValueOfStatusOfAllInstances()(normalizeReducer),
+      instances: entities.instances,
+      templates: entities.templates,
+      navigatePrevent: configReducer.navigatePrevent,
+      navigatePopToTopRequest: configReducer.navigatePopToTopRequest,
+      triedNavigateWhenPrevented: configReducer.triedNavigateWhenPrevented
+    },
+    route: ownProps.route,
+    navigator: ownProps.navigator
+  }
+}
 
 const mapDispatchToProps = dispatch => ({
   searchBarText: (searchText, attr) => dispatch(searchBarText(searchText, attr)),
@@ -25,13 +31,15 @@ const mapDispatchToProps = dispatch => ({
   triedNavigateWhenPrevented: (parentTab, statusBoolean) => dispatch(triedNavigateWhenPrevented(parentTab, statusBoolean))
 })
 
-const mergeProps = (stateProps, dispatchProps, ownProps) => ({
-  state: {
-    ...stateProps.state,
-    templateLength: stateProps.state.dataSourceForAllInstances._cachedRowCount
-  },
-  ...dispatchProps,
-  ...ownProps,
-})
+const mergeProps = (stateProps, dispatchProps, ownProps) => {
+  return {
+    state: {
+      ...stateProps.state,
+      templateLength: stateProps.state.dataSourceForAllInstances._cachedRowCount
+    },
+    ...dispatchProps,
+    ...ownProps,
+  }
+}
 
 export default connect(make_mapStateToProps, mapDispatchToProps, mergeProps)(HomeComponent)

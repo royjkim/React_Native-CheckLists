@@ -9,17 +9,21 @@ import {
   addInstance,
 } from '../../actions/dataActionCreators'
 
-const make_mapStateToProps = () => (state, ownProps) => ({
-  state: {
-    instancesOfChosenTemplate: mySelectors.make_get_instancesOfChosenTemplate()(state.normalizeReducer, ownProps.route.passProps.chosenTemplate),
-    itemsCustomized: state.normalizeReducer.entities.itemsCustomized,
-    itemsOfChosenTemplate: mySelectors.make_get_itemsOfChosenTemplate()(state.normalizeReducer, ownProps.route.passProps.chosenTemplate),
-    dataSourceTemplates: mySelectors.make_get_dataSourceTemplates()(state.normalizeReducer),
-    lastId: state.normalizeReducer.lastId
-  },
-  route: ownProps.route,
-  navigator: ownProps.navigator
-})
+const make_mapStateToProps = () => (state, ownProps) => {
+  const normalizeReducer = state.normalizeReducer,
+        chosenTemplate = ownProps.route.passProps.chosenTemplate;
+  return {
+    state: {
+      instancesOfChosenTemplate: mySelectors.make_get_instancesOfChosenTemplate()(normalizeReducer, chosenTemplate),
+      itemsCustomized: normalizeReducer.entities.itemsCustomized,
+      itemsOfChosenTemplate: mySelectors.make_get_itemsOfChosenTemplate()(normalizeReducer, chosenTemplate),
+      dataSourceTemplates: mySelectors.make_get_dataSourceTemplates()(normalizeReducer),
+      lastId: normalizeReducer.lastId
+    },
+    route: ownProps.route,
+    navigator: ownProps.navigator
+  }
+}
 
 const mapDispatchToProps = dispatch => ({
   searchBarText: (searchText, attr) => dispatch(searchBarText(searchText, attr)),

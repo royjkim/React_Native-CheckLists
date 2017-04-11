@@ -50,24 +50,12 @@ export default class TemplateDetailsComponent extends React.Component {
   }
 
   componentWillMount() {
-    this.props.state.existOrNot_chosenTemplate || Alert.alert(
-      'Template Deleted',
-      'Because of Current Template Deleted. Page would be directed to back.',
-      [
-        { text: 'Confirm', onPress: () => this.props.navigator.pop() }
-      ]
-    );
+    this.props.state.existOrNot_chosenTemplate || this.becauseOfExistNotAlertMsgFn();
   }
 
   componentWillUpdate(nextProps) {
     // Below could be cause ignoring 'navigate prevent data' which is to be canceled.
-    nextProps.state.existOrNot_chosenTemplate || Alert.alert(
-      'Template Deleted',
-      'Because of Current Template Deleted. Page would be directed to back.',
-      [
-        { text: 'Confirm', onPress: () => this.props.navigator.pop() }
-      ]
-    );
+    nextProps.state.existOrNot_chosenTemplate || this.becauseOfExistNotAlertMsgFn();
   }
 
   componentDidUpdate() {
@@ -93,6 +81,22 @@ export default class TemplateDetailsComponent extends React.Component {
     this.state.addItemModalVisible && this.refs['newItemTempDescTextInput'].focus()
   }
 
+  becauseOfExistNotAlertMsgFn() {
+    const tempFn_becauseOfExistNotAlertMsgFn = this.becauseOfExistNotAlertMsgFn;
+    this.becauseOfExistNotAlertMsgFn = () => null;
+    Alert.alert(
+      'Template Deleted',
+      'Because of Current Template Deleted. Page would be directed to back.',
+      [
+        { text: 'Confirm', onPress: () => {
+          this.becauseOfExistNotAlertMsgFn = tempFn_becauseOfExistNotAlertMsgFn;
+          this.props.navigator.pop();
+          }
+        }
+      ]
+    )
+
+  }
   render() {
     const {
       route,
@@ -103,6 +107,7 @@ export default class TemplateDetailsComponent extends React.Component {
       addItem,
       modifyItem,
       modifyTemplate,
+      delTemplate,
     } = this.props;
     const resetData = () => this.setState({
         searchText: '',
@@ -417,7 +422,18 @@ export default class TemplateDetailsComponent extends React.Component {
         <Button
           icon={{ name: 'delete-forever' }}
           title='Delete template'
-          onPress={() => alert('delete template')}
+          backgroundColor='#FF7F7C'
+          onPress={() => Alert.alert(
+            'Confim Delete',
+            `Warning : Instanecs connected to this template(${this.state.prevTemplateTitle}) would be deleted. It couldn't restore after deleted.`,
+            [
+              { text: 'Cancel Delete' },
+              { text: 'Confirm Delete', onPress: () => {
+                navigator.pop();
+                delTemplate(route.passProps.chosenTemplate);
+              }}
+            ]
+          )}
         />
         <Modal
           animationType={'slide'}

@@ -204,11 +204,11 @@ const addResultHistory = (attr, args) => dataResultHistory[attr].past.push(args)
 const loadResultHistory = attr => (dataResultHistory[attr].past.length < 1 ? dataResultHistory[attr].past[0] : dataResultHistory[attr].past[dataResultHistory[attr].past.length - 1])
 
 const templates = state => state.entities.templates
-const instances = state => state.entities.instances
-const chosenTemplate = (state, chosenTemplate) => chosenTemplate
+const instances = state => state.entities.instances;
+const chosenTemplate = (undefined, chosenTemplate) => chosenTemplate;
 
-const chosenInstance = (state, chosenInstance) => chosenInstance
-const items = state => state.entities.items
+const chosenInstance = (state, chosenInstance) => chosenInstance;
+const items = state => state.entities.items;
 const itemsCustomized = state => state.entities.itemsCustomized
 // const sideMenuVisible = state => state.sideMenuVisible
 const templateCategories = state => state.entities.templateCategories
@@ -224,18 +224,21 @@ const statusPicker = state => state.picker
 
 const make_get_last_orderNum = () => createSelector(
   items,
-  (items, data) => data,
+  (undefined, data) => data,
   (items, chosenTemplate) => {
     const currentAttr = 'make_get_last_orderNum';
     compareInputHistory(currentAttr, items, chosenTemplate);
-    const SortedItemOfChosenTemplate = chosenTemplate.items.sort((data1, data2) => data2.orderNum - data1.orderNum);
-    SortedItemOfChosenTemplate.map(value => {
-      if(items.hasOwnProperty(value)) {
-        const tempResult = items[value].orderNum
-        addResultHistory(currentAttr, tempResult)
-        return tempResult
-      }
-    })
+    const itemIdOflargestOrderNum = chosenTemplate.items.sort((data1, data2) => data2.orderNum - data1.orderNum)[0];
+    // SortedItemOfChosenTemplate.map(value => {
+    //   if(items.hasOwnProperty(value)) {
+    //     const tempResult = items[value].orderNum
+    //     addResultHistory(currentAttr, tempResult)
+    //     return tempResult
+    //   }
+    // })
+    const tempResult = items.hasOwnProperty(itemIdOflargestOrderNum) ? items[itemIdOflargestOrderNum].orderNum : 0;
+    addResultHistory(currentAttr, tempResult)
+    return tempResult
   }
 )
 
@@ -257,21 +260,24 @@ const make_get_dataSourceInstances = () => createSelector(
     const currentAttr = 'make_get_dataSourceInstances'
     compareInputHistory(currentAttr, instances, itemsCustomized, searchBarText)
     // return make_dataSource_cloneWithRows(currentAttr, Object.values(instances))
-    if(searchBarText) {
-      return make_dataSource_cloneWithRows(currentAttr, Object.values(instances).filter(value => value.name.toLowerCase().includes(searchBarText)))
-    } else {
-      return make_dataSource_cloneWithRows(currentAttr, Object.values(instances))
-    }
+    // if(searchBarText) {
+    //   return make_dataSource_cloneWithRows(currentAttr, Object.values(instances).filter(value => value.name.toLowerCase().includes(searchBarText)))
+    // } else {
+    //   return make_dataSource_cloneWithRows(currentAttr, Object.values(instances))
+    // }
+    return searchBarText ? make_dataSource_cloneWithRows(currentAttr, Object.values(instances).filter(value => value.name.toLowerCase().includes(searchBarText))) : make_dataSource_cloneWithRows(currentAttr, Object.values(instances))
   }
 )
 
 const make_get_dataSourceItems = () => createSelector(
-  templates,
   items,
+  templates,
+  // items,
   searchBarTextItemList,
-  (templates, items, searchBarText) => {
+  (items, templates, searchBarText) => {
+  // (templates, items, searchBarText) => {
     const currentAttr = 'make_get_dataSourceItems'
-    compareInputHistory(currentAttr, templates, items, searchBarText)
+    compareInputHistory(currentAttr, items, templates, searchBarText)
     let tempResult = {}
     Object.values(templates).map(value1 => {
       tempResult[value1.templateId] = [];
@@ -350,12 +356,19 @@ const make_get_badgeValueOfInstancesOfChosenTemplates = () => createSelector(
   (templates, instances) => {
     const currentAttr = 'make_get_badgeValueOfInstancesOfChosenTemplates'
     compareInputHistory(currentAttr, templates, instances)
-    let tempResult_badgeValueOfInstancesOfChosenTemplates = {}
+    let tempResult = {};
     Object.values(instances).map(value => {
-      (tempResult_badgeValueOfInstancesOfChosenTemplates.hasOwnProperty(templates[value.template].templateId) ? tempResult_badgeValueOfInstancesOfChosenTemplates[templates[value.template].templateId] = tempResult_badgeValueOfInstancesOfChosenTemplates[templates[value.template].templateId] + 1 : tempResult_badgeValueOfInstancesOfChosenTemplates[templates[value.template].templateId] = 1)
+      if(templates.hasOwnProperty(value.template)) {
+        const targetTemplateId = templates[value.template].templateId;
+        tempResult.hasOwnProperty(targetTemplateId) ? ++tempResult[targetTemplateId] : tempResult[targetTemplateId] = 1;
+      }
+      // tempResult.hasOwnProperty(targetTemplateId) ?
+      //   tempResult[targetTemplateId] = tempResult[targetTemplateId] + 1 :
+      //     tempResult[targetTemplateId] = 1;
+
     })
-    addResultHistory(currentAttr, tempResult_badgeValueOfInstancesOfChosenTemplates)
-    return tempResult_badgeValueOfInstancesOfChosenTemplates
+    addResultHistory(currentAttr, tempResult)
+    return tempResult
   }
 )
 
@@ -366,8 +379,9 @@ const make_get_instancesOfChosenTemplate = () => createSelector(
   searchBarTextInstancesOfChosenTemplate,
   (items, instances, chosenTemplate, searchBarText) => {
     const currentAttr = 'make_get_instancesOfChosenTemplate';
-    chosenTemplate.items = chosenTemplate.items.filter(value => items.hasOwnProperty(value));
-    compareInputHistory(currentAttr, instances, items, chosenTemplate, searchBarText)
+    // chosenTemplate.items = chosenTemplate.items.filter(value => items.hasOwnProperty(value));
+    chosenTemplate.items.map(value => items.hasOwnProperty(value));
+    compareInputHistory(currentAttr, items, instances, chosenTemplate, searchBarText)
     const tempResult = Object.values(instances).filter(value => value.template == chosenTemplate.templateId && value.name.toLowerCase().includes(searchBarText))
     addResultHistory(currentAttr, tempResult)
     return tempResult
@@ -466,7 +480,7 @@ const make_get_itemsOfChosenTemplate = () => createSelector(
   chosenTemplate,
   searchBarTextItemsOfChosenTemplate,
   (items, chosenTemplate, searchBarText) => {
-    const currentAttr = 'make_get_itemsOfChosenTemplate'
+    const currentAttr = 'make_get_itemsOfChosenTemplate';
     compareInputHistory(currentAttr, items, chosenTemplate, searchBarText)
     let tempResult = []
     chosenTemplate.items.map(value => items.hasOwnProperty(value) && items[value].desc.toLowerCase().includes(searchBarText) && tempResult.push(items[value]))
@@ -502,7 +516,7 @@ const make_get_itemsCustomizedOfEachInstanceOfChosenTemplate = () => createSelec
   (itemsCustomized, instancesOfChosenTemplate) => {
     const currentAttr = 'make_get_itemsCustomizedOfEachInstanceOfChosenTemplate'
     compareInputHistory(currentAttr, itemsCustomized, instancesOfChosenTemplate)
-    let tempResult = {}
+    let tempResult = {};
     instancesOfChosenTemplate.map(value1 => {
       let temp_array_itemsCustomizedOfEachInstanceOfChosenTemplate = []
       value1.items.map(value2 => {

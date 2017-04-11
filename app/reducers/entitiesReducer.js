@@ -60,13 +60,61 @@ const modifyTemplate = (state, action) => ({
   }
 })
 
-const delTemplate = (state, action) => ({
-
-})
+const delTemplate = (state, action) => {
+  let tempData_templates = { ...state.templates };
+  delete tempData_templates[action.targetData.templateId];
+  return {
+    ...state,
+    templates: {
+      ...tempData_templates
+    }
+  }
+}
 
 const deleteInstance = (state, action) => {
   let tempData_instances = { ...state.instances };
   delete tempData_instances[action.targetData.instanceId];
+  return {
+    ...state,
+    instances: {
+      ...tempData_instances
+    }
+  }
+}
+
+const delInstanceListByTemplateWhenDeleteInstance = (state, action) => {
+  let tempData_instanceListByTemplate = { ...state.instanceListByTemplate[action.targetData.templateId] };
+  const targetIndexOfInstanceListByTemplate = tempData_instanceListByTemplate.instances.indexOf(action.targetData.instanceId);
+  tempData_instanceListByTemplate.items.splice(targetIndexOfInstanceListByTemplate, 1);
+  return {
+    ...state,
+    instanceListByTemplate: {
+      ...state.instanceListByTemplate,
+      [action.targetData.templateId]: {
+        ...tempData_instanceListByTemplate
+      }
+    }
+  }
+}
+
+const delInstanceListByTemplateWhenDeleteTemplate = (state, action) => {
+  let tempData_instanceListByTemplate = { ...state.instanceListByTemplate };
+  tempData_instanceListByTemplate.hasOwnProperty(action.targetData.templateId) && delete tempData_instanceListByTemplate[action.targetData.templateId];
+  return {
+    ...state,
+    instanceListByTemplate: {
+      ...tempData_instanceListByTemplate
+    }
+  }
+}
+
+const delInstanceMulti = (state, action) => {
+  // action.targetTemplate,
+  // action.targetInstances
+  let tempData_instances = { ...state.instances };
+  action.targetInstances.map(value => {
+    tempData_instances.hasOwnProperty(value) && delete tempData_instances[value]
+  })
   return {
     ...state,
     instances: {
@@ -368,6 +416,19 @@ const delItem = (state, action) => {
   }
 }
 
+const delItemMulti = (state, action) => {
+  let tempData_items = { ...state.items };
+  action.targetData.items.map(value => {
+    tempData_items.hasOwnProperty(value) && delete tempData_items[value];
+  })
+  return {
+    ...state,
+    items: {
+      ...tempData_items
+    }
+  }
+}
+
 const addTemplateCategory = (state, action) => ({
   ...state,
   templateCategories: {
@@ -396,6 +457,9 @@ export default function resultReducer(state = initialState, action) {
     [types.DELETE_TEMPLATE]: delTemplate,
     [types.ADD_INSTANCE]: addInstance,
     [types.DELETE_INSTANCE]: deleteInstance,
+    [types.DELETE_INSTANCE_MULTI]: delInstanceMulti,
+    [types.DELETE_INSTANCE_LIST_BY_TEMPLATE_WHEN_DELETE_INSTANCE]: delInstanceListByTemplateWhenDeleteInstance,
+    [types.DELETE_INSTANCE_LIST_BY_TEMPLATE_WHEN_DELETE_TEMPLATE]: delInstanceListByTemplateWhenDeleteTemplate,
     [types.MODIFY_INSTANCE]: modifyInstance,
     [types.ADD_ITEMS_CUSTOMIZED]: addItemsCustomized,
     [types.ADD_ITEMS_CUSTOMIZED_WHEN_ADD_INSTNACE]: addItemsCustomizedWhenAddInstance,
@@ -405,6 +469,7 @@ export default function resultReducer(state = initialState, action) {
     [types.ADD_ITEM]: addItem,
     [types.MODIFY_ITEM]: modifyItem,
     [types.DEL_ITEM]: delItem,
+    [types.DEL_ITEM_MULTI]: delItemMulti,
     [types.ADD_TEMPLATE_CATEGORY]: addTemplateCategory,
     [types.MODIFY_TEMPLATE_CATEGORY]: modifyTemplateCategory,
     [types.DEL_TEMPLATE_CATEGORY]: delTemplateCategory,

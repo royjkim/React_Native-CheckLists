@@ -8,7 +8,7 @@ import { normalizedDataInput, findLastId } from '../actions/dataActionCreators'
 import HomeContainer from '../home/homeContainer'
 import normalizeStore from './normalizeStore'
 
-const logger = createLogger()
+const logger = createLogger();
 
 export default function initializeStore() {
   const store = Reactotron.createStore(reducer, compose(applyMiddleware(thunk, logger)))
@@ -25,8 +25,9 @@ export default function initializeStore() {
     items: [],
     instances: [],
     itemsCustomized: [],
-    templateCategories: []
-  }
+    templateCategories: [],
+    instanceListByTemplate: []
+  };
   initialData = normalizeStore.addOriginalTemplate(initialData,
     {
       templateId: 1,
@@ -143,6 +144,25 @@ export default function initializeStore() {
     { itemCustomizedId: 9, itemId: 4, instanceId: 4, desc: 'Close Door', orderNum: 3, status: true },
     { itemCustomizedId: 10, itemId: 2, instanceId: 4, desc: 'Watching TV', orderNum: 1, status: true },
     { itemCustomizedId: 11, itemId: 5, instanceId: 4, desc: 'Open Door', orderNum: 2, status: false }
+  )
+
+  initialData = normalizeStore.make_instanceListByTemplate(initialData,
+    {
+      templateId: 1, instances: [
+        { instanceId: 1 },
+      ]
+    },
+    {
+      templateId: 2, instances: [
+        { instanceId: 3 },
+      ]
+    },
+    {
+      templateId: 3, instances: [
+        { instanceId: 2 },
+        { instanceId: 4 }
+      ]
+    }
   )
 
   // for(let i = 1; i < 5000 ; i++) {

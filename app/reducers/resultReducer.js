@@ -9,9 +9,17 @@ const addTemplate = (state, action) => ({
   items: state.items.concat(action.newData.items.map(value => value.itemId))
 })
 
-const delTemplate = (state, action) => ({
-
-})
+const delTemplate = (state, action) => {
+  let tempData_templates = [ ...state.templates ];
+  const targetIndexOfTemplates = tempData_templates.indexOf(parseInt(action.targetData.templateId));
+  targetIndexOfTemplates !== -1 && tempData_templates.splice(targetIndexOfTemplates, 1);
+  return {
+    ...state,
+    templates: [
+      ...tempData_templates
+    ]
+  }
+}
 
 const addInstance = (state, action) => ({
   ...state,
@@ -34,6 +42,20 @@ const deleteInstance = (state, action) => {
       ...tempData_instances
     ]
   } : state
+}
+
+const delInstanceMulti = (state, action) => {
+  let tempData_instances = [ ...state.instances ];
+  action.targetInstances.map(value => {
+    const targetIndexOfInstances = tempData_instances.indexOf(value);
+    targetIndexOfInstances !== -1 && tempData_instances.splice(targetIndexOfInstances, 1);
+  })
+  return {
+    ...state,
+    instances: [
+      ...tempData_instances
+    ]
+  }
 }
 
 const modifyItemsCustomized = (state, action) => {
@@ -81,14 +103,27 @@ const addItemsCustomizedWhenAddInstance = (state, action) => {
   }
 }
 
+const delInstanceListByTemplateWhenDeleteTemplate = (state, action) => {
+  let tempData_instanceListByTemplate = [ ...state.instanceListByTemplate ];
+  const targetIndexOfInstanceListByTemplate = tempData_instanceListByTemplate.indexOf(action.targetData.templateId);
+  targetIndexOfInstanceListByTemplate !== -1 && tempData_instanceListByTemplate.splice(targetIndexOfInstanceListByTemplate, 1);
+  return {
+    ...state,
+    instanceListByTemplate: [
+      ...tempData_instanceListByTemplate
+    ]
+  }
+}
+
 const delItemsCustomized = (state, action) => {
   let tempData_itemsCustomized = [ ...state.itemsCustomized ];
   action.targetData.items.map(value => {
-    let targetIndexOfItemsCustomized = tempData_itemsCustomized.indexOf(value);
-    targetIndexOfItemsCustomized !== -1 && (tempData_itemsCustomized = [
-      ...tempData_itemsCustomized.slice(0, targetIndexOfItemsCustomized),
-      ...tempData_itemsCustomized.slice(targetIndexOfItemsCustomized + 1)
-    ]);
+    const targetIndexOfItemsCustomized = tempData_itemsCustomized.indexOf(value);
+    // targetIndexOfItemsCustomized !== -1 && (tempData_itemsCustomized = [
+    //   ...tempData_itemsCustomized.slice(0, targetIndexOfItemsCustomized),
+    //   ...tempData_itemsCustomized.slice(targetIndexOfItemsCustomized + 1)
+    // ]);
+    targetIndexOfItemsCustomized !== -1 && tempData_itemsCustomized.splice(targetIndexOfItemsCustomized, 1);
   })
   return {
     ...state,
@@ -126,6 +161,20 @@ const delItem = (state, action) => ({
   ]
 })
 
+const delItemMulti = (state, action) => {
+  let tempData_items = [ ...state.items ];
+  action.targetData.items.map(value => {
+    const targetIndexOfItems = tempData_items.indexOf(parseInt(value));
+    targetIndexOfItems !== -1 && tempData_items.splice(targetIndexOfItems, 1);
+  })
+  return {
+    ...state,
+    items: [
+      ...tempData_items
+    ]
+  }
+}
+
 const addTemplateCategory = (state, action) => ({
   ...state,
   templateCategories: state.templateCategories.concat(action.lastId + 1)
@@ -143,12 +192,15 @@ export default function resultReducer(state, action) {
     [types.DELETE_TEMPLATE]: delTemplate,
     [types.ADD_INSTANCE]: addInstance,
     [types.DELETE_INSTANCE]: deleteInstance,
+    [types.DELETE_INSTANCE_MULTI]: delInstanceMulti,
     [types.MODIFY_ITEMS_CUSTOMIZED]: modifyItemsCustomized,
     [types.ADD_ITEMS_CUSTOMIZED]: addItemsCustomized,
     [types.ADD_ITEMS_CUSTOMIZED_WHEN_ADD_INSTNACE]: addItemsCustomizedWhenAddInstance,
+    [types.DELETE_INSTANCE_LIST_BY_TEMPLATE_WHEN_DELETE_TEMPLATE]: delInstanceListByTemplateWhenDeleteTemplate,
     [types.DEL_ITEMS_CUSTOMIZED]: delItemsCustomized,
     [types.ADD_ITEM]: addItem,
     [types.DEL_ITEM]: delItem,
+    [types.DEL_ITEM_MULTI]: delItemMulti,
     [types.ADD_TEMPLATE_CATEGORY]: addTemplateCategory,
     [types.DEL_TEMPLATE_CATEGORY]: delTemplateCategory,
     [types.INITIATE_NORMALIZED_DATA_INPUT]: normalizedDataInput
