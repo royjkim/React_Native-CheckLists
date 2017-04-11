@@ -170,7 +170,8 @@ export function modifyInstance(targetInstanceId, data) {
 export function modifyItemsCustomized(targetData) {
   return {
     type: types.MODIFY_ITEMS_CUSTOMIZED,
-    targetData
+    targetData,
+    targetInstanceId: Object.values(targetData).slice(0)[0].instanceId
   }
 }
 

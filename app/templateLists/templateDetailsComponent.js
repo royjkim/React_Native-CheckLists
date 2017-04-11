@@ -49,6 +49,27 @@ export default class TemplateDetailsComponent extends React.Component {
     this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
   }
 
+  componentWillMount() {
+    this.props.state.existOrNot_chosenTemplate || Alert.alert(
+      'Template Deleted',
+      'Current Template Deleted. Page would be move to back.',
+      [
+        { text: 'Confirm', onPress: () => this.props.navigator.pop() }
+      ]
+    );
+  }
+
+  componentWillUpdate(nextProps) {
+    // Below could be cause ignoring 'navigate prevent data' which is to be canceled.
+    nextProps.state.existOrNot_chosenTemplate || Alert.alert(
+      'Template Deleted',
+      'Current Template Deleted. Page would be move to back.',
+      [
+        { text: 'Confirm', onPress: () => this.props.navigator.pop() }
+      ]
+    );
+  }
+
   componentDidUpdate() {
     // console.log(`componentDidUpdate - this.props : `, this.props)
     // console.log(`componentDidUpdate - this.state : `, this.state)
@@ -367,7 +388,7 @@ export default class TemplateDetailsComponent extends React.Component {
               />
             </View>
             )}
-        <View style={{ height: 10 }}/>
+        <View style={{ height: 10 }} />
         <Button
           title={`Show Instances of this templates(${state.instancesOfChosenTemplate.length})`}
           backgroundColor='#6296F9'
@@ -391,6 +412,12 @@ export default class TemplateDetailsComponent extends React.Component {
               component: InstanceListContainer,
             }
           )}
+        />
+        <View style={{ height: 10 }} />
+        <Button
+          icon={{ name: 'delete-forever' }}
+          title='Delete template'
+          onPress={() => alert('delete template')}
         />
         <Modal
           animationType={'slide'}

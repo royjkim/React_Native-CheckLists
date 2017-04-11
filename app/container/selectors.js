@@ -96,10 +96,6 @@ let dataInputHistory = {
     past: [],
     // present: [], future: []
   },
-  make_get_instancesOfChosenTemplate: {
-    past: [],
-    // present: [], future: []
-  },
   make_get_itemsOfChosenTemplate: {
     past: [],
     // present: [], future: []
@@ -168,10 +164,6 @@ let dataResultHistory = {
     // present: [], future: []
   },
   make_get_badgeValueOfStatusOfAllInstances: {
-    past: [],
-    // present: [], future: []
-  },
-  make_get_instancesOfChosenTemplate: {
     past: [],
     // present: [], future: []
   },
@@ -368,12 +360,14 @@ const make_get_badgeValueOfInstancesOfChosenTemplates = () => createSelector(
 )
 
 const make_get_instancesOfChosenTemplate = () => createSelector(
+  items,
   instances,
   chosenTemplate,
   searchBarTextInstancesOfChosenTemplate,
-  (instances, chosenTemplate, searchBarText) => {
-    const currentAttr = 'make_get_instancesOfChosenTemplate'
-    compareInputHistory(currentAttr, instances, chosenTemplate, searchBarText)
+  (items, instances, chosenTemplate, searchBarText) => {
+    const currentAttr = 'make_get_instancesOfChosenTemplate';
+    chosenTemplate.items = chosenTemplate.items.filter(value => items.hasOwnProperty(value));
+    compareInputHistory(currentAttr, instances, items, chosenTemplate, searchBarText)
     const tempResult = Object.values(instances).filter(value => value.template == chosenTemplate.templateId && value.name.toLowerCase().includes(searchBarText))
     addResultHistory(currentAttr, tempResult)
     return tempResult
@@ -452,7 +446,8 @@ const make_get_itemsCustomizedOfChosenInstance = () => createSelector(
   itemsCustomized,
   chosenInstance,
   (itemsCustomized, chosenInstance) => {
-    const currentAttr = 'make_get_itemsCustomizedOfChosenInstance'
+    const currentAttr = 'make_get_itemsCustomizedOfChosenInstance';
+    chosenInstance.items = chosenInstance.items.filter(value => itemsCustomized.hasOwnProperty(value));
     compareInputHistory(currentAttr, itemsCustomized, chosenInstance)
     let tempResult = []
     chosenInstance.items.map(data => {

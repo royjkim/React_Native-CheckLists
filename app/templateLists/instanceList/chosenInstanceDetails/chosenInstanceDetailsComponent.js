@@ -236,6 +236,7 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
             dataSource={state.dataSourceItemsCustomizedOfChosenInstance}
             renderRow={renderRow}
             enableEmptySections={true}
+            removeClippedSubviews={false}
             style={{ maxHeight: 200 }}
           />
         </List>

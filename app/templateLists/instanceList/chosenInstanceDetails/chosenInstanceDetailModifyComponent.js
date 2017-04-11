@@ -90,7 +90,7 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
     const { chosenInstance } = route.passProps;
     const changeItemText = (tempItemText, rowData, rowId, emptyStatusBoolean) => {
       const commonFn = () => this.setState(prevState => {
-        rowId in prevState.tempItems && (prevState.prevItems[rowData.itemCustomizedId].desc == tempItemText ?
+        rowId in prevState.tempItems && (prevState.tempItems[rowData.itemCustomizedId].desc == tempItemText ?
           (prevState.modifyExistingItems.hasOwnProperty(rowData.itemCustomizedId) && delete prevState.modifyExistingItems[rowData.itemCustomizedId])
             : prevState.modifyExistingItems[rowData.itemCustomizedId] = {
                 ...prevState.tempItems[rowData.itemCustomizedId],
@@ -101,6 +101,7 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
         prevState.changeValue_items = !isEqual(prevState.tempItems, prevState.prevItems);
         prevState.changeValue_items && (prevState.dataSourceItemsCustomizedOfChosenInstance = this.ds.cloneWithRows(prevState.tempItems));
       });
+      commonFn();
       emptyStatusBoolean && Object.keys(this.state.modifyExistingItems).length >= Object.keys(this.state.tempItems).length && Alert.alert(
         'Delete Disable',
         'Each Template should have at least 1 item.',
@@ -108,15 +109,17 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
           {
             text: 'Confirm', onPress: () => {
               this.setState(prevState => {
-                prevState.tempItems.hasOwnProperty(rowData.itemCustomizedId) && (prevState.tempItems[rowData.itemCustomizedId].desc = prevState.prevItems[rowData.itemCustomizedId].desc);
-                prevStae.modifyExistingItems.hasOwnProperty(rowData.itemCustomizedId) && delete prevState.modifyExistingItems[rowData.itemCustomizedId];
+                prevState.prevItems.hasOwnProperty(rowData.itemCustomizedId) && (prevState.tempItems[rowData.itemCustomizedId].desc = prevState.prevItems[rowData.itemCustomizedId].desc);
+                prevState.modifyExistingItems.hasOwnProperty(rowData.itemCustomizedId) && delete prevState.modifyExistingItems[rowData.itemCustomizedId];
+                prevState.changeValue_items = !isEqual(prevState.tempItems, prevState.prevItems);
+                prevState.changeValue_items && (prevState.dataSourceItemsCustomizedOfChosenInstance = this.ds.cloneWithRows(prevState.tempItems));
               });
               return null
             }
           }
         ]
       );
-      commonFn();
+      // commonFn();
       }
     const renderRow = (rowData, sectionId, rowId) => <View
       style={{
@@ -368,7 +371,7 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
                   prevState.modifyExistingItems = {};
                   let tempData_newAddedItemsCustomized = [];
                   for(let key in prevState.tempItems) {
-                    prevState.tempItems[key].desc = prevState.tempItems[key].desc.trim();
+                    prevState.tempItems[key].desc == '' ? delete prevState.tempItems[key] : prevState.tempItems[key].desc = prevState.tempItems[key].desc.trim();
                     // key in prevState.prevItems || addItemsCustomized(state.lastId, prevState.tempItems[key]);
                     key in prevState.prevItems || tempData_newAddedItemsCustomized.push(prevState.tempItems[key]);
                   }

@@ -21,10 +21,30 @@ const addInstance = (state, action) => ({
   ]
 })
 
-// const addInstanceThenAddOnResult = (state, action) => ({
-//   ...state,
-//   [action.attr]: state[action.attr].concat(action.newAddedItemsCustomized)
-// })
+const modifyItemsCustomized = (state, action) => {
+  let tempData_itemsCustomized = [ ...state.itemsCustomized ],
+      toBeDeletedItemsCustomized = [];
+  for(let key in action.targetData) {
+    if(action.targetData[key].desc == '') {
+      toBeDeletedItemsCustomized.push(action.targetData[key].itemCustomizedId);
+        const deleteTargetIndex = tempData_itemsCustomized.indexOf(action.targetData[key].itemCustomizedId);
+        tempData_itemsCustomized = [
+          ...tempData_itemsCustomized.slice(0, deleteTargetIndex),
+          ...tempData_itemsCustomized.slice(deleteTargetIndex + 1)
+        ];
+    };
+  }
+  return toBeDeletedItemsCustomized.length > 0 ? {
+    ...state,
+    itemsCustomized: [
+      ...tempData_itemsCustomized
+    ]
+  } : state;
+  // return {
+  //   ...state,
+  //
+  // }
+}
 
 const addItemsCustomized = (state, action) => ({
   ...state,
@@ -94,7 +114,7 @@ export default function resultReducer(state, action) {
     [types.ADD_TEMPLATE]: addTemplate,
     [types.DELETE_TEMPLATE]: delTemplate,
     [types.ADD_INSTANCE]: addInstance,
-    // [types.ADD_INSTANCE_THEN_ADD_ON_RESULT]: addInstanceThenAddOnResult,
+    [types.MODIFY_ITEMS_CUSTOMIZED]: modifyItemsCustomized,
     [types.ADD_ITEMS_CUSTOMIZED]: addItemsCustomized,
     [types.ADD_ITEMS_CUSTOMIZED_WHEN_ADD_INSTNACE]: addItemsCustomizedWhenAddInstance,
     [types.DELETE_INSTANCE]: deleteInstance,

@@ -47,7 +47,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
       stateProps.state.itemsCustomizedOfChosenInstance.map(value => tempResult[value.itemCustomizedId] = { ...value })
       return tempResult
     })(),
-    lastOrderNum: stateProps.state.itemsCustomizedOfChosenInstance.slice(-1)[0].orderNum
+    lastOrderNum: stateProps.state.itemsCustomizedOfChosenInstance.length > 0 ? stateProps.state.itemsCustomizedOfChosenInstance.slice(-1)[0].orderNum : 0
   },
   ...dispatchProps
 })

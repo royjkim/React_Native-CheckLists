@@ -162,25 +162,73 @@ const addItemsCustomizedWhenAddInstance = (state, action) => {
 }
 
 const modifyItemsCustomized = (state, action) => {
-  let tempData_itemsCustomized = { ...state.itemsCustomized };
+  let tempData_itemsCustomized = { ...state.itemsCustomized },
+      // tempData_instancesOfTargetData = {},
+      // targetDataInstanceId = action.targetInstanceId,
+      deletedStatus = false,
+      tempData_instancesOfTargetData = { ...state.instances[action.targetInstanceId] };
+
   for(let key in action.targetData) {
-    tempData_itemsCustomized[action.targetData[key].itemCustomizedId] = {
-      ...action.targetData[key],
-      status: state.itemsCustomized[action.targetData[key].itemCustomizedId].status
+    if(action.targetData[key].desc == '') {
+      delete tempData_itemsCustomized[key];
+      // targetDataInstanceId = action.targetData[key].instanceId;
+      // console.log('action.targetInstanceId : ', action.targetInstanceId);
+
+      // console.log(`tempData_instancesOfTargetData : ${JSON.stringify(tempData_instancesOfTargetData, null, 1)}`)
+      // console.log('tempData_instancesOfTargetData.items : ', tempData_instancesOfTargetData.items);
+      console.log(`before - tempData_instancesOfTargetData : ${JSON.stringify(tempData_instancesOfTargetData, null, 1)}`)
+      const targetIndexOfItemOfInstance = tempData_instancesOfTargetData.items.indexOf(parseInt(key));
+      console.log(`the value want to find - key : ${key}, targetIndexOfItemOfInstance : ${targetIndexOfItemOfInstance}`);
+      targetIndexOfItemOfInstance !== -1 && (tempData_instancesOfTargetData.items = [
+        ...tempData_instancesOfTargetData.items.slice(0, targetIndexOfItemOfInstance),
+        ...tempData_instancesOfTargetData.items.slice(targetIndexOfItemOfInstance + 1)
+      ], deletedStatus = true);
+      console.log(`after - tempData_instancesOfTargetData : ${JSON.stringify(tempData_instancesOfTargetData, null, 1)}`)
+      console.log('tempData_instancesOfTargetData.items : ', tempData_instancesOfTargetData.items);
+    } else {
+      tempData_itemsCustomized[action.targetData[key].itemCustomizedId] = {
+        ...action.targetData[key],
+        status: state.itemsCustomized[action.targetData[key].itemCustomizedId].status
+      };
     }
+
+
+    // action.targetData[key].desc == '' ? (delete tempData_itemsCustomized[action.targetData[key].itemCustomizedId],
+    //   ) : tempData_itemsCustomized[action.targetData[key].itemCustomizedId] = {
+    //   ...action.targetData[key],
+    //   status: state.itemsCustomized[action.targetData[key].itemCustomizedId].status
+    // }
   };
-  return {
+  return deletedStatus ? {
+    ...state,
+    instances: {
+      ...state.instances,
+      [action.targetInstanceId]: {
+        // ...state.instances[targetDataInstanceId],
+        ...tempData_instancesOfTargetData
+      }
+    },
+    itemsCustomized: {
+      ...tempData_itemsCustomized
+    }
+  } : {
     ...state,
     itemsCustomized: {
-      ...state.itemsCustomized,
       ...tempData_itemsCustomized
-      // ...action.targetData,
-      // [action.targetData.itemCustomizedId]: {
-      //   ...action.targetData,
-      //   status: !action.targetData.status
-      // }
     }
   }
+  // return {
+  //   ...state,
+  //   itemsCustomized: {
+  //     // ...state.itemsCustomized,
+  //     ...tempData_itemsCustomized
+  //     // ...action.targetData,
+  //     // [action.targetData.itemCustomizedId]: {
+  //     //   ...action.targetData,
+  //     //   status: !action.targetData.status
+  //     // }
+  //   }
+  // }
 }
 
 const changeStatusOfItemsCustomized = (state, action) => ({
