@@ -145,13 +145,26 @@ export function addItemsCustomized(lastId, newData) {
   }
 }
 
-function internal_delInstance() {
-
+export function delItemsCustomized(targetData) {
+  return {
+    type: types.DEL_ITEMS_CUSTOMIZED,
+    targetData
+  }
 }
 
-export function delInstance() {
-  return {
-    type: types.DELETE_INSTANCE
+const internal_delInstance = targetData => ({
+  type: types.DELETE_INSTANCE,
+  targetData
+});
+
+export function delInstance(targetData) {
+  // return {
+  //   type: types.DELETE_INSTANCE,
+  //   targetData
+  // }
+  return dispatch => {
+    dispatch(internal_delInstance(targetData));
+    dispatch(delItemsCustomized(targetData));
   }
 }
 

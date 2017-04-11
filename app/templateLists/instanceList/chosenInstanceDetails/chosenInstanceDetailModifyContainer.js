@@ -6,7 +6,8 @@ import {
   modifyTemplate,
   modifyInstance,
   modifyItemsCustomized,
-  addItemsCustomized
+  addItemsCustomized,
+  delInstance,
 } from '../../../actions/dataActionCreators';
 import ChosenInstanceDetailModifyComponent from './chosenInstanceDetailModifyComponent'
 import { connect } from 'react-redux'
@@ -33,7 +34,8 @@ const mapDispatchToProps = dispatch => ({
   modifyTemplate: (targetTemplateId, data) => dispatch(modifyTemplate(targetTemplateId, data)),
   modifyInstance: (targetInstanceId, data) => dispatch(modifyInstance(targetInstanceId, data)),
   modifyItemsCustomized: targetData => dispatch(modifyItemsCustomized(targetData)),
-  addItemsCustomized: (lastId, newData) => dispatch(addItemsCustomized(lastId, newData))
+  addItemsCustomized: (lastId, newData) => dispatch(addItemsCustomized(lastId, newData)),
+  delInstance: targetData => dispatch(delInstance(targetData))
 })
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => ({

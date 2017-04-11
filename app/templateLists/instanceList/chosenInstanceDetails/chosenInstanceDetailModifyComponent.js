@@ -41,7 +41,6 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
     };
     this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
   }
-
   componentWillMount() {
     // console.log('componentWillMount - this.state : ', this.state);
     // console.log('componentWillMount - this.props : ', this.props);
@@ -60,9 +59,11 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
           navigatePreventFn = this.props.navigatePreventFn,
           triedNavigateWhenPreventedFn = this.props.triedNavigateWhenPreventedFn;
 
-    // Below is for determining of save button visible.
-    !this.state.saveButtonVisible && (this.state.changeValue_tempInstanceName || this.state.changeValue_tempTemplateTitle || this.state.changeValue_items) && this.setState({ saveButtonVisible: true });
-    this.state.saveButtonVisible && !this.state.changeValue_tempInstanceName && !this.state.changeValue_tempTemplateTitle && !this.state.changeValue_items && (this.setState({ saveButtonVisible: false }));
+    // // Below is for determining of save button visible.
+    // !this.state.saveButtonVisible && (this.state.changeValue_tempInstanceName || this.state.changeValue_tempTemplateTitle || this.state.changeValue_items) && this.setState({ saveButtonVisible: true });
+    // this.state.saveButtonVisible && !this.state.changeValue_tempInstanceName && !this.state.changeValue_tempTemplateTitle && !this.state.changeValue_items && (this.setState({ saveButtonVisible: false }));
+
+    this.checkIfNavigatePreventOrNot();
 
     // Below is for alert let an user know 'save before navigate', then make redux 'alert completed'.
     triedNavigateWhenPrevented[__navigatorRouteID] && (
@@ -75,6 +76,27 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
         (alert('press save button to save changed template name.'), triedNavigateWhenPreventedFn(parentTab, false))
           : this.state.changeValue_tempInstanceName && (alert('press save button to save changed instance name.'), triedNavigateWhenPreventedFn(parentTab, false)));
   }
+  checkIfNavigatePreventOrNot() {
+    const __navigatorRouteID = this.props.route.__navigatorRouteID,
+          parentTab = this.props.route.passProps.parentTab,
+          navigatePrevent = this.props.state.navigatePrevent,
+          triedNavigateWhenPrevented = this.props.state.triedNavigateWhenPrevented,
+          navigatePreventFn = this.props.navigatePreventFn,
+          triedNavigateWhenPreventedFn = this.props.triedNavigateWhenPreventedFn;
+
+    // Below is for alert let an user know 'save before navigate', then make redux 'alert completed'.
+    (this.state.changeValue_tempInstanceName || this.state.changeValue_tempTemplateTitle || this.state.changeValue_items) && (
+      navigatePrevent[__navigatorRouteID] || navigatePreventFn(__navigatorRouteID, true),
+      navigatePrevent[parentTab] || navigatePreventFn(parentTab, true),
+      this.state.saveButtonVisible || this.setState({ saveButtonVisible: true }));
+
+    (!this.state.changeValue_tempInstanceName && !this.state.changeValue_tempTemplateTitle && !this.state.changeValue_items) && (
+      navigatePrevent[__navigatorRouteID] && navigatePreventFn(__navigatorRouteID, false),
+      navigatePrevent[parentTab] && navigatePreventFn(parentTab, false),
+      this.state.saveButtonVisible && this.setState({ saveButtonVisible: false }));
+
+  };
+
   render() {
     const {
       route,
@@ -86,6 +108,7 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
       modifyInstance,
       modifyItemsCustomized,
       addItemsCustomized,
+      delInstance,
     } = this.props
     const { chosenInstance } = route.passProps;
     const changeItemText = (tempItemText, rowData, rowId, emptyStatusBoolean) => {
@@ -396,6 +419,27 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
             />
           </View>
         )}
+        <View
+          style={{ height: 10 }}
+        />
+        <Button
+          icon={{ name: 'delete' }}
+          title='delete'
+          backgroundColor='#FF7F7C'
+          onPress={() => Alert.alert(
+            'Delete Confirm',
+            `This instance (${this.state.prev_instanceName}) would be deleted. It couldn't restore after deleted.`,
+            [
+              { text: 'Cancel Delete' },
+              { text: 'Confirm Delete', onPress: () => {
+                  delInstance(route.passProps.chosenInstance);
+                  this.checkIfNavigatePreventOrNot();
+                  navigator.pop();
+                }
+              }
+            ]
+          )}
+        />
       </View>
     )
   }

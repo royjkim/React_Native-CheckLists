@@ -21,6 +21,21 @@ const addInstance = (state, action) => ({
   ]
 })
 
+const deleteInstance = (state, action) => {
+  let tempData_instances = [ ...state.instances ];
+  const targetIndexOfInstance = tempData_instances.indexOf(action.targetData.instanceId);
+  targetIndexOfInstance !== -1 && (tempData_instances = [
+    ...tempData_instances.slice(0, targetIndexOfInstance),
+    ...tempData_instances.slice(targetIndexOfInstance + 1)
+  ]);
+  return targetIndexOfInstance !== -1 ? {
+    ...state,
+    instances: [
+      ...tempData_instances
+    ]
+  } : state
+}
+
 const modifyItemsCustomized = (state, action) => {
   let tempData_itemsCustomized = [ ...state.itemsCustomized ],
       toBeDeletedItemsCustomized = [];
@@ -66,9 +81,22 @@ const addItemsCustomizedWhenAddInstance = (state, action) => {
   }
 }
 
-const deleteInstance = (state, action) => ({
-
-})
+const delItemsCustomized = (state, action) => {
+  let tempData_itemsCustomized = [ ...state.itemsCustomized ];
+  action.targetData.items.map(value => {
+    let targetIndexOfItemsCustomized = tempData_itemsCustomized.indexOf(value);
+    targetIndexOfItemsCustomized !== -1 && (tempData_itemsCustomized = [
+      ...tempData_itemsCustomized.slice(0, targetIndexOfItemsCustomized),
+      ...tempData_itemsCustomized.slice(targetIndexOfItemsCustomized + 1)
+    ]);
+  })
+  return {
+    ...state,
+    itemsCustomized: [
+      ...tempData_itemsCustomized
+    ]
+  }
+}
 
 const addItem = (state, action) => {
   // Below need to be modified, to
@@ -114,10 +142,11 @@ export default function resultReducer(state, action) {
     [types.ADD_TEMPLATE]: addTemplate,
     [types.DELETE_TEMPLATE]: delTemplate,
     [types.ADD_INSTANCE]: addInstance,
+    [types.DELETE_INSTANCE]: deleteInstance,
     [types.MODIFY_ITEMS_CUSTOMIZED]: modifyItemsCustomized,
     [types.ADD_ITEMS_CUSTOMIZED]: addItemsCustomized,
     [types.ADD_ITEMS_CUSTOMIZED_WHEN_ADD_INSTNACE]: addItemsCustomizedWhenAddInstance,
-    [types.DELETE_INSTANCE]: deleteInstance,
+    [types.DEL_ITEMS_CUSTOMIZED]: delItemsCustomized,
     [types.ADD_ITEM]: addItem,
     [types.DEL_ITEM]: delItem,
     [types.ADD_TEMPLATE_CATEGORY]: addTemplateCategory,

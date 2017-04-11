@@ -18,7 +18,8 @@ const make_mapStateToProps = () => (state, ownProps) => ({
     itemsCustomizedOfChosenInstance: mySelectors.make_get_itemsCustomizedOfChosenInstance()(state.normalizeReducer, ownProps.route.passProps.chosenInstance),
     statusPicker: state.configReducer.picker,
     navigatePrevent: state.configReducer.navigatePrevent,
-    triedNavigateWhenPrevented: state.configReducer.triedNavigateWhenPrevented
+    triedNavigateWhenPrevented: state.configReducer.triedNavigateWhenPrevented,
+    existOrNot_chosenInstance: state.normalizeReducer.entities.instances.hasOwnProperty(ownProps.route.passProps.chosenInstance.instanceId)
   },
   route: ownProps.route,
   navigator: ownProps.navigator

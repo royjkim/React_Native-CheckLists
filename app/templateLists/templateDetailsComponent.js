@@ -52,7 +52,7 @@ export default class TemplateDetailsComponent extends React.Component {
   componentWillMount() {
     this.props.state.existOrNot_chosenTemplate || Alert.alert(
       'Template Deleted',
-      'Current Template Deleted. Page would be move to back.',
+      'Because of Current Template Deleted. Page would be directed to back.',
       [
         { text: 'Confirm', onPress: () => this.props.navigator.pop() }
       ]
@@ -63,7 +63,7 @@ export default class TemplateDetailsComponent extends React.Component {
     // Below could be cause ignoring 'navigate prevent data' which is to be canceled.
     nextProps.state.existOrNot_chosenTemplate || Alert.alert(
       'Template Deleted',
-      'Current Template Deleted. Page would be move to back.',
+      'Because of Current Template Deleted. Page would be directed to back.',
       [
         { text: 'Confirm', onPress: () => this.props.navigator.pop() }
       ]

@@ -64,9 +64,16 @@ const delTemplate = (state, action) => ({
 
 })
 
-const deleteInstance = (state, action) => ({
-
-})
+const deleteInstance = (state, action) => {
+  let tempData_instances = { ...state.instances };
+  delete tempData_instances[action.targetData.instanceId];
+  return {
+    ...state,
+    instances: {
+      ...tempData_instances
+    }
+  }
+}
 
 const modifyInstance = (state, action) => ({
   ...state,
@@ -139,72 +146,54 @@ const addItemsCustomizedWhenAddInstance = (state, action) => {
     tempData_instances[action.newData.instanceId].items.push(tempData_newAddedItemsCustomized[key].itemCustomizedId)
   };
   return {
-      ...state,
-      // instances: {
-      //   ...state.instances,
-      //   [action.newData.instanceId]: {
-      //     ...state.instances[action.newData.instanceId],
-      //     items: [
-      //       ...state.instances[action.newData.instanceId].items,
-      //       ...tempData_itemsCustomized.map(value => value.itemsCustomizedId)
-      //     ]
-      //   }
-      // },
-      instances: {
-        ...tempData_instances
-      },
-      itemsCustomized: {
-        ...state.itemsCustomized,
-        ...tempData_newAddedItemsCustomized
-        // ...tempData_itemsCustomized
-      }
+    ...state,
+    instances: {
+      ...tempData_instances
+    },
+    itemsCustomized: {
+      ...state.itemsCustomized,
+      ...tempData_newAddedItemsCustomized
+    }
+  }
 }
+const delItemsCustomized = (state, action) => {
+  let tempData_itemsCustomized = { ...state.itemsCustomized };
+  action.targetData.items.map(value => {
+    delete tempData_itemsCustomized[value]
+  });
+  return {
+    ...state,
+    itemsCustomized: {
+      ...tempData_itemsCustomized
+    }
+  }
 }
 
 const modifyItemsCustomized = (state, action) => {
   let tempData_itemsCustomized = { ...state.itemsCustomized },
-      // tempData_instancesOfTargetData = {},
-      // targetDataInstanceId = action.targetInstanceId,
       deletedStatus = false,
       tempData_instancesOfTargetData = { ...state.instances[action.targetInstanceId] };
 
   for(let key in action.targetData) {
     if(action.targetData[key].desc == '') {
       delete tempData_itemsCustomized[key];
-      // targetDataInstanceId = action.targetData[key].instanceId;
-      // console.log('action.targetInstanceId : ', action.targetInstanceId);
-
-      // console.log(`tempData_instancesOfTargetData : ${JSON.stringify(tempData_instancesOfTargetData, null, 1)}`)
-      // console.log('tempData_instancesOfTargetData.items : ', tempData_instancesOfTargetData.items);
-      console.log(`before - tempData_instancesOfTargetData : ${JSON.stringify(tempData_instancesOfTargetData, null, 1)}`)
       const targetIndexOfItemOfInstance = tempData_instancesOfTargetData.items.indexOf(parseInt(key));
-      console.log(`the value want to find - key : ${key}, targetIndexOfItemOfInstance : ${targetIndexOfItemOfInstance}`);
       targetIndexOfItemOfInstance !== -1 && (tempData_instancesOfTargetData.items = [
         ...tempData_instancesOfTargetData.items.slice(0, targetIndexOfItemOfInstance),
         ...tempData_instancesOfTargetData.items.slice(targetIndexOfItemOfInstance + 1)
       ], deletedStatus = true);
-      console.log(`after - tempData_instancesOfTargetData : ${JSON.stringify(tempData_instancesOfTargetData, null, 1)}`)
-      console.log('tempData_instancesOfTargetData.items : ', tempData_instancesOfTargetData.items);
     } else {
       tempData_itemsCustomized[action.targetData[key].itemCustomizedId] = {
         ...action.targetData[key],
         status: state.itemsCustomized[action.targetData[key].itemCustomizedId].status
       };
     }
-
-
-    // action.targetData[key].desc == '' ? (delete tempData_itemsCustomized[action.targetData[key].itemCustomizedId],
-    //   ) : tempData_itemsCustomized[action.targetData[key].itemCustomizedId] = {
-    //   ...action.targetData[key],
-    //   status: state.itemsCustomized[action.targetData[key].itemCustomizedId].status
-    // }
   };
   return deletedStatus ? {
     ...state,
     instances: {
       ...state.instances,
       [action.targetInstanceId]: {
-        // ...state.instances[targetDataInstanceId],
         ...tempData_instancesOfTargetData
       }
     },
@@ -410,6 +399,7 @@ export default function resultReducer(state = initialState, action) {
     [types.MODIFY_INSTANCE]: modifyInstance,
     [types.ADD_ITEMS_CUSTOMIZED]: addItemsCustomized,
     [types.ADD_ITEMS_CUSTOMIZED_WHEN_ADD_INSTNACE]: addItemsCustomizedWhenAddInstance,
+    [types.DEL_ITEMS_CUSTOMIZED]: delItemsCustomized,
     [types.MODIFY_ITEMS_CUSTOMIZED]: modifyItemsCustomized,
     [types.CHANGE_STATUS_OF_ITEMS_CUSTOMIZED]: changeStatusOfItemsCustomized,
     [types.ADD_ITEM]: addItem,
