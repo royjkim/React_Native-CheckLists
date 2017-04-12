@@ -424,7 +424,7 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
         />
         <Button
           icon={{ name: 'delete' }}
-          title='delete'
+          title='delete instance'
           backgroundColor='#FF7F7C'
           onPress={() => Alert.alert(
             'Delete Confirm',

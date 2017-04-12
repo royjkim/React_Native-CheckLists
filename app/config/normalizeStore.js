@@ -40,41 +40,31 @@ const addItemsCustomized = (prevData, ...newData) => ({
   ]
 })
 
-const make_instanceListByTemplate = (prevData, ...newData) => ({
-  ...prevData,
-  instanceListByTemplate: [
-    ...prevData.instanceListByTemplate,
-    ...newData
-  ]
-})
-
 const my_normalize = prevData => {
   const itemsEntity = new schema.Entity('items', {
-    templateId: templatesEntity
-  }, { idAttribute: 'itemId' });
-  const itemsCustomizedEntity = new schema.Entity('itemsCustomized', {}, { idAttribute: 'itemCustomizedId' });
-  const templatesEntity = new schema.Entity('templates', {
-          items: [ itemsEntity ],
-        }, { idAttribute: 'templateId' });
+          templateId: templatesEntity
+        }, { idAttribute: 'itemId' }),
+      itemsCustomizedEntity = new schema.Entity('itemsCustomized', {}, { idAttribute: 'itemCustomizedId' });
+  let templatesEntity = new schema.Entity('templates', {
+        items: [ itemsEntity ],
+      }, { idAttribute: 'templateId' });
   const instancesEntity = new schema.Entity('instances', {
           template: templatesEntity,
           items: [ itemsCustomizedEntity ],
         }, { idAttribute: 'instanceId' });
-        templateCategoriesEntity = new schema.Entity('templateCategories');
-  const instanceListByTemplateEntity = new schema.Entity('instanceListByTemplate', {
-          templateId: templatesEntity,
-          instances: [ instancesEntity ]
-        }, { idAttribute: 'templateId' });
-  const mySchema = new schema.Object({
+  templatesEntity = new schema.Entity('templates', {
+    items: [ itemsEntity ],
+    instances: [ instancesEntity ]
+  }, { idAttribute: 'templateId' });
+  const templateCategoriesEntity = new schema.Entity('templateCategories'),
+        mySchema = new schema.Object({
           templates: [ templatesEntity ],
           items: [ itemsEntity ],
           instances: [ instancesEntity ],
           itemsCustomized: [ itemsCustomizedEntity ],
           templateCategories: [ templateCategoriesEntity ],
-          instanceListByTemplate: [ instanceListByTemplateEntity ]
         });
-  const normalizedData = normalize(prevData, mySchema);
-  return normalizedData
+  return normalize(prevData, mySchema)
 }
 
 const normalizeStore = {
@@ -84,7 +74,6 @@ const normalizeStore = {
   addCategory,
   addItemsCustomized,
   my_normalize,
-  make_instanceListByTemplate
 }
 
 export default normalizeStore

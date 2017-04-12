@@ -246,8 +246,8 @@ const make_get_dataSourceTemplates = () => createSelector(
   templates,
   searchBarTextTemplateList,
   (templates, searchBarText) => {
-    const currentAttr = 'make_get_dataSourceTemplates'
-    compareInputHistory(currentAttr, templates, searchBarText)
+    const currentAttr = 'make_get_dataSourceTemplates';
+    compareInputHistory(currentAttr, templates, searchBarText);
     return make_dataSource_cloneWithRows(currentAttr, Object.values(templates).filter(value => value.title.toLowerCase().includes(searchBarText)).sort((data1, data2) => data2.templateId - data1.templateId))
   }
 )

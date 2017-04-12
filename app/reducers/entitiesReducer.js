@@ -1,4 +1,5 @@
 import types from '../actions/dataActions'
+import { cloneDeep } from 'lodash';
 
 const initialState = {
   entities: {
@@ -7,7 +8,7 @@ const initialState = {
     items: [],
     templateCategories: []
   }
-}
+};
 
 const addTemplate = (state, action) => {
   return {
@@ -72,47 +73,25 @@ const delTemplate = (state, action) => {
 }
 
 const deleteInstance = (state, action) => {
-  let tempData_instances = { ...state.instances };
+  let tempData_instances = { ...state.instances },
+      tempData_templates = { ...state.templates };
   delete tempData_instances[action.targetData.instanceId];
+  const targetIndexOfInstanceOfTemplate = tempData_templates[action.targetData.templateId].instances.indexOf(parseInt(action.targetData.instanceId));
+  targetIndexOfInstanceOfTemplate !== -1 && tempData_templates[action.targetData.templateId].instances.splice(targetIndexOfInstanceOfTemplate, 1);
   return {
     ...state,
     instances: {
       ...tempData_instances
+    },
+    templates: {
+      ...tempData_templates
     }
   }
 }
 
-const delInstanceListByTemplateWhenDeleteInstance = (state, action) => {
-  let tempData_instanceListByTemplate = { ...state.instanceListByTemplate[action.targetData.templateId] };
-  const targetIndexOfInstanceListByTemplate = tempData_instanceListByTemplate.instances.indexOf(action.targetData.instanceId);
-  tempData_instanceListByTemplate.items.splice(targetIndexOfInstanceListByTemplate, 1);
-  return {
-    ...state,
-    instanceListByTemplate: {
-      ...state.instanceListByTemplate,
-      [action.targetData.templateId]: {
-        ...tempData_instanceListByTemplate
-      }
-    }
-  }
-}
-
-const delInstanceListByTemplateWhenDeleteTemplate = (state, action) => {
-  let tempData_instanceListByTemplate = { ...state.instanceListByTemplate };
-  tempData_instanceListByTemplate.hasOwnProperty(action.targetData.templateId) && delete tempData_instanceListByTemplate[action.targetData.templateId];
-  return {
-    ...state,
-    instanceListByTemplate: {
-      ...tempData_instanceListByTemplate
-    }
-  }
-}
-
-const delInstanceMulti = (state, action) => {
-  // action.targetTemplate,
-  // action.targetInstances
+const delInstanceWhenDeleteTemplate = (state, action) => {
   let tempData_instances = { ...state.instances };
-  action.targetInstances.map(value => {
+  action.targetData.instances.map(value => {
     tempData_instances.hasOwnProperty(value) && delete tempData_instances[value]
   })
   return {
@@ -133,16 +112,6 @@ const modifyInstance = (state, action) => ({
     }
   }
 })
-
-// export function addItemsCustomized(lastId, newData, newAddedItemsCustomized) {
-//   return {
-//     type: types.ADD_ITEMS_CUSTOMIZED,
-//     attr: 'itemsCustomized',
-//     lastId: lastId.itemsCustomized,
-//     newData,
-//     newAddedItemsCustomized
-//   }
-// }
 
 const addItemsCustomized = (state, action)  => {
   const chosenInstanceId = action.newData[0].instanceId;
@@ -282,7 +251,7 @@ const changeStatusOfItemsCustomized = (state, action) => ({
 const addItem = (state, action) => {
   // console.log('reducer - action.newData : ', action.newData);
   // (action.newData instanceof Array) ? const tempData_items = ((tempResult = {}) => {
-  //   action.newData.map(value => tempResult[value.itemId] = value);
+  //   action.DEL_ITEM_MULTI_WHEN_DEL_TEMPLATE_WHEN_DEL_TEMPLATElue => tempResult[value.itemId] = value);
   //   return tempResult
   // })() : null
 
@@ -416,7 +385,7 @@ const delItem = (state, action) => {
   }
 }
 
-const delItemMulti = (state, action) => {
+const delItemWhenDeleteTemplate = (state, action) => {
   let tempData_items = { ...state.items };
   action.targetData.items.map(value => {
     tempData_items.hasOwnProperty(value) && delete tempData_items[value];
@@ -457,9 +426,7 @@ export default function resultReducer(state = initialState, action) {
     [types.DELETE_TEMPLATE]: delTemplate,
     [types.ADD_INSTANCE]: addInstance,
     [types.DELETE_INSTANCE]: deleteInstance,
-    [types.DELETE_INSTANCE_MULTI]: delInstanceMulti,
-    [types.DELETE_INSTANCE_LIST_BY_TEMPLATE_WHEN_DELETE_INSTANCE]: delInstanceListByTemplateWhenDeleteInstance,
-    [types.DELETE_INSTANCE_LIST_BY_TEMPLATE_WHEN_DELETE_TEMPLATE]: delInstanceListByTemplateWhenDeleteTemplate,
+    [types.DELETE_INSTANCE_WHEN_DELETE_TEMPLATE]: delInstanceWhenDeleteTemplate,
     [types.MODIFY_INSTANCE]: modifyInstance,
     [types.ADD_ITEMS_CUSTOMIZED]: addItemsCustomized,
     [types.ADD_ITEMS_CUSTOMIZED_WHEN_ADD_INSTNACE]: addItemsCustomizedWhenAddInstance,
@@ -469,7 +436,7 @@ export default function resultReducer(state = initialState, action) {
     [types.ADD_ITEM]: addItem,
     [types.MODIFY_ITEM]: modifyItem,
     [types.DEL_ITEM]: delItem,
-    [types.DEL_ITEM_MULTI]: delItemMulti,
+    [types.DEL_ITEM_MULTI_WHEN_DEL_TEMPLATE]: delItemWhenDeleteTemplate,
     [types.ADD_TEMPLATE_CATEGORY]: addTemplateCategory,
     [types.MODIFY_TEMPLATE_CATEGORY]: modifyTemplateCategory,
     [types.DEL_TEMPLATE_CATEGORY]: delTemplateCategory,

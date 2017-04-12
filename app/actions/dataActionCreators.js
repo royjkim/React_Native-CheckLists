@@ -63,20 +63,8 @@ export function delTemplate(targetData) {
   //   targetData
   // }
   return (dispatch, getState) => {
-
-    // dispatch(delItem(targetData));
-    // dispatch(delItem(targetItemId, targetTemplateId))
-    dispatch(delItemMulti(targetData));
-    // const prevState_instanceListByTemplate = ((tempResult = {}) => {
-    //   const data = getState();
-    //   return data.instanceListByTemplate
-    // })();
-    const prevState = getState();
-    const tempData_targetInstanceList = prevState.normalizeReducer.entities.instanceListByTemplate[targetData.templateId].instances;
-    // const tempData_targetInstanceList = prevState_instanceListByTemplate[targetData.templateId].instances;
-    dispatch(delInstancesWhenDelTemplate(targetData, tempData_targetInstanceList));
-    // dispatch(delInstanceMulti)
-    dispatch(delInstanceListByTemplateWhenDeleteTemplate(targetData));
+    dispatch(delItemWhenDeleteTemplate(targetData));
+    dispatch(delInstancesWhenDelTemplate(targetData));
     dispatch(internal_delTemplate(targetData));
   }
 }
@@ -140,14 +128,6 @@ export function addItemsCustomizedWhenAddInstance(lastId, newData, preventBoolea
   // }
 }
 
-// const addInstanceThenAddOnResult = (lastId, newData, newAddedItemsCustomized) => ({
-//   type: types.ADD_INSTANCE_THEN_ADD_ON_RESULT,
-//   attr: 'itemsCustomized',
-//   lastId,
-//   newData,
-//   newAddedItemsCustomized
-// })
-
 const internal_addItemsCustomized = (lastId, newData) => ({
   type: types.ADD_ITEMS_CUSTOMIZED,
   lastId: lastId.itemsCustomized,
@@ -171,22 +151,12 @@ export function delItemsCustomized(targetData) {
   }
 }
 
-const delInstanceListByTemplateWhenDeleteInstance = targetData => ({
-  type: types.DELETE_INSTANCE_LIST_BY_TEMPLATE_WHEN_DELETE_INSTANCE,
+const internal_delInstance = targetData => ({
+  type: types.DELETE_INSTANCE,
   targetData: {
     ...targetData,
     templateId: targetData.template
   }
-})
-
-const delInstanceListByTemplateWhenDeleteTemplate = targetData => ({
-  type: types.DELETE_INSTANCE_LIST_BY_TEMPLATE_WHEN_DELETE_TEMPLATE,
-  targetData
-})
-
-const internal_delInstance = targetData => ({
-  type: types.DELETE_INSTANCE,
-  targetData
 });
 
 export function delInstance(targetData) {
@@ -197,15 +167,13 @@ export function delInstance(targetData) {
   return dispatch => {
     dispatch(internal_delInstance(targetData));
     dispatch(delItemsCustomized(targetData));
-    dispatch(delInstanceListByTemplateWhenDeleteInstance(targetData));
+    // dispatch(delInstanceListByTemplateWhenDeleteInstance(targetData));
   }
 }
 
-const delInstancesWhenDelTemplate = (targetTemplate, targetInstances) => ({
-  type: types.DELETE_INSTANCE_MULTI,
-  // targetData
-  targetTemplate,
-  targetInstances
+const delInstancesWhenDelTemplate = targetData => ({
+  type: types.DELETE_INSTANCE_WHEN_DELETE_TEMPLATE,
+  targetData
 })
 
 function internal_modifyInstance() {
@@ -285,8 +253,8 @@ export function delItem(targetItemId, targetTemplateId) {
   }
 }
 
-const delItemMulti = targetData => ({
-  type: types.DEL_ITEM_MULTI,
+const delItemWhenDeleteTemplate = targetData => ({
+  type: types.DEL_ITEM_MULTI_WHEN_DEL_TEMPLATE,
   targetData
 })
 

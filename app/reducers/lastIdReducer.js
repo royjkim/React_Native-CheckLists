@@ -38,31 +38,12 @@ const lastIdPlusOneByOne = (state, action) => ({
   [action.attr]: action.lastId[action.attr] + 1
 })
 
-// const lastIdPlusAddTemplate = (state, action) => ({
-//   ...state,
-//   templates: action.lastId.templates + 1,
-//   items: action.lastId.items + action.newData.items.length
-//   // itemsCustomized: action.lastId.itemsCustomized + action.newData.items.length
-// })
-
 export default function lastIdReducer(state, action) {
   const reducerMapper = {
     [types.FIND_LAST_ID]: findLastId,
     [types.LAST_ID_PLUS]: lastIdPlus,
     [types.LAST_ID_PLUS_MULTI]: lastIdPlusMulti,
     [types.LAST_ID_PLUS_ONE_BY_ONE]: lastIdPlusOneByOne,
-    // [types.ADD_TEMPLATE_CATEGORY]: lastIdPlus,
-    // [types.ADD_TEMPLATE]: lastIdPlusAddTemplate,
-    // [types.ADD_ITEM]: lastIdPlus,
-    // [types.ADD_INSTANCE]: lastIdPlus,
-    // [types.ADD_INSTANCE_THEN_ADD_ITEMS_CUSTOMIZED]: lastIdPlus
-
   }
   return reducerMapper.hasOwnProperty(action.type) ? reducerMapper[action.type](state, action) : state
 }
-
-// LAST_ID_PLUS_INSTANCES = 'lastIdPlusInstances',
-// LAST_ID_PLUS_ITEMS = 'lastIdPlusItems',
-// LAST_ID_PLUS_ITEMS_CUSTOMIZED = 'lastIdPlusItemsCustomized',
-// LAST_ID_PLUS_TEMPLATE_CATEGORIES = 'lastIdPlusTemplateCategories',
-// LAST_ID_PLUS_TEMPLATES = 'lastIdPlusTemplates';
