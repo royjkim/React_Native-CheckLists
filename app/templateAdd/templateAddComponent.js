@@ -115,6 +115,7 @@ export default class TemplateAddComponent extends React.Component {
                 dataSource={state.dataSourceTemplates}
                 renderRow={renderRowTemplates}
                 enableEmptySections={true}
+                removeClippedSubviews={false}
               />
             </List>
             {/* <View style={{ backgroundColor: 'lightgray', height: 3, marginVertical: 13 }} /> */}

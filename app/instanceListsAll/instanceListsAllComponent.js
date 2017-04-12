@@ -46,28 +46,24 @@ export default class InstanceListsAllComponent extends React.Component {
         ...state.templates[state.instances[sectionId].template]
       }
       return <TouchableOpacity
-        onPress={() => {
-          console.log('clicked')
-          console.log('state.instances[sectionId] : ', state.instances[sectionId])
-          return navigator.push(
-            {
-              passProps: {
-                leftButton: {
-                  title: 'back',
-                  component: ''
-                },
-                rightButton: {
-                  title: '',
-                  component: ''
-                },
-                parentTab: route.passProps.parentTab,
-                chosenInstance: state.instances[sectionId]
+        onPress={() => navigator.push(
+          {
+            passProps: {
+              leftButton: {
+                title: 'back',
+                component: ''
               },
-              title: `${state.instances[sectionId].name}`,
-              component: ChosenInstanceDetailsContainer,
-            }
-          )
-        }}
+              rightButton: {
+                title: '',
+                component: ''
+              },
+              parentTab: route.passProps.parentTab,
+              chosenInstance: state.instances[sectionId]
+            },
+            title: `${state.instances[sectionId].name}`,
+            component: ChosenInstanceDetailsContainer,
+          }
+        )}
         >
         <View style={{ flexDirection: 'row', backgroundColor: 'lightgray', padding: 8 }}>
           <Text
@@ -118,6 +114,7 @@ export default class InstanceListsAllComponent extends React.Component {
             renderRow={renderRow}
             enableEmptySections={true}
             renderSectionHeader={renderSectionHeader}
+            removeClippedSubviews={false}
           />
         </List>
         <View style={{ height: 5 }} />

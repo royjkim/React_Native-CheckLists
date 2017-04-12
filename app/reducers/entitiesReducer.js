@@ -255,41 +255,52 @@ const addItem = (state, action) => {
   //   return tempResult
   // })() : null
 
-  let tempData_items;
+  // let tempData_items;
       // tempData_itemsInTemplates;
 
-  console.log('action.newData instanceof Array : ', action.newData instanceof Array);
-  console.log('action.newData instanceof Object : ', action.newData instanceof Object);
+  // console.log('action.newData instanceof Array : ', action.newData instanceof Array);
+  // console.log('action.newData instanceof Object : ', action.newData instanceof Object);
 
-  if(action.newData instanceof Array) {
-    console.log('when instanceof Array is True');
-    tempData_items = {};
-    // tempData_itemsInTemplates = [];
-    tempData_items = ((tempResult = {}) => {
-      action.newData.map(value => {
-        tempResult[value.itemId] = value;
-        // tempData_itemsInTemplates.push(value.itemId);
-      });
-      return tempResult
-    })();
-  };
+  // if(action.newData instanceof Array) {
+  //   console.log('when instanceof Array is True');
+  //   tempData_items = {};
+  //   // tempData_itemsInTemplates = [];
+  //   tempData_items = ((tempResult = {}) => {
+  //     action.newData.map(value => {
+  //       tempResult[value.itemId] = value;
+  //       // tempData_itemsInTemplates.push(value.itemId);
+  //     });
+  //     return tempResult
+  //   })();
+  // };
 
-  let temp_items;
+  // let temp_items;
       // temp_itemsInTemplates;
-  if(action.newData instanceof Object) {
-    console.log('when instanceof Object is True');
+  // if(action.newData instanceof Object) {
+    // console.log('when instanceof Object is True');
     // temp_items = ((tempResult = {}) => {
-    temp_items = {};
+  let temp_items = {},
+      tempData_templates = { ...state.templates[action.templateId] };
     // temp_itemsInTemplates = [];
-      action.newData.items.map(value => {
-        temp_items[value.itemId] = {
-          ...value,
-          template: action.newData.title
-        };
-        // temp_itemsInTemplates.push(value.itemid);
-      });
+    for(let key in action.newData) {
+      temp_items[key] = {
+        ...action.newData[key],
+      };
+      tempData_templates.items.push(parseInt(key));
+    };
+
+
+
+
+      // action.newData.items.map(value => {
+      //   temp_items[value.itemId] = {
+      //     ...value,
+      //     template: action.newData.title
+      //   };
+      //   // temp_itemsInTemplates.push(value.itemid);
+      // });
     // })();
-  }
+  // }
   //   ...action.newData.map(value => value.itemId)
 
   // action.newData instanceof Object && (const temp_items = ((tempResult = {}) => {
@@ -300,7 +311,7 @@ const addItem = (state, action) => {
   //     }
   //   });
   // })(););
-  const result_items = tempData_items || temp_items || {};
+  // const result_items = tempData_items || temp_items || {};
   // const result_itemsInTemplates = tempData_itemsInTemplates || temp_itemsInTemplates || [];
   // const tempData_itemsOftemplates = action.newData.map(value => value.itemId)
   return {
@@ -312,8 +323,14 @@ const addItem = (state, action) => {
       // }
       // ...action.newData.map(value => [value.itemId]: value)
       // ...tempData_items
-      ...result_items
+      ...temp_items
     },
+    templates: {
+      ...state.templates,
+      [action.templateId] : {
+        ...tempData_templates
+      }
+    }
     // templates: {
     //   ...state.templates,
     //   [action.templateId]: {

@@ -8,7 +8,23 @@ const checkIdOverlapOrNot = (attr, lastId, newData, requestAction) => {
       ...newData,
       templateId: newData.templateId + 1
     },
-    addItem: (attr, lastId, newData) => newData[attr][0].itemId > lastId[attr] ? newData : newData[attr].map((value, index) => value.itemId = lastId[attr] + 1 + index),
+    // addItem: (attr, lastId, newData) => newData[attr][0].itemId > lastId[attr] ? newData : newData[attr].map((value, index) => value.itemId = lastId[attr] + 1 + index),
+    addItem: (attr, lastId, newData) => {
+      const temp1 = Object.values(newData).sort((data1, data2) => data2.itemId - data1.itemId);
+      console.log('temp1 : ', temp1);
+      const tempData_min_itemID = parseInt(Object.values(newData).sort((data1, data2) => data2.itemId - data1.itemId)[0].itemId);
+      console.log('tempData_min_itemID : ', tempData_min_itemID);
+      // tempData_items[0].itemId > lastId[attr] ? newData : newData[attr].map((value, index) => value.itemId = lastId[attr] + 1 + index)
+      if(tempData_min_itemID > lastId[attr]) {
+        return newData
+      } else {
+        const plusValue = lastId[attr] + 1 - tempData_min_itemID;
+        for(let key in newData) {
+          newData[key].itemId += plusValue;
+        }
+        return newData
+      }
+    },
     addTemplateCategory: (attr, lastId, newData) => {
       newData.id = lastId[attr] + 1
       return newData
@@ -203,27 +219,22 @@ export function changeStatusOfItemsCustomized(targetData) {
   }
 }
 
-const internal_addItem = (lastId, newData) => ({
+const internal_addItem = (lastId, newData, templateId) => ({
   type: types.ADD_ITEM,
   newData,
   lastId,
   // templateId: newData[0].templateId
-  templateId: newData instanceof Array ? newData[0].templateId : newData.templateId
+  // templateId: newData instanceof Array ? newData[0].templateId : newData.templateId
+  templateId,
 })
 
-export function addItem(lastId, newData) {
-  // return {
-  //   type: types.ADD_ITEM,
-  //   newData,
-  //   attr: 'items',
-  //   lastId,
-  //   templateId: newData[0].templateId
-  // }
-  newData = checkIdOverlapOrNot('items', lastId, newData, 'addItem');
+export function addItem(lastId, newData, targetTemplateId) {
+  // newData = checkIdOverlapOrNot('items', lastId, newData, 'addItem');
   return dispatch => {
-    dispatch(internal_addItem(lastId, newData));
+    dispatch(internal_addItem(lastId, newData, targetTemplateId));
     // dispatch(lastIdPlus('items', lastId, newData));
-    dispatch(lastIdPlusMulti('items', lastId, newData));
+    // dispatch(lastIdPlusMulti('items', lastId, newData));
+    dispatch(lastIdPlusMultiObject('items', lastId, newData));
   }
 }
 
@@ -330,6 +341,13 @@ const lastIdPlus = (attr, lastId, newData) => ({
 
 const lastIdPlusMulti = (attr, lastId, newData) => ({
   type: types.LAST_ID_PLUS_MULTI,
+  attr,
+  lastId,
+  newData
+})
+
+const lastIdPlusMultiObject = (attr, lastId, newData) => ({
+  type: types.LAST_ID_PLUS_MULTI_OBJECT,
   attr,
   lastId,
   newData

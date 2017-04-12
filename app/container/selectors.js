@@ -1,6 +1,6 @@
 import { ListView } from 'react-native'
 import { createSelector } from 'reselect'
-import { isEqual, flatten } from 'lodash'
+import { isEqual, cloneDeep } from 'lodash'
 
 const ds = new ListView.DataSource(
   {
@@ -114,80 +114,82 @@ let dataInputHistory = {
   }
 }
 
-let dataResultHistory = {
-  make_get_last_orderNum: {
-    past: [],
-    // present: [], future: []
-  },
-  make_get_dataSourceTemplates: {
-    past: [],
-    // present: [], future: []
-  },
-  make_get_dataSourceInstances: {
-    past: [],
-    // present: [], future: []
-  },
-  make_get_dataSourceItems: {
-    past: [],
-    // present: [], future: []
-  },
-  make_get_dataSourceInstancesOfChosenTemplate: {
-    past: [],
-    // present: [], future: []
-  },
-  make_get_dataSourceOfItemsOfChosenTemplate: {
-    past: [],
-    // present: [], future: []
-  },
-  make_get_dataSourceItemsOfChosenInstance: {
-    past: [],
-    // present: [], future: []
-  },
-  make_get_dataSourceForAllInstances: {
-    past: [],
-    // present: [], future: []
-  },
-  make_get_dataSourceTemplateCategories: {
-    past: [],
-    // present: [], future: []
-  },
-  make_get_badgeValueOfInstancesOfChosenTemplates: {
-    past: [],
-    // present: [], future: []
-  },
-  make_get_badgeValueOfStatusOfEachInstanceOfChosenTemplate: {
-    past: [],
-    // present: [], future: []
-  },
-  make_get_badgeValueOfStatusOfChosenInstance: {
-    past: [],
-    // present: [], future: []
-  },
-  make_get_badgeValueOfStatusOfAllInstances: {
-    past: [],
-    // present: [], future: []
-  },
-  make_get_instancesOfChosenTemplate: {
-    past: [],
-    // present: [], future: []
-  },
-  make_get_itemsOfChosenTemplate: {
-    past: [],
-    // present: [], future: []
-  },
-  make_get_itemsCustomizedOfChosenInstance: {
-    past: [],
-    // present: [], future: []
-  },
-  make_get_itemsCustomizedOfAllItems: {
-    past: [],
-    // present: [], future: []
-  },
-  make_get_itemsCustomizedOfEachInstanceOfChosenTemplate: {
-    past: [],
-    // present: [], future: []
-  }
-};
+// let dataResultHistory = {
+//   make_get_last_orderNum: {
+//     past: [],
+//     // present: [], future: []
+//   },
+//   make_get_dataSourceTemplates: {
+//     past: [],
+//     // present: [], future: []
+//   },
+//   make_get_dataSourceInstances: {
+//     past: [],
+//     // present: [], future: []
+//   },
+//   make_get_dataSourceItems: {
+//     past: [],
+//     // present: [], future: []
+//   },
+//   make_get_dataSourceInstancesOfChosenTemplate: {
+//     past: [],
+//     // present: [], future: []
+//   },
+//   make_get_dataSourceOfItemsOfChosenTemplate: {
+//     past: [],
+//     // present: [], future: []
+//   },
+//   make_get_dataSourceItemsOfChosenInstance: {
+//     past: [],
+//     // present: [], future: []
+//   },
+//   make_get_dataSourceForAllInstances: {
+//     past: [],
+//     // present: [], future: []
+//   },
+//   make_get_dataSourceTemplateCategories: {
+//     past: [],
+//     // present: [], future: []
+//   },
+//   make_get_badgeValueOfInstancesOfChosenTemplates: {
+//     past: [],
+//     // present: [], future: []
+//   },
+//   make_get_badgeValueOfStatusOfEachInstanceOfChosenTemplate: {
+//     past: [],
+//     // present: [], future: []
+//   },
+//   make_get_badgeValueOfStatusOfChosenInstance: {
+//     past: [],
+//     // present: [], future: []
+//   },
+//   make_get_badgeValueOfStatusOfAllInstances: {
+//     past: [],
+//     // present: [], future: []
+//   },
+//   make_get_instancesOfChosenTemplate: {
+//     past: [],
+//     // present: [], future: []
+//   },
+//   make_get_itemsOfChosenTemplate: {
+//     past: [],
+//     // present: [], future: []
+//   },
+//   make_get_itemsCustomizedOfChosenInstance: {
+//     past: [],
+//     // present: [], future: []
+//   },
+//   make_get_itemsCustomizedOfAllItems: {
+//     past: [],
+//     // present: [], future: []
+//   },
+//   make_get_itemsCustomizedOfEachInstanceOfChosenTemplate: {
+//     past: [],
+//     // present: [], future: []
+//   }
+// };
+
+let dataResultHistory = cloneDeep(dataInputHistory);
 
 const compareInputHistory = (attr, args) => {
   const lastIndex = (dataInputHistory[attr].past.length < 1 ? 0 : dataInputHistory[attr].past.length - 1 )
@@ -483,11 +485,13 @@ const make_get_itemsOfChosenTemplate = () => createSelector(
   (items, chosenTemplate, searchBarText) => {
     const currentAttr = 'make_get_itemsOfChosenTemplate';
     compareInputHistory(currentAttr, items, chosenTemplate, searchBarText)
-    let tempResult = []
-    chosenTemplate.items.map(value => items.hasOwnProperty(value) && items[value].desc.toLowerCase().includes(searchBarText) && tempResult.push(items[value]))
+    // let tempResult = [];
+    let tempResult = {}
+    chosenTemplate.items.map(value => items.hasOwnProperty(value) && items[value].desc.toLowerCase().includes(searchBarText) && (tempResult[value] = { ...items[value] }))
+    // chosenTemplate.items.map(value => items.hasOwnProperty(value) && items[value].desc.toLowerCase().includes(searchBarText) && tempResult.push(items[value]))
     // chosenTemplate.items.map(value => items[value].desc.toLowerCase().includes(searchBarText) ? tempResult.push(items[value]) : null)
     // chosenTemplate.items.map(value => items[value].desc.toLowerCase().includes(searchBarText) ? tempResult = tempResult.concat(items[value]) : null)
-    tempResult.sort((data1, data2) => data1.orderNum - data2.orderNum)
+    // tempResult.sort((data1, data2) => data1.orderNum - data2.orderNum)
     addResultHistory(currentAttr, tempResult)
     return tempResult
   }

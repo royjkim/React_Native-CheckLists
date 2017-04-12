@@ -29,7 +29,10 @@ export default class MyTabs extends React.Component {
   }
 
   render() {
-    const { state, navigatePopToTopRequest, navigatePrevent, triedNavigateWhenPrevented } = this.props
+    const { state,
+            navigatePopToTopRequest,
+            navigatePrevent,
+            triedNavigateWhenPrevented } = this.props;
     const tabCountFn = attr => {
       // this.prevTab == attr ? state.navigatePopToTopRequest.home ? null : navigatePopToTopRequest(attr, true) : this.setState({ selectedTab: attr })
 
@@ -37,13 +40,19 @@ export default class MyTabs extends React.Component {
       // If an user tried to navigate even though there was data changes, let redux know 'An user had tried to navigate.'.
       this.prevTab == attr ?
         state.navigatePrevent[attr] ?
-          state.triedNavigateWhenPrevented[attr] ?
-            null : triedNavigateWhenPrevented(attr, true)
-              : state.navigatePopToTopRequest.home ?
-                null : navigatePopToTopRequest(attr, true)
-                  : this.setState({ selectedTab: attr })
+          state.triedNavigateWhenPrevented[attr] || triedNavigateWhenPrevented(attr, true)
+            : state.navigatePopToTopRequest[attr] || navigatePopToTopRequest(attr, true)
+                  : this.setState({ selectedTab: attr });
 
-      this.prevTab = attr
+      // this.prevTab == attr ?
+      //   state.navigatePrevent[attr] ?
+      //     state.triedNavigateWhenPrevented[attr] ?
+      //       null : triedNavigateWhenPrevented(attr, true)
+      //         : state.navigatePopToTopRequest.home ?
+      //           null : navigatePopToTopRequest(attr, true)
+      //             : this.setState({ selectedTab: attr })
+
+      this.prevTab = attr;
     }
     return(
       <Tabs>

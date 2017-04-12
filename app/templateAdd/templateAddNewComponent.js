@@ -93,7 +93,7 @@ export default class TemplateAddNewComponent extends React.Component {
   componentDidUpdate() {
     const { navigatePrevent, triedNavigateWhenPrevented } = this.props.state,
           __navigatorRouteID = this.props.route.__navigatorRouteID,
-          parentTab = this.props.route.passProps.parentTab + __navigatorRouteID,
+          parentTab = this.props.route.passProps.parentTab,
           navigatePreventFn = this.props.navigatePreventFn,
           triedNavigateWhenPreventedFn = this.props.triedNavigateWhenPreventedFn,
           { chosenTemplate } = this.props.route.passProps;
@@ -396,6 +396,7 @@ export default class TemplateAddNewComponent extends React.Component {
                 dataSource={this.state.dataSourceNewAddedItems}
                 renderRow={renderRow}
                 enableEmptySections={true}
+                removeClippedSubviews={false}
               />
             </List>
           </View>

@@ -1,0 +1,505 @@
+import React from 'react'
+import {
+  View,
+  Text,
+  ListView,
+  TextInput,
+  Alert,
+  TouchableOpacity,
+  Modal,
+  KeyboardAvoidingView,
+} from 'react-native'
+import styles from '../components/styles'
+import {
+  Button,
+  List,
+  ListItem,
+  FormLabel,
+  SearchBar,
+  Icon,
+} from 'react-native-elements'
+import { isEqual, cloneDeep } from 'lodash'
+
+import ChosenInstanceDetailsContainer from './instanceList/chosenInstanceDetails/chosenInstanceDetailsContainer'
+import InstanceListContainer from './instanceList/instanceListContainer'
+
+export default class TemplateDetailsModifyComponent extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      searchText: '',
+      tempItems: cloneDeep(this.props.itemsOfChosenTemplate),
+      prevItems: Object.freeze(cloneDeep(this.props.itemsOfChosenTemplate)),
+      emptyItemsRowId: [],
+      changeValue: false,
+      addItemModalVisible: false,
+      newItem: {
+        desc: '',
+        itemId: parseInt(this.props.lastId.items) + 1,
+        orderNum: parseInt(this.props.last_orderNum) + 1,
+        template: this.props.chosenTemplate.title,
+        templateId: this.props.chosenTemplate.templateId
+      },
+      modifyExistingItems: {},
+      tempTemplateTitle: this.props.chosenTemplate.title,
+      prevTemplateTitle: this.props.chosenTemplate.title,
+      changeValue_templateTitle: false,
+      dataSource_tempItems: this.props.dataSourceOfItemsOfChosenTemplate || []
+    };
+    this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
+  }
+
+  componentWillMount() {
+    this.props.existOrNot_chosenTemplate || this.becauseOfExistNotAlertMsgFn();
+  }
+
+  componentWillUpdate(nextProps) {
+    // Below could be cause ignoring 'navigate prevent data' which is to be canceled.
+    nextProps.existOrNot_chosenTemplate || this.becauseOfExistNotAlertMsgFn();
+  }
+
+  componentDidUpdate() {
+    // console.log(`componentDidUpdate - this.props : `, this.props)
+    // console.log(`componentDidUpdate - this.state : `, this.state)
+
+    const { route, navigatePrevent, triedNavigateWhenPrevented } = this.props,
+          __navigatorRouteID = route.__navigatorRouteID,
+          parentTab = route.passProps.parentTab,
+          navigatePreventFn = this.props.navigatePreventFn,
+          triedNavigateWhenPreventedFn = this.props.triedNavigateWhenPreventedFn;
+
+    // Below is for when the item text changed , make redux navigate disable.
+    (this.state.changeValue || this.state.changeValue_templateTitle) ? (navigatePrevent[__navigatorRouteID] || navigatePreventFn(__navigatorRouteID, true),
+      navigatePrevent[parentTab] || navigatePreventFn(parentTab, true))
+        : (navigatePrevent[__navigatorRouteID] && navigatePreventFn(__navigatorRouteID, false),
+          navigatePrevent[parentTab] && navigatePreventFn(parentTab, false));
+
+    // Below is for alert let an user know 'save before navigate', then make redux 'alert completed'.
+    triedNavigateWhenPrevented[__navigatorRouteID] && (alert('press save button to save changes'), triedNavigateWhenPreventedFn(__navigatorRouteID, false));
+    triedNavigateWhenPrevented[parentTab] && (alert('press save button to save changes'), triedNavigateWhenPreventedFn(parentTab, false));
+
+    this.state.addItemModalVisible && (this.refs['newItemTempDescTextInput'].isFocused() || this.refs['newItemTempDescTextInput'].focus());
+  };
+
+  becauseOfExistNotAlertMsgFn() {
+    const tempFn_becauseOfExistNotAlertMsgFn = this.becauseOfExistNotAlertMsgFn;
+    this.becauseOfExistNotAlertMsgFn = () => null;
+    Alert.alert(
+      'Template Deleted',
+      'Because of Current Template Deleted. Page would be directed to back.',
+      [
+        { text: 'Confirm', onPress: () => {
+          this.becauseOfExistNotAlertMsgFn = tempFn_becauseOfExistNotAlertMsgFn;
+          this.props.navigator.pop();
+          }
+        }
+      ]
+    );
+  };
+  render() {
+    const { route,
+            navigator,
+            searchBarText,
+            navigatePreventFn,
+            addItem,
+            modifyItem,
+            modifyTemplate,
+            delTemplate,
+            length_instancesOfChosenTemplate,
+            itemsCustomized,
+            itemsOfChosenTemplate,
+            navigatePrevent,
+            triedNavigateWhenPrevented,
+            lastId,
+            chosenTemplate,
+            last_orderNum,
+            existOrNot_chosenTemplate } = this.props;
+    const resetData = () => this.setState({
+        searchText: '',
+        tempItems: cloneDeep(this.props.itemsOfChosenTemplate),
+        prevItems: Object.freeze(cloneDeep(this.props.itemsOfChosenTemplate)),
+        emptyItemsRowId: [],
+        changeValue: false,
+        addItemModalVisible: false,
+        newItem: {
+          desc: '',
+          itemId: parseInt(this.props.lastId.items) + 1,
+          orderNum: parseInt(this.props.last_orderNum) + 1,
+          template: this.props.chosenTemplate.title,
+          templateId: this.props.chosenTemplate.templateId
+        },
+        modifyExistingItems: {},
+        dataSource_tempItems: this.props.dataSourceOfItemsOfChosenTemplate || []
+      });
+    const saveAlertFn = () => {
+      this.state.emptyItemsRowId < this.state.tempItems ? Alert.alert(
+        'Confirm Save',
+        'You are making an existing item empty. If you want to delete it, press Save. Or press Cancel. Even though the item deleted, it won\'t be deleted neither on each instance.',
+        [
+          { text: 'Cancel'},
+          { text: 'Save', onPress: () => saveProcessFn() }
+        ]
+      ) : Alert.alert(
+        'Disable To Delete',
+        'Each template has more than 1 item.',
+        [
+          {
+            text: 'Confirm'
+          }
+        ]
+      )
+    }
+    const saveProcessFn = async () => {
+      this.state.changeValue_templateTitle && modifyTemplate(chosenTemplate.templateId, this.state.tempTemplateTitle);
+      let newAddedItems = {};
+      for(let key in this.state.tempItems) {
+        (key in this.state.prevItems) || (newAddedItems[key] = { ...this.state.tempItems[key] });
+      };
+      Object.keys(newAddedItems).length > 0 && addItem(lastId.items, newAddedItems, chosenTemplate.templateId);
+      await this.setState(prevState => {
+        prevState.changeValue = false;
+        prevState.emptyItemsRowId.length > 0 && (
+        prevState.emptyItemsRowId.map(value => delete prevState.tempItems[value]),
+        prevState.emptyItemsRowId = []);
+        prevState.dataSource_tempItems = this.ds.cloneWithRows(prevState.tempItems);
+        prevState.prevItems = Object.freeze(cloneDeep(prevState.tempItems));
+        prevState.prevTemplateTitle = prevState.tempTemplateTitle;
+        prevState.changeValue_templateTitle = false;
+      });
+      Object.keys(this.state.modifyExistingItems).length > 0 && modifyItem(this.state.modifyExistingItems, chosenTemplate.templateId)
+      // this.state.prevItems.length < this.state.tempItems.length && addItem(lastId.items, this.state.tempItems.slice(itemsOfChosenTemplate.length));
+
+
+      alert('save complete');
+      // this.props.navigator.pop()
+    }
+    const changeItemText = (itemText, rowId, target_itemId, emptyStatusBoolean) => prevState => {
+      emptyStatusBoolean && (prevState.emptyItemsRowId.push(rowId));
+      prevState.emptyItemsRowId.length >= Object.keys(prevState.tempItems).length ? Alert.alert(
+        'Disable Delete Item',
+        'Each template has more than 1 item.',
+        [
+          { text: 'Confirm', onPress: () => this.setState(prevState => {
+            prevState.tempItems[rowId].desc = prevState.prevItems.hasOwnProperty(rowId) ? prevState.prevItems[rowId].desc : 'new added item';
+            // itemText = prevState.prevItems.hasOwnProperty(rowId) ? prevState.prevItems[rowId].desc : 'fucking empty';
+            itemText = prevState.tempItems[rowId].desc;
+            prevState.emptyItemsRowId.pop();
+            prevState.modifyExistingItems.hasOwnProperty(target_itemId) && (prevState.modifyExistingItems[target_itemId] = itemText);
+          })
+          }
+        ]
+      ) : prevState.tempItems.hasOwnProperty(target_itemId) && (prevState.modifyExistingItems[target_itemId] = itemText);
+      // Below is for handing on existing data.
+      prevState.tempItems[rowId].desc = itemText;
+      prevState.dataSource_tempItems = this.ds.cloneWithRows(prevState.tempItems);
+      !isEqual(this.state.prevItems, prevState.tempItems) ? (prevState.changeValue = true, prevState.searchText = '') : prevState.changeValue = false;
+    };
+    const renderRowItems = (rowData, sectionId, rowId) => {
+      const compareResult = isEqual(this.state.tempItems[rowId], this.state.prevItems[rowId]);
+      return (
+        <View
+          key={rowData.itemId}
+          style={{
+            // flexDirection: 'row',
+            marginHorizontal: 10,
+            marginVertical: 10,
+            // flex: 1,
+            // #C1C1C1
+            borderColor: compareResult ? '#CBD2D9' : '#159589',
+            borderBottomWidth: 1,
+            marginHorizontal: 10
+          }}
+          >
+              <TextInput
+                value={this.state.tempItems[rowId].desc || ''}
+                onChangeText={itemText => this.setState(changeItemText(itemText, rowId, rowData.itemId, itemText == ''))}
+                placeholder={this.state.prevItems.hasOwnProperty(rowId) ? this.state.prevItems[rowId].desc : 'input item'}
+                placeholderTextColor='#D2D8C9'
+                style={{
+                  // flex: 1,
+                  height: 23,
+                  color: compareResult ? '#86939D' : '#159589',
+                  textAlign: 'center',
+                  // marginBottom: 0,
+                  // borderWidth: 1,
+                  // borderColor: 'red'
+                }}
+              />
+        </View>
+      )
+    };
+    return(
+      <View style={styles.bodyContainerOnSideMenu}>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginHorizontal: 10,
+            marginVertical: 10
+          }}
+          >
+            <Text
+              style={{
+                color: '#86939D',
+                fontWeight: 'bold',
+                marginLeft: 8
+              }}
+              >
+              Template Name :
+            </Text>
+            <View
+              style={{
+                flex: 1,
+                borderColor: this.state.changeValue_templateTitle ? '#159589' : '#CBD2D9',
+                // '#C1C1C1' : '#FF2A1A',
+                borderBottomWidth: 1.5,
+                marginHorizontal: 10
+              }}
+              >
+              <TextInput
+                value={this.state.tempTemplateTitle}
+                onChangeText={templatTitleText => {
+                  templatTitleText == '' && Alert.alert(
+                    'Delete Disable',
+                    'Template name shouldn\'t be empty.',
+                    [
+                      { text: 'Confirm', onPress: () => this.setState({
+                          tempTemplateTitle: this.state.prevTemplateTitle,
+                          changeValue_templateTitle: false
+                        })
+                      }
+                    ]
+                  );
+                  this.setState(prevState => {
+                    prevState.tempTemplateTitle = templatTitleText;
+                    prevState.changeValue_templateTitle = !(prevState.tempTemplateTitle === prevState.prevTemplateTitle);
+                  })
+                }}
+                placeholder={this.state.prevTemplateTitle}
+                style={{
+                  flex: 1,
+                  color: this.state.changeValue_templateTitle ? '#159589' : '#605E60',
+                  textAlign: 'center',
+                  // marginBottom: 2
+                }}
+              />
+            </View>
+        </View>
+        {this.state.searchText !== ''
+          ? (
+              <FormLabel>
+                Category : {chosenTemplate.category} / Items({itemsLengthOfChosenTemplate}, searched)
+              </FormLabel>
+            )
+          : this.state.changeValue ? (
+            <FormLabel>
+              Category : {chosenTemplate.category} / Items({Object.keys(this.state.tempItems).length}), new item added)
+            </FormLabel>
+          ) : (
+                <FormLabel>
+                  Category : {chosenTemplate.category} / Items({Object.keys(this.state.prevItems).length})
+                </FormLabel>
+              )
+        }
+        <List>
+          <ListView
+            dataSource={this.state.dataSource_tempItems}
+            enableEmptySections={true}
+            renderRow={renderRowItems}
+            removeClippedSubviews={false}
+            style={{ maxHeight: 250 }}
+          />
+        </List>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            marginTop: 5,
+            marginRight: 5
+          }}
+          >
+            <TouchableOpacity
+              style={{
+                flexDirection: 'row',
+              }}
+              onPress={() => {
+                this.setState({
+                  searchText: '',
+                  addItemModalVisible: true
+                })
+                searchBarText('', 'itemsOfChosenTemplate')
+            }}
+              >
+              <Icon
+                name='add-circle-outline'
+                size={17}
+                color='#9E9E9E'
+              />
+              <Text
+                style={{
+                  color: '#9E9E9E',
+                  fontSize: 15
+                }}
+                >
+                add item
+              </Text>
+            </TouchableOpacity>
+        </View>
+        {(this.state.changeValue || this.state.changeValue_templateTitle) && (<View>
+              <View
+                style={{ height: 10 }}
+              />
+              <Button
+                icon={{ name: 'check' }}
+                title='Save'
+                backgroundColor='#159589'
+                disabled={this.state.addItemModalVisible}
+                onPress={() => this.state.emptyItemsRowId.length > 0 ? saveAlertFn() : saveProcessFn() }
+              />
+              <View
+                style={{ height: 10 }}
+              />
+              <Button
+                title='Restore'
+                backgroundColor='#86939D'
+                disabled={this.state.addItemModalVisible}
+                onPress={() => resetData()}
+              />
+            </View>
+            )}
+        <View style={{ height: 10 }} />
+        <Button
+          icon={{ name: 'delete-forever' }}
+          title='Delete template'
+          backgroundColor='#FF7F7C'
+          disabled={this.state.addItemModalVisible}
+          onPress={() => Alert.alert(
+            'Confim Delete',
+            `Warning : instances(${length_instancesOfChosenTemplate}) connected to this template(${this.state.prevTemplateTitle}) would be deleted. It couldn't restore after deleted.`,
+            [
+              { text: 'Cancel' },
+              { text: 'OK', onPress: () => {
+                navigator.pop();
+                delTemplate(chosenTemplate);
+              }}
+            ]
+          )}
+        />
+        <Modal
+          animationType={'slide'}
+          transparent={true}
+          visible={this.state.addItemModalVisible}
+          >
+          <View
+            style={{
+              flex: 1,
+              // backgroundColor: 'transparent',
+              // backgroundColor: 'white',
+              justifyContent: 'center',
+              marginBottom: 54
+            }}
+            >
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: 'transparent',
+              }}
+              >
+              <TouchableOpacity
+                style={{
+                  flex: 1,
+                }}
+                onPress={() => this.state.newItem.desc == '' ? this.setState({ addItemModalVisible: false }) : (alert('press add button, after input a new item.'), this.refs['newItemTempDescTextInput'].focus())}
+              />
+            </View>
+            <KeyboardAvoidingView
+              style={{
+                flex: 0,
+                height: 110,
+                backgroundColor: 'white',
+                // paddingBottom: 20,
+                // borderTopWidth: 1,
+                borderColor: '#86939D',
+                // paddingBottom: 20,
+                // paddingVertical: 20,
+                // borderColor: '#9E9E9E',
+              }}
+              behavior='position'
+              contentContainerStyle={{
+                backgroundColor: 'white',
+                borderTopWidth: 1,
+                borderColor: '#86939D',
+                // paddingVertical: 20
+                paddingBottom: 27
+              }}
+              >
+                <FormLabel
+                  containerStyle={{
+                    backgroundColor: 'white'
+                  }}>
+                  New Item
+                </FormLabel>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    backgroundColor: 'white',
+                  }}
+                  >
+                  <View
+                    style={{
+                      flex: 1,
+                      borderColor: '#86939D',
+                      borderBottomWidth: 1,
+                      marginLeft: 15,
+                      // marginBottom: 10,
+                      // marginTop: 10,
+                    }}
+                  >
+                    <TextInput
+                      ref='newItemTempDescTextInput'
+                      value={this.state.newItem.desc}
+                      onChangeText={newItemText => this.setState(prevState => {
+                        prevState.newItem.desc = newItemText;
+                        prevState.changeValue = !isEqual(prevState.prevItems, prevState.tempItems);
+                      })}
+                      style={{
+                        flex: 1,
+                        // height: 45,
+                        // borderWidth: 1,
+                        textAlign: 'center',
+                      }}
+                    />
+                  </View>
+                  <Button
+                    title='Add'
+                    onPress={() => {
+                      this.state.newItem.desc !== '' ? (this.setState(prevState => {
+                        // prevState.tempItems = [
+                        //   ...prevState.tempItems,
+                        //   { ...prevState.newItem }
+                        // ];
+                        // prevState.tempItems.push({ ...prevState.newItem });
+                        prevState.tempItems[prevState.newItem.itemId] = { ...prevState.newItem };
+                        prevState.newItem.desc = '';
+                        ++prevState.newItem.itemId;
+                        ++prevState.newItem.orderNum;
+
+                        prevState.dataSource_tempItems = this.ds.cloneWithRows(prevState.tempItems)
+                        prevState.changeValue = !isEqual(prevState.prevItems, prevState.tempItems)
+                      }), Alert.alert(
+                        'Add success',
+                        'add completed',
+                        [
+                          { text: 'OK', onPress: () => this.refs['newItemTempDescTextInput'].isFocused() || this.refs['newItemTempDescTextInput'].focus()}
+                        ]
+                      )) : alert('input new item');
+
+                    }}
+                  />
+                </View>
+            </KeyboardAvoidingView>
+          </View>
+        </Modal>
+      </View>
+    )
+  }
+}

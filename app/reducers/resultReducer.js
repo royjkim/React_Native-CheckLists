@@ -127,9 +127,12 @@ const addItem = (state, action) => {
 
   let tempData_items = [];
 
-  action.newData instanceof Array && (tempData_items = action.newData.map(value => value.itemId));
-  action.newData instanceof Object && (tempData_items = action.newData.items.map(value => value.itemId));
-
+  // action.newData instanceof Array && (tempData_items = action.newData.map(value => value.itemId));
+  // action.newData instanceof Object && (tempData_items = action.newData.items.map(value => value.itemId));
+  // (tempData_items = action.newData.items.map(value => value.itemId))
+  for(let key in action.newData) {
+    tempData_items.push(key)
+  }
   return {
     ...state,
     // items: [

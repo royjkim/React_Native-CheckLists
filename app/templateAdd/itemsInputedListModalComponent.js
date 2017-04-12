@@ -58,6 +58,7 @@ export default class ItemsInputedListModalComponent extends React.Component {
             dataSource={dataSourceItems}
             enableEmptySections={true}
             renderRow={renderRow}
+            removeClippedSubviews={false}
           />
         </List>
 

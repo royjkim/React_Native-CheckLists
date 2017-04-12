@@ -31,7 +31,7 @@ export default class TemplateListsComponent extends React.Component {
   // }
 
   componentDidUpdate() {
-    this.props.state.navigatePopToTopRequest[this.props.route.passProps.parentTab] && (this.props.navigatePopToTopRequestFn(this.props.route.passProps.parentTab, false), this.props.navigator.popToTop());
+    this.props.state.navigatePopToTopRequest.templateList && (this.props.navigatePopToTopRequestFn('templateList', false), this.props.navigator.popToTop());
   }
   render() {
     const { route, navigator, state, searchBarText } = this.props;

@@ -117,6 +117,7 @@ export default class InstanceListComponent extends React.Component {
                 dataSource={state.dataSourceInstancesOfChosenTemplate}
                 renderRow={renderRowInstances}
                 enableEmptySections={true}
+                removeClippedSubviews={false}
               />
             </List>
             <View style={{ height: 10 }}/>
@@ -159,6 +160,7 @@ export default class InstanceListComponent extends React.Component {
                           dataSource={state.dataSourceTemplates}
                           renderRow={renderRowTemplates}
                           enableEmptySections={true}
+                          removeClippedSubviews={false}
                           style={{ maxHeight: 200 }}
                         />
                       </List>

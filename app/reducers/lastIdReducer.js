@@ -33,6 +33,14 @@ const lastIdPlusMulti = (state, action) => {
   }
 }
 
+const lastIdPlusMultiObject = (state, action) => {
+  const lastItemId = Object.values(action.newData).sort((data1, data2) => data2.itemId - data1.itemId)[0].itemId;
+  return {
+    ...state,
+    [action.attr]: parseInt(lastItemId)
+  }
+};
+
 const lastIdPlusOneByOne = (state, action) => ({
   ...state,
   [action.attr]: action.lastId[action.attr] + 1
@@ -43,6 +51,7 @@ export default function lastIdReducer(state, action) {
     [types.FIND_LAST_ID]: findLastId,
     [types.LAST_ID_PLUS]: lastIdPlus,
     [types.LAST_ID_PLUS_MULTI]: lastIdPlusMulti,
+    [types.LAST_ID_PLUS_MULTI_OBJECT]: lastIdPlusMultiObject,
     [types.LAST_ID_PLUS_ONE_BY_ONE]: lastIdPlusOneByOne,
   }
   return reducerMapper.hasOwnProperty(action.type) ? reducerMapper[action.type](state, action) : state

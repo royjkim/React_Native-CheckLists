@@ -77,6 +77,7 @@ export default class TemplateCategoryModal extends React.Component {
               dataSource={dataSourceTemplateCategories}
               enableEmptySections={true}
               renderRow={renderRow}
+              removeClippedSubviews={false}
               style={{
                 maxHeight: 150
               }}

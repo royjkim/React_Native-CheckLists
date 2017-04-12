@@ -25,10 +25,9 @@ export default class HomeComponent extends React.Component {
     }
   }
   shouldComponentUpdate(nextProps) {
-    let tempResult = true
+    let tempResult = true;
     // Below is for let this presentational component knows need to be navigate.popToTop().
-    nextProps.state.navigatePopToTopRequest.home ?
-      (this.props.navigatePopToTopRequest('home', false), tempResult = false, this.props.navigator.popToTop()) : null
+    nextProps.state.navigatePopToTopRequest.home && (this.props.navigatePopToTopRequest('home', false), tempResult = false, this.props.navigator.popToTop());
     return tempResult
   }
 

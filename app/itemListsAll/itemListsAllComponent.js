@@ -123,6 +123,7 @@ export default class ItemsListsAllComponent extends React.Component {
               enableEmptySections={true}
               renderRow={renderRow}
               renderSectionHeader={renderSectionHeader}
+              removeClippedSubviews={false}
             />
           </List>
         </View>

@@ -52,7 +52,7 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
 
   // componentDidUpdate() {
   //   const __navigatorRouteID = this.props.route.__navigatorRouteID,
-  //         parentTab = this.props.route.passProps.parentTab + __navigatorRouteID,
+  //         parentTab = this.props.route.passProps.parentTab,
   //         navigatePrevent = this.props.state.navigatePrevent,
   //         triedNavigateWhenPrevented = this.props.state.triedNavigateWhenPrevented,
   //         navigatePreventFn = this.props.navigatePreventFn,
@@ -328,7 +328,7 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
         <Button
           icon={{ name: 'edit' }}
           title='Edit instance'
-          backgroundColor='#6296F9'
+          backgroundColor='#159588'
           onPress={() => navigator.push({
               passProps: {
                 leftButton: {
