@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import ItemsListsAllComponent from './itemListsAllComponent'
 import { bindActionCreators } from 'redux'
-import { modifyItemsCustomized, searchBarText, navigatePopToTopRequest } from '../actions/dataActionCreators'
+import { searchBarText, navigatePopToTopRequest } from '../actions/dataActionCreators'
 import mySelectors from '../container/selectors'
 
 const make_mapStateToProps = () => (state, ownProps) => ({
@@ -18,7 +18,6 @@ const make_mapStateToProps = () => (state, ownProps) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  modifyItemsCustomized: targetData => dispatch(modifyItemsCustomized(targetData)),
   searchBarText: (searchText, attr) => dispatch(searchBarText(searchText, attr)),
   navigatePopToTopRequest: (targetTab, statusBoolean) => dispatch(navigatePopToTopRequest(targetTab, statusBoolean))
 })

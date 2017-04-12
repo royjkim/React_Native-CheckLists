@@ -27,6 +27,10 @@ export default class InstanceListsAllComponent extends React.Component {
     }
   }
 
+  componentDidMount() {
+    console.log('this.props : ', this.props);
+  }
+
   render() {
     const { route, navigator, state, changeStatusOfItemsCustomized, searchBarText } = this.props
     const renderRow = (rowData, sectionId, rowId) => <ListItem

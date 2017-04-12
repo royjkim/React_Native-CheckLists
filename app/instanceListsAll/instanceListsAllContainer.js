@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import InstanceListsAllComponent from './instanceListsAllComponent'
 import { bindActionCreators } from 'redux'
-import { modifyItemsCustomized, searchBarText } from '../actions/dataActionCreators'
+import { changeStatusOfItemsCustomized, searchBarText } from '../actions/dataActionCreators'
 import mySelectors from '../container/selectors'
 
 const make_mapStateToProps = () => (state, ownProps) => ({
@@ -19,7 +19,7 @@ const make_mapStateToProps = () => (state, ownProps) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  modifyItemsCustomized: targetData => dispatch(modifyItemsCustomized(targetData)),
+  changeStatusOfItemsCustomized: targetData => dispatch(changeStatusOfItemsCustomized(targetData)),
   searchBarText: (searchText, attr) => dispatch(searchBarText(searchText, attr))
 })
 
