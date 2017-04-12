@@ -17,7 +17,8 @@ const addTemplate = (state, action) => {
       ...state.templates,
       [action.lastId.templates + 1]: {
         ...action.newData,
-        items: action.newData.items.map(value => value.itemId)
+        items: action.newData.items.map(value => value.itemId),
+        instances: []
       }
     }
     // items: {
@@ -49,6 +50,20 @@ const addInstance = (state, action) => ({
   //   ...tempData_itemsCustomized
   // }
 })
+
+const addInstanceOnTemplate = (state, action) => {
+  let tempData_templates = { ...state.templates[action.newData.templateId] };
+  tempData_templates.instances.push(action.newData.instanceId);
+  return {
+    ...state,
+    templates: {
+      ...state.templates,
+      [action.newData.templateId]: {
+        ...tempData_templates
+      }
+    }
+  }
+}
 
 const modifyTemplate = (state, action) => ({
   ...state,
@@ -261,19 +276,6 @@ const addItem = (state, action) => {
   // console.log('action.newData instanceof Array : ', action.newData instanceof Array);
   // console.log('action.newData instanceof Object : ', action.newData instanceof Object);
 
-  // if(action.newData instanceof Array) {
-  //   console.log('when instanceof Array is True');
-  //   tempData_items = {};
-  //   // tempData_itemsInTemplates = [];
-  //   tempData_items = ((tempResult = {}) => {
-  //     action.newData.map(value => {
-  //       tempResult[value.itemId] = value;
-  //       // tempData_itemsInTemplates.push(value.itemId);
-  //     });
-  //     return tempResult
-  //   })();
-  // };
-
   // let temp_items;
       // temp_itemsInTemplates;
   // if(action.newData instanceof Object) {
@@ -342,6 +344,22 @@ const addItem = (state, action) => {
     //     items: state.templates[action.newData.templateId].items.concat(result_itemsInTemplates)
     //   }
     // }
+  }
+}
+
+const addItemWhenAddTemplate = (state, action) => {
+  let tempData_items = {};
+  action.newData.items.map(value => {
+    tempData_items[value.itemId] = {
+      ...value
+    };
+  });
+  return {
+    ...state,
+    items: {
+      ...state.items,
+      ...tempData_items
+    }
   }
 }
 
@@ -442,6 +460,7 @@ export default function resultReducer(state = initialState, action) {
     [types.MODIFY_TEMPLATE]: modifyTemplate,
     [types.DELETE_TEMPLATE]: delTemplate,
     [types.ADD_INSTANCE]: addInstance,
+    [types.ADD_INSTANCE_ON_TEMPLATE]: addInstanceOnTemplate,
     [types.DELETE_INSTANCE]: deleteInstance,
     [types.DELETE_INSTANCE_WHEN_DELETE_TEMPLATE]: delInstanceWhenDeleteTemplate,
     [types.MODIFY_INSTANCE]: modifyInstance,
@@ -451,6 +470,7 @@ export default function resultReducer(state = initialState, action) {
     [types.MODIFY_ITEMS_CUSTOMIZED]: modifyItemsCustomized,
     [types.CHANGE_STATUS_OF_ITEMS_CUSTOMIZED]: changeStatusOfItemsCustomized,
     [types.ADD_ITEM]: addItem,
+    [types.ADD_ITEM_WHEN_ADD_TEMPLATE]: addItemWhenAddTemplate,
     [types.MODIFY_ITEM]: modifyItem,
     [types.DEL_ITEM]: delItem,
     [types.DEL_ITEM_MULTI_WHEN_DEL_TEMPLATE]: delItemWhenDeleteTemplate,

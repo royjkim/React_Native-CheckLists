@@ -56,7 +56,8 @@ export function addTemplate(lastId, newData) {
     // dispatch(lastIdPlus('templates', lastId, newData));
     // dispatch(lastIdPlusMulti('templates', lastId, newData));
     dispatch(lastIdPlusOneByOne('templates', lastId, newData));
-    dispatch(addItem(lastId, newData));
+    // dispatch(addItem(lastId, newData));
+    dispatch(addItemWhenAddTemplate(lastId, newData));
   }
 }
 
@@ -85,6 +86,12 @@ export function delTemplate(targetData) {
   }
 }
 
+const addInstanceOnTemplate = (lastId, newData) => ({
+  type: types.ADD_INSTANCE_ON_TEMPLATE,
+  lastId,
+  newData
+})
+
 const internalAddInstance = (lastId, newData) => ({
   type: types.ADD_INSTANCE,
   attr: 'instances',
@@ -97,17 +104,11 @@ const internalAddInstance = (lastId, newData) => ({
 })
 
 export function addInstance(lastId, newData) {
-  // return {
-  //   type: types.ADD_INSTANCE,
-  //   attr: 'instances',
-  //   lastId,
-  //   newData,
-  //   templateId: newData.template
-  // }
   newData.templateId = newData.template;
   return (dispatch, getState) => {
     dispatch(internalAddInstance(lastId, newData));
     dispatch(addItemsCustomizedWhenAddInstance(lastId, newData, true));
+    dispatch(addInstanceOnTemplate(lastId, newData));
     // const prevState = getState()
     //       newAddedItemsCustomized = prevState.normalizeReducer.entities.instances[newData.instanceId].items;
     // dispatch(addInstanceThenAddOnResult(lastId, newData, newAddedItemsCustomized));
@@ -236,6 +237,19 @@ export function addItem(lastId, newData, targetTemplateId) {
     // dispatch(lastIdPlusMulti('items', lastId, newData));
     dispatch(lastIdPlusMultiObject('items', lastId, newData));
   }
+}
+
+const internal_addItemWhenAddTemplate = (lastId, newData) => ({
+  type: types.ADD_ITEM_WHEN_ADD_TEMPLATE,
+  lastId,
+  newData
+})
+
+const addItemWhenAddTemplate = (lastId, newData) => {
+  return dispatch => {
+    dispatch(internal_addItemWhenAddTemplate(lastId, newData));
+    dispatch(lastIdPlusMulti('items', lastId, newData));
+  };
 }
 
 function internal_modifyItem(data) {
