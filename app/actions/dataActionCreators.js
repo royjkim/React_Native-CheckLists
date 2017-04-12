@@ -297,10 +297,12 @@ export function searchBarText(searchText, attr) {
   }
 }
 
-export function chooseCategory(chosenCategory) {
+export function chooseCategory(__navigatorRouteID, pickerValue) {
   return {
     type: types.CHOOSE_CATEGORY,
-    chosenCategory
+    // chosenCategory
+    __navigatorRouteID,
+    pickerValue
   }
 }
 

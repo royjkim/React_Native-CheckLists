@@ -1,9 +1,21 @@
 import types from '../actions/dataActions'
 
-const chooseCategory = (state, action) => ({
-  ...state,
-  picker: action.chosenCategory
-})
+const chooseCategory = (state, action) => {
+  let tempData_picker = {
+    ...state.picker,
+    [action.__navigatorRouteID]: action.pickerValue
+  };
+  (action.pickerValue == 'all' && tempData_picker.hasOwnProperty(action.__navigatorRouteID)) && delete tempData_picker[action.__navigatorRouteID];
+  return {
+    ...state,
+    // picker: action.chosenCategory
+    picker: {
+      // ...state.picker,
+      // [action.__navigatorRouteID]: action.pickerValue
+      ...tempData_picker
+    }
+  }
+}
 
 const navigatePopToTopRequest = (state, action) => ({
   ...state,
@@ -38,7 +50,8 @@ const triedNavigateWhenPrevented = (state, action) => {
 }
 
 const initialState = {
-  picker: 'all',
+  // picker: 'all',
+  picker: {},
   navigatePopToTopRequest: {
     home: false,
     templateList: false,

@@ -320,7 +320,8 @@ const make_get_dataSourceItemsOfChosenInstance = () => createSelector(
       'completed': () => Object.values(itemsCustomizedOfChosenInstance).filter(value => value.status == true),
       'uncompleted': () => Object.values(itemsCustomizedOfChosenInstance).filter(value => value.status == false)
     }
-    const tempResult = statusPickerMapper[statusPicker]()
+    // const tempResult = statusPickerMapper[statusPicker]();
+    const tempResult = statusPickerMapper.hasOwnProperty(statusPicker) ? statusPickerMapper[statusPicker]() : Object.values(itemsCustomizedOfChosenInstance);
     return make_dataSource_cloneWithRows(currentAttr, tempResult)
   }
 )

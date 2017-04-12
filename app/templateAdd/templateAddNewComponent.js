@@ -93,7 +93,7 @@ export default class TemplateAddNewComponent extends React.Component {
   componentDidUpdate() {
     const { navigatePrevent, triedNavigateWhenPrevented } = this.props.state,
           __navigatorRouteID = this.props.route.__navigatorRouteID,
-          parentTab = this.props.route.passProps.parentTab,
+          parentTab = this.props.route.passProps.parentTab + __navigatorRouteID,
           navigatePreventFn = this.props.navigatePreventFn,
           triedNavigateWhenPreventedFn = this.props.triedNavigateWhenPreventedFn,
           { chosenTemplate } = this.props.route.passProps;

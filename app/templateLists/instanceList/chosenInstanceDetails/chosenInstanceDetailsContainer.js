@@ -15,6 +15,7 @@ const make_mapStateToProps = () => (state, ownProps) => ({
     chosenTemplate: {
       ...state.normalizeReducer.entities.templates[ownProps.route.passProps.chosenInstance.template]
     },
+    chosenInstance: ownProps.route.passProps.chosenInstance,
     itemsCustomizedOfChosenInstance: mySelectors.make_get_itemsCustomizedOfChosenInstance()(state.normalizeReducer, ownProps.route.passProps.chosenInstance),
     statusPicker: state.configReducer.picker,
     navigatePrevent: state.configReducer.navigatePrevent,
@@ -27,7 +28,7 @@ const make_mapStateToProps = () => (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => ({
   changeStatusOfItemsCustomized: targetData => dispatch(changeStatusOfItemsCustomized(targetData)),
-  chooseCategory: category => dispatch(chooseCategory(category)),
+  chooseCategory: (__navigatorRouteID, pickerValue) => dispatch(chooseCategory(__navigatorRouteID, pickerValue)),
   navigatePreventFn: (routeTitle, statusBoolean) => dispatch(navigatePrevent(routeTitle, statusBoolean)),
   triedNavigateWhenPreventedFn: (__navigatorRouteID, statusBoolean) => dispatch(triedNavigateWhenPrevented(__navigatorRouteID, statusBoolean)),
   modifyTemplate: (targetTemplateId, data) => dispatch(modifyTemplate(targetTemplateId, data)),
@@ -38,7 +39,8 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
   ...ownProps,
   state: {
     ...stateProps.state,
-    dataSourceItemsCustomizedOfChosenInstance: mySelectors.make_get_dataSourceItemsOfChosenInstance()(stateProps.state.itemsCustomizedOfChosenInstance, stateProps.state.statusPicker),
+    // dataSourceItemsCustomizedOfChosenInstance: mySelectors.make_get_dataSourceItemsOfChosenInstance()(stateProps.state.itemsCustomizedOfChosenInstance, stateProps.state.statusPicker),
+    dataSourceItemsCustomizedOfChosenInstance: mySelectors.make_get_dataSourceItemsOfChosenInstance()(stateProps.state.itemsCustomizedOfChosenInstance, stateProps.state.statusPicker[stateProps.route.__navigatorRouteID]),
     countsOfStatusCompleted: mySelectors.make_get_badgeValueOfStatusOfChosenInstance()(stateProps.state.itemsCustomizedOfChosenInstance),
     itemsCustomizedLength: stateProps.state.itemsCustomizedOfChosenInstance.length
   },

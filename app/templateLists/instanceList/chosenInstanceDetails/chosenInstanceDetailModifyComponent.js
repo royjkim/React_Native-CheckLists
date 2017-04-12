@@ -53,7 +53,7 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
     // console.log('componentDidUpdate - this.state : ', this.state);
     // console.log('componentDidUpdate - this.props : ', this.props);
     const __navigatorRouteID = this.props.route.__navigatorRouteID,
-          parentTab = this.props.route.passProps.parentTab,
+          parentTab = this.props.route.passProps.parentTab + __navigatorRouteID,
           navigatePrevent = this.props.state.navigatePrevent,
           triedNavigateWhenPrevented = this.props.state.triedNavigateWhenPrevented,
           navigatePreventFn = this.props.navigatePreventFn,
@@ -63,26 +63,31 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
     // !this.state.saveButtonVisible && (this.state.changeValue_tempInstanceName || this.state.changeValue_tempTemplateTitle || this.state.changeValue_items) && this.setState({ saveButtonVisible: true });
     // this.state.saveButtonVisible && !this.state.changeValue_tempInstanceName && !this.state.changeValue_tempTemplateTitle && !this.state.changeValue_items && (this.setState({ saveButtonVisible: false }));
 
-    this.checkIfNavigatePreventOrNot();
+    this.checkIfNavigatePreventOrNot(__navigatorRouteID, parentTab, navigatePrevent, triedNavigateWhenPrevented, navigatePreventFn, triedNavigateWhenPreventedFn);
 
     // Below is for alert let an user know 'save before navigate', then make redux 'alert completed'.
     triedNavigateWhenPrevented[__navigatorRouteID] && (
-      this.state.changeValue_tempInstanceName ?
-        (alert('press save button to save changed instance name.'), triedNavigateWhenPreventedFn(__navigatorRouteID, false))
-          : this.state.changeValue_tempTemplateTitle && (alert('press save button to save changed template name.'), this.props.triedNavigateWhenPreventedFn(__navigatorRouteID, false)));
+      this.state.changeValue_tempTemplateTitle ?
+        (alert('press save button to save changed template name.'),
+          triedNavigateWhenPreventedFn(__navigatorRouteID, false))
+          : this.state.changeValue_tempInstanceName && (alert('press save button to save changed instance name.'),
+            triedNavigateWhenPreventedFn(__navigatorRouteID, false)));
+
+    // triedNavigateWhenPrevented[__navigatorRouteID] && (
+    //   this.state.changeValue_tempInstanceName ?
+    //     (alert('press save button to save changed instance name.'),
+    //       triedNavigateWhenPreventedFn(__navigatorRouteID, false))
+    //       : this.state.changeValue_tempTemplateTitle && (alert('press save button to save changed template name.'),
+    //         triedNavigateWhenPreventedFn(__navigatorRouteID, false)));
 
     triedNavigateWhenPrevented[parentTab] && (
       this.state.changeValue_tempTemplateTitle ?
-        (alert('press save button to save changed template name.'), triedNavigateWhenPreventedFn(parentTab, false))
-          : this.state.changeValue_tempInstanceName && (alert('press save button to save changed instance name.'), triedNavigateWhenPreventedFn(parentTab, false)));
+        (alert('press save button to save changed template name.'),
+          triedNavigateWhenPreventedFn(parentTab, false))
+          : this.state.changeValue_tempInstanceName && (alert('press save button to save changed instance name.'),
+            triedNavigateWhenPreventedFn(parentTab, false)));
   }
-  checkIfNavigatePreventOrNot() {
-    const __navigatorRouteID = this.props.route.__navigatorRouteID,
-          parentTab = this.props.route.passProps.parentTab,
-          navigatePrevent = this.props.state.navigatePrevent,
-          triedNavigateWhenPrevented = this.props.state.triedNavigateWhenPrevented,
-          navigatePreventFn = this.props.navigatePreventFn,
-          triedNavigateWhenPreventedFn = this.props.triedNavigateWhenPreventedFn;
+  checkIfNavigatePreventOrNot(__navigatorRouteID, parentTab, navigatePrevent, triedNavigateWhenPrevented, navigatePreventFn, triedNavigateWhenPreventedFn) {
 
     // Below is for alert let an user know 'save before navigate', then make redux 'alert completed'.
     (this.state.changeValue_tempInstanceName || this.state.changeValue_tempTemplateTitle || this.state.changeValue_items) && (
@@ -94,7 +99,6 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
       navigatePrevent[__navigatorRouteID] && navigatePreventFn(__navigatorRouteID, false),
       navigatePrevent[parentTab] && navigatePreventFn(parentTab, false),
       this.state.saveButtonVisible && this.setState({ saveButtonVisible: false }));
-
   };
 
   render() {
@@ -382,8 +386,8 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
               icon={{ name: 'check' }}
               title='Save'
               backgroundColor='#159589'
-              onPress={() => {
-                this.setState(prevState => {
+              onPress={async () => {
+                await this.setState(prevState => {
                   prevState.changeValue_tempTemplateTitle && (modifyTemplate(state.chosenTemplate.templateId, prevState.tempTemplateTitle.trim()), prevState.prev_templateTitle = prevState.tempTemplateTitle.trim(), prevState.tempTemplateTitle = prevState.tempTemplateTitle.trim(), prevState.changeValue_tempInstanceName = false);
                   prevState.changeValue_tempInstanceName && (modifyInstance(route.passProps.chosenInstance.instanceId, prevState.tempInstanceName.trim()), prevState.prev_instanceName = prevState.tempInstanceName.trim(), prevState.tempInstanceName = prevState.tempInstanceName.trim() , prevState.changeValue_tempTemplateTitle = false);
                   for(let key in prevState.modifyExistingItems) {
@@ -403,9 +407,12 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
                   prevState.prevItems = Object.freeze((cloneDeep(prevState.tempItems)));
                   prevState.changeValue_items = false;
                   prevState.dataSourceItemsCustomizedOfChosenInstance = this.ds.cloneWithRows(prevState.tempItems);
-                })
-                state.navigatePrevent[route.__navigatorRouteID] && navigatePreventFn(route.__navigatorRouteID, false);
-                state.navigatePrevent[route.passProps.parentTab] && navigatePreventFn(route.passProps.parentTab, false);
+                });
+                (!this.state.changeValue_tempInstanceName && !this.state.changeValue_tempTemplateTitle && !this.state.changeValue_items) && (
+                  state.navigatePrevent[route.__navigatorRouteID] && navigatePreventFn(route.__navigatorRouteID, false),
+                  state.navigatePrevent[route.passProps.parentTab] && navigatePreventFn(route.passProps.parentTab, false));
+                // state.navigatePrevent[route.__navigatorRouteID] && navigatePreventFn(route.__navigatorRouteID, false);
+                // state.navigatePrevent[route.passProps.parentTab] && navigatePreventFn(route.passProps.parentTab, false);
                 alert('save complete')
               }}
             />

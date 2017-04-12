@@ -64,7 +64,7 @@ export default class TemplateDetailsComponent extends React.Component {
 
     const { navigatePrevent, triedNavigateWhenPrevented } = this.props.state,
           __navigatorRouteID = this.props.route.__navigatorRouteID,
-          parentTab = this.props.route.passProps.parentTab,
+          parentTab = this.props.route.passProps.parentTab + __navigatorRouteID,
           navigatePreventFn = this.props.navigatePreventFn,
           triedNavigateWhenPreventedFn = this.props.triedNavigateWhenPreventedFn;
 
@@ -425,10 +425,15 @@ export default class TemplateDetailsComponent extends React.Component {
           backgroundColor='#FF7F7C'
           onPress={() => Alert.alert(
             'Confim Delete',
-            `Warning : Instanecs connected to this template(${this.state.prevTemplateTitle}) would be deleted. It couldn't restore after deleted.`,
+            `Warning : instances(${state.instancesOfChosenTemplate.length}) connected to this template(${this.state.prevTemplateTitle}) would be deleted. It couldn't restore after deleted.`,
             [
-              { text: 'Cancel Delete' },
-              { text: 'Confirm Delete', onPress: () => {
+              // { text: 'Cancel Delete' },
+              // { text: 'Confirm Delete', onPress: () => {
+              //   navigator.pop();
+              //   delTemplate(route.passProps.chosenTemplate);
+              // }}
+              { text: 'Cancel' },
+              { text: 'OK', onPress: () => {
                 navigator.pop();
                 delTemplate(route.passProps.chosenTemplate);
               }}
