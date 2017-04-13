@@ -446,11 +446,11 @@ const make_get_badgeValueOfStatusOfAllInstances = () => createSelector(
     for(let key in itemsCustomized) {
       // key is itemsCustomizedId.
       const targetItemsCustomized = itemsCustomized[key];
-      (temp_object_ListOfitemsCustomizedOfChosenInstance.hasOwnProperty(targetItemsCustomized.instanceId) ? null : temp_object_ListOfitemsCustomizedOfChosenInstance[targetItemsCustomized.instanceId] = {
+      temp_object_ListOfitemsCustomizedOfChosenInstance.hasOwnProperty(targetItemsCustomized.instanceId) || (temp_object_ListOfitemsCustomizedOfChosenInstance[targetItemsCustomized.instanceId] = {
         total: 0,
         completed: 0,
         uncompleted: 0
-      })
+      });
       addFn(temp_object_ListOfitemsCustomizedOfChosenInstance, targetItemsCustomized.instanceId, targetItemsCustomized.status)
     }
     addResultHistory(currentAttr, temp_object_ListOfitemsCustomizedOfChosenInstance)
@@ -501,13 +501,14 @@ const make_get_itemsCustomizedOfAllItems = () => createSelector(
   itemsCustomized,
   searchBarTextItemsCustomizedAllInstances,
   (itemsCustomized, searchBarText) => {
-    const currentAttr = 'make_get_itemsCustomizedOfAllItems'
+    const currentAttr = 'make_get_itemsCustomizedOfAllItems';
     compareInputHistory(currentAttr, itemsCustomized, searchBarText)
-    let tempResult = {}
+    let tempResult = {};
     for(let key in itemsCustomized) {
-      if(itemsCustomized[key].desc.toLowerCase().includes(searchBarText)) {
-        tempResult.hasOwnProperty(itemsCustomized[key].instanceId) ? null : tempResult[itemsCustomized[key].instanceId] = []
-        tempResult[itemsCustomized[key].instanceId].push(itemsCustomized[key])
+      const current_instanceId = itemsCustomized[key].instanceId;
+      if(searchBarText == '' || itemsCustomized[key].desc.toLowerCase().includes(searchBarText)) {
+        tempResult.hasOwnProperty(current_instanceId) || (tempResult[current_instanceId] = []);
+        tempResult[current_instanceId].push(itemsCustomized[key])
       }
     }
     addResultHistory(currentAttr, tempResult)
@@ -530,7 +531,7 @@ const make_get_itemsCustomizedOfEachInstanceOfChosenTemplate = () => createSelec
         })
       })
       temp_array_itemsCustomizedOfEachInstanceOfChosenTemplate.sort((data1, data2) => data1.orderNum - data2.orderNum);
-      (tempResult.hasOwnProperty(value1.instanceId) ? null : tempResult[value1.instanceId] = [])
+      tempResult.hasOwnProperty(value1.instanceId) || (tempResult[value1.instanceId] = []);
       tempResult[value1.instanceId] = temp_array_itemsCustomizedOfEachInstanceOfChosenTemplate
     })
     addResultHistory(currentAttr, tempResult)

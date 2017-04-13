@@ -36,8 +36,10 @@ export default class InstanceListsAllComponent extends React.Component {
     const renderRow = (rowData, sectionId, rowId) => <ListItem
       key={rowId}
       // title={rowData.desc}
+      underlayColor='#C0C0C0'
       title={<CheckBox
-        title={rowData.desc}
+        // title={rowData.desc}
+        title={`${rowData.desc}, orderNum : ${rowData.orderNum}`}
         checked={rowData.status}
         onPress={() => changeStatusOfItemsCustomized(rowData)}
         />

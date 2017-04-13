@@ -72,6 +72,7 @@ export default class TemplateAddComponent extends React.Component {
       key={sectionId}
       title={rowData.title}
       subtitle={`Category : ${rowData.category}, Items : ${rowData.items.length}`}
+      underlayColor='#C0C0C0'
       onPress={() => navigator.push(
         {
           passProps: {
@@ -128,7 +129,7 @@ export default class TemplateAddComponent extends React.Component {
         <Button
           icon={{ name: 'add' }}
           title='Make New Template'
-          backgroundColor='#2B98F0'
+          backgroundColor='#008D14'
           onPress={() => navigator.push(
             {
               passProps: {

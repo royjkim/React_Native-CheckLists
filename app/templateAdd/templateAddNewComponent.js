@@ -185,6 +185,7 @@ export default class TemplateAddNewComponent extends React.Component {
         title={String(rowData.desc || 'none')}
         subtitle={`orderNum : ${String(rowData.orderNum)}, templateId : ${rowData.templateId}, itemId: ${rowData.itemId}`}
         onPress={() => deleteAlert(rowData, rowId)}
+        underlayColor='#C0C0C0'
         hideChevron
       />
     )
@@ -218,7 +219,7 @@ export default class TemplateAddNewComponent extends React.Component {
                 value={this.state.templateName}
                 onChangeText={templateName => templateName !== '' && (this.setState({ templateName }))}
                 // placeholder='(at leat 3 characters)'
-                placeholder={route.passProps.chosenTemplate.title || ''}
+                // placeholder={route.passProps.chosenTemplate.title || ''}
                 autoFocus={true}
                 style={{
                   flex: 1,
@@ -299,7 +300,10 @@ export default class TemplateAddNewComponent extends React.Component {
               flex: 0,
             }}>
             <Button
+              // icon={{ name: 'add' }}
               title='Add'
+              backgroundColor='#008D14'
+              buttonStyle={{ borderRadius: 10 }}
               onPress={() => {
                 this.state.tempNewItemDesc !== '' && this.setState(prevState => {
                   const addedLengthBetweenPrevItemsTempItems = prevState.prevItems.length - prevState.tempItems.length;
@@ -335,8 +339,10 @@ export default class TemplateAddNewComponent extends React.Component {
         </View>
         <View style={{ height: 10 }}/>
         <Button
+          icon={{ name: 'check' }}
           title='Save'
-          backgroundColor='#159588'
+          backgroundColor='#6598F6'
+          buttonStyle={{ borderRadius: 10 }}
           onPress={() => {
             if(this.state.templateName.length > 0 && this.state.chosenCategory && this.state.tempItems.length > 0 && this.state.tempNewItemDesc == '') {
               // this.setState({ save: true, changeValue: false })
@@ -355,29 +361,79 @@ export default class TemplateAddNewComponent extends React.Component {
               addTemplate(state.lastId, newData);
               state.navigatePrevent[route.__navigatorRouteID] && navigatePreventFn(route.__navigatorRouteID, false);
               state.navigatePrevent[route.passProps.parentTab] && navigatePreventFn(route.passProps.parentTab, false);
-              alert('save complete', navigator.replacePreviousAndPop({
-                passProps: {
-                  leftButton: {
-                    title: 'back',
-                    component: ''
-                  },
-                  rightButton: {
-                    title: '',
-                    component: ''
-                  },
-                  parentTab: route.passProps.parentTab,
-                  chosenTemplate: {
-                    ...newData,
-                    items: [
-                      ...newData.items.map(value => value.itemId)
-                    ]
-                  },
-                },
-                title: 'Instance List',
-                component: InstanceListContainer
-              }));
+              Alert.alert(
+                'Completed',
+                'save completed',
+                [
+                  { text: 'OK', onPress: () => navigator.replacePreviousAndPop({
+                    passProps: {
+                      leftButton: {
+                        title: 'back',
+                        component: ''
+                      },
+                      rightButton: {
+                        title: '',
+                        component: ''
+                      },
+                      parentTab: route.passProps.parentTab,
+                      chosenTemplate: {
+                        ...newData,
+                        items: [
+                          ...newData.items.map(value => value.itemId)
+                        ]
+                      },
+                    },
+                    title: 'Instance List',
+                    component: InstanceListContainer
+                  })}
+                ]
+              )
+              // alert('save complete', navigator.replacePreviousAndPop({
+              //   passProps: {
+              //     leftButton: {
+              //       title: 'back',
+              //       component: ''
+              //     },
+              //     rightButton: {
+              //       title: '',
+              //       component: ''
+              //     },
+              //     parentTab: route.passProps.parentTab,
+              //     chosenTemplate: {
+              //       ...newData,
+              //       items: [
+              //         ...newData.items.map(value => value.itemId)
+              //       ]
+              //     },
+              //   },
+              //   title: 'Instance List',
+              //   component: InstanceListContainer
+              // }));
             } else {
-              this.state.templateName.length < 4 ? alert('input template name(at least 3 characters)') : !this.state.chosenCategory ? alert('input category') : this.state.tempItems.length < 1 ? alert('add new item(at least 1 item)') : this.state.tempNewItemDesc !== '' ? alert('after input item, please press add button') : null
+              this.state.templateName.length < 4 ? Alert.alert(
+                'Warning',
+                'template name should be at least 3 characters.',
+                [
+                  { text: 'Confirm' }
+                ]
+              ) : !this.state.chosenCategory ? Alert.alert(
+                'Warning',
+                'choose or input category',
+                [
+                  { text: 'OK' }
+                ]
+              ) : this.state.tempItems.length < 1 ? Alert.alert(
+                'Warning',
+                'Each template should have at least 1 item.',
+                [
+                  { text: 'Confirm' }
+                ]
+              ) : this.state.tempNewItemDesc !== '' ? Alert.alert(
+                'Warning',
+                'After input item, please press add button.',
+                [
+                  { text: 'OK' }
+                ]) : null
             }
           }}
         />

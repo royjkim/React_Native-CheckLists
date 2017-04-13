@@ -37,6 +37,7 @@ export default class HomeComponent extends React.Component {
       key={sectionId}
       title={rowData.name}
       subtitle={`Template : ${state.templates[rowData.template].title}\nItems : total(${state.badgeValueOfStatusOfAllInstances[rowData.instanceId].total}), complete(${state.badgeValueOfStatusOfAllInstances[rowData.instanceId].completed})`}
+      underlayColor='#C0C0C0'
       badge={{
         value: state.badgeValueOfStatusOfAllInstances[rowData.instanceId].uncompleted,
         // value: `${state.badgeValueOfStatusOfAllInstances[rowData.instanceId].completed} / ${state.badgeValueOfStatusOfAllInstances[rowData.instanceId].uncompleted}`,
@@ -97,10 +98,12 @@ export default class HomeComponent extends React.Component {
             removeClippedSubviews={false}
           />
         </List>
-        <View style={{ height: 5 }} />
+        <View style={{ height: 10 }} />
         <Button
           icon={{ name: 'format-list-bulleted' }}
           title='Show instances with all items'
+          buttonStyle={{ borderRadius: 10 }}
+          backgroundColor='#3D7CAA'
           onPress={() => {
             navigator.push({
               passProps: {

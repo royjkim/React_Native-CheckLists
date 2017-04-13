@@ -6,6 +6,7 @@ import {
   Text,
   TextInput,
   KeyboardAvoidingView,
+  Alert,
 } from 'react-native'
 import {
   List,
@@ -30,10 +31,12 @@ export default class TemplateCategoryModal extends React.Component {
       key={sectionID}
       title={rowData.title}
       leftIcon={rowData.icon}
+      underlayColor='#C0C0C0'
       onPress={() => {
-        categoryChosen(rowData.title)
-        closeFn()
+        categoryChosen(rowData.title);
+        closeFn();
       }}
+      underlayColor='#C0C0C0'
       hideChevron
     />
     return(
@@ -46,7 +49,13 @@ export default class TemplateCategoryModal extends React.Component {
           style={{
             flex: 1,
           }}
-          onPress={() => this.state.newCategory ? alert('after input new category, please press add button') : closeFn()}
+          onPress={() => this.state.newCategory ? Alert.alert(
+            'Close Disable',
+            'After input new category, please press add button',
+            [
+              { text: 'Confirm' }
+            ]
+          ) : closeFn()}
           >
         </TouchableOpacity>
         <KeyboardAvoidingView
@@ -119,13 +128,21 @@ export default class TemplateCategoryModal extends React.Component {
               </View>
               <Button
                 title='Add'
+                backgroundColor='#008D14'
+                buttonStyle={{ borderRadius: 10 }}
                 onPress={() => {
                   if(this.state.newCategory) {
                     addTemplateCategory(lastId, { title: this.state.newCategory })
                     categoryChosen(this.state.newCategory)
                     closeFn()
                   } else {
-                    alert('input new category')
+                    Alert.alert(
+                      'Warning',
+                      'Please input new category or choose one from the category list.',
+                      [
+                        { text: 'Confirm' }
+                      ]
+                    )
                   }
                 }}
               />

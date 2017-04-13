@@ -70,6 +70,7 @@ export default class TemplateDetailsComponent extends React.Component {
     const renderRowItems = rowData => <ListItem
       key={rowData.itemId}
       title={rowData.desc}
+      underlayColor='#C0C0C0'
       subtitle={`itemId : ${rowData.itemId}, orderNum : ${rowData.orderNum}`}
       hideChevron
     />;
@@ -114,7 +115,9 @@ export default class TemplateDetailsComponent extends React.Component {
         <View style={{ height: 10 }} />
         <Button
           title={`Show instances of this template(${length_instancesOfChosenTemplate})`}
-          backgroundColor='#6296F9'
+          backgroundColor='#3D7CAA'
+          // backgroundColor='#6296F9'
+          buttonStyle={{ borderRadius: 10 }}
           onPress={() => navigator.push(
             {
               passProps: {
@@ -140,23 +143,30 @@ export default class TemplateDetailsComponent extends React.Component {
           icon={{ name: 'edit' }}
           title='Edit Template'
           backgroundColor='#159588'
-          onPress={() => navigator.push(
-            {
-              passProps: {
-                leftButton: {
-                  title: 'back',
-                  component: ''
-                },
-                rightButton: {
-                  title: '',
-                  component: ''
-                },
-                parentTab: route.passProps.parentTab,
-                chosenTemplate
-              },
-              title: 'Template Edit',
-              component: TemplateDetailsModifyContainer,
-            }
+          buttonStyle={{ borderRadius: 10 }}
+          onPress={() => Alert.alert(
+            'Warning',
+            'Because items of instance have items at the moment of creating instance from template, changing the items of template doesn\'t applied on each instance. Alternatively, you can modify items of instance in instance edit page. But, when you delete a template is proceed along with connected instances.',
+            [
+              { text: 'OK', onPress: () => navigator.push(
+                {
+                  passProps: {
+                    leftButton: {
+                      title: 'back',
+                      component: ''
+                    },
+                    rightButton: {
+                      title: '',
+                      component: ''
+                    },
+                    parentTab: route.passProps.parentTab,
+                    chosenTemplate
+                  },
+                  title: 'Template Edit',
+                  component: TemplateDetailsModifyContainer,
+                }
+              )}
+            ]
           )}
         />
       </View>

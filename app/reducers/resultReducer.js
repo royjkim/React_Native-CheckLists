@@ -77,10 +77,6 @@ const modifyItemsCustomized = (state, action) => {
       ...tempData_itemsCustomized
     ]
   } : state;
-  // return {
-  //   ...state,
-  //
-  // }
 }
 
 const addItemsCustomized = (state, action) => ({
@@ -91,15 +87,7 @@ const addItemsCustomized = (state, action) => ({
 const addItemsCustomizedWhenAddInstance = (state, action) => {
   return {
     ...state,
-    // itemsCustomized: [
-    //   ...state.itemsCustomized,
-    //   ...action.newAddedItemsCustomized
-    // ],
     itemsCustomized: state.itemsCustomized.concat(action.newData.items)
-    // itemsCustomized: [
-    //   ...state.itemsCustomized,
-    //   ...action.newData.items,
-    // ]
   }
 }
 
@@ -107,10 +95,6 @@ const delItemsCustomized = (state, action) => {
   let tempData_itemsCustomized = [ ...state.itemsCustomized ];
   action.targetData.items.map(value => {
     const targetIndexOfItemsCustomized = tempData_itemsCustomized.indexOf(value);
-    // targetIndexOfItemsCustomized !== -1 && (tempData_itemsCustomized = [
-    //   ...tempData_itemsCustomized.slice(0, targetIndexOfItemsCustomized),
-    //   ...tempData_itemsCustomized.slice(targetIndexOfItemsCustomized + 1)
-    // ]);
     targetIndexOfItemsCustomized !== -1 && tempData_itemsCustomized.splice(targetIndexOfItemsCustomized, 1);
   })
   return {
@@ -122,24 +106,12 @@ const delItemsCustomized = (state, action) => {
 }
 
 const addItem = (state, action) => {
-  // Below need to be modified, to
-  // const itemId =  action.newData.map(value => value.itemId)
-
   let tempData_items = [];
-
-  // action.newData instanceof Array && (tempData_items = action.newData.map(value => value.itemId));
-  // action.newData instanceof Object && (tempData_items = action.newData.items.map(value => value.itemId));
-  // (tempData_items = action.newData.items.map(value => value.itemId))
   for(let key in action.newData) {
     tempData_items.push(key)
   }
   return {
     ...state,
-    // items: [
-    //   ...state.items,
-    //   // action.newData.itemId
-    //   ...action.newData.map(value => value.itemId)
-    // ]
     items: state.items.concat(tempData_items)
   }
 }
@@ -181,7 +153,7 @@ const addTemplateCategory = (state, action) => ({
 })
 
 const delTemplateCategory = (state, action) => ({
-
+  ...state,
 })
 
 const normalizedDataInput = (state, action) => action.data.result

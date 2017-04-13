@@ -38,6 +38,7 @@ export default class ItemsListsAllComponent extends React.Component {
       key={sectionId}
       title={rowData.desc}
       subtitle={`orderNum : ${rowData.orderNum} / itemId : ${rowData.itemId}`}
+      underlayColor='#C0C0C0'
       hideChevron
     />
     const renderSectionHeader = (sectionData, sectionId) => {

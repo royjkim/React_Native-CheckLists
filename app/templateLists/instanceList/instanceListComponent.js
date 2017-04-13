@@ -45,6 +45,7 @@ export default class InstanceListComponent extends React.Component {
     const renderRowInstances = (rowData, sectionId) => <ListItem
       key={sectionId}
       title={rowData.name}
+      underlayColor='#C0C0C0'
       badge={{
         value: state.badgeValueOfStatusOfEachInstanceOfChosenTemplate[rowData.instanceId].uncompleted,
         badgeTextStyle: { color: 'white' },
@@ -74,6 +75,7 @@ export default class InstanceListComponent extends React.Component {
       key={rowData.templateId}
       title={rowData.title}
       subtitle={rowData.title == route.passProps.chosenTemplate.title ? 'This is current template.' : null}
+      underlayColor='#C0C0C0'
       onPress={() => {
         this.setState({
           chosenTemplateForAdd: rowData.title,
@@ -123,8 +125,9 @@ export default class InstanceListComponent extends React.Component {
             <View style={{ height: 10 }}/>
             <Button
               icon={{ name: 'add' }}
+              backgroundColor='#008D14'
               title='Add Instance'
-              backgroundColor='#339AED'
+              buttonStyle={{ borderRadius: 10 }}
               onPress={() => this.setState({ addNewInstanceModalVisible: true })}
             />
             <Modal
@@ -139,7 +142,13 @@ export default class InstanceListComponent extends React.Component {
                     style={{
                       flex: 1,
                     }}
-                    onPress={() => this.setState({ addNewInstanceModalVisible: false, chosenTemplateForAdd: '', tempInstanceName: '' })}
+                    onPress={() => this.state.tempInstanceName =='' ? this.setState({ addNewInstanceModalVisible: false, chosenTemplateForAdd: '', tempInstanceName: '' }) : Alert.alert(
+                      'Warning',
+                      'After input instance name, press submit button.',
+                      [
+                        { text: 'OK', onPress: () => this.refs['tempInstanceName'].focus() }
+                      ]
+                    )}
                     >
                   </TouchableOpacity>
                   <KeyboardAvoidingView
@@ -198,8 +207,14 @@ export default class InstanceListComponent extends React.Component {
                           </View>
                           <Button
                             title='Submit'
-                            backgroundColor='#159589'
-                            onPress={() => this.state.tempInstanceName == '' ? alert('input new category') : (this.setState({
+                            backgroundColor='#008D14'
+                            buttonStyle={{ borderRadius: 10 }}
+                            onPress={() => this.state.tempInstanceName == '' ? Alert.alert(
+                              'Warning',
+                              'input new category',
+                              [
+                                { text: 'OK' }
+                              ]) : (this.setState({
                               addNewInstanceModalVisible: false,
                               tempInstanceName: '',
                               chosenTemplateForAdd: ''
@@ -217,6 +232,7 @@ export default class InstanceListComponent extends React.Component {
                         icon={{ name: 'note-add' }}
                         title='Move to add new template'
                         backgroundColor='#339AED'
+                        buttonStyle={{ borderRadius: 10 }}
                         onPress={() => {
                           this.setState({ addNewInstanceModalVisible: false })
                           navigator.push({

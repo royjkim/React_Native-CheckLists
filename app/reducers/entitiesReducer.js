@@ -10,33 +10,17 @@ const initialState = {
   }
 };
 
-const addTemplate = (state, action) => {
-  return {
-    ...state,
-    templates: {
-      ...state.templates,
-      [action.lastId.templates + 1]: {
-        ...action.newData,
-        items: action.newData.items.map(value => value.itemId),
-        instances: []
-      }
+const addTemplate = (state, action) => ({
+  ...state,
+  templates: {
+    ...state.templates,
+    [action.lastId.templates + 1]: {
+      ...action.newData,
+      items: action.newData.items.map(value => value.itemId),
+      instances: []
     }
-    // items: {
-    //   ...state.items,
-    //   ...temp_items
-    // }
-    // items: {
-    //   ...state.items,
-    //   [action.lastId.items + 1]: {
-    //     ...action.newData.items
-    //   }
-    // },
-    // itemsCustomized: {
-    //   ...state.itemsCustomized,
-    //   ...temp_itemsCustomized
-    // }
   }
-}
+})
 
 const addInstance = (state, action) => ({
   ...state,
@@ -45,10 +29,7 @@ const addInstance = (state, action) => ({
     [action.newData.instanceId]: {
       ...action.newData
     }
-  },
-  // itemsCustomized: {
-  //   ...tempData_itemsCustomized
-  // }
+  }
 })
 
 const addInstanceOnTemplate = (state, action) => {
@@ -157,14 +138,7 @@ const addItemsCustomizedWhenAddInstance = (state, action) => {
   let tempData_newAddedItemsCustomized = {};
   let lastId = action.lastId;
   state.templates[action.newData.templateId].items.map(value => {
-    // tempData_itemsCustomized[++action.lastId] = {
-    //   ...state.items[value],
-    //   instanceId: action.newData.instanceId,
-    //   itemCustomizedId: action.lastId,
-    //   status: false
-    // };
     tempData_newAddedItemsCustomized[++lastId] = {
-      // ...tempData_itemsCustomized[action.lastId]
       ...state.items[value],
       instanceId: action.newData.instanceId,
       itemCustomizedId: lastId,
@@ -238,18 +212,6 @@ const modifyItemsCustomized = (state, action) => {
       ...tempData_itemsCustomized
     }
   }
-  // return {
-  //   ...state,
-  //   itemsCustomized: {
-  //     // ...state.itemsCustomized,
-  //     ...tempData_itemsCustomized
-  //     // ...action.targetData,
-  //     // [action.targetData.itemCustomizedId]: {
-  //     //   ...action.targetData,
-  //     //   status: !action.targetData.status
-  //     // }
-  //   }
-  // }
 }
 
 const changeStatusOfItemsCustomized = (state, action) => ({
@@ -264,23 +226,6 @@ const changeStatusOfItemsCustomized = (state, action) => ({
 })
 
 const addItem = (state, action) => {
-  // console.log('reducer - action.newData : ', action.newData);
-  // (action.newData instanceof Array) ? const tempData_items = ((tempResult = {}) => {
-  //   action.DEL_ITEM_MULTI_WHEN_DEL_TEMPLATE_WHEN_DEL_TEMPLATElue => tempResult[value.itemId] = value);
-  //   return tempResult
-  // })() : null
-
-  // let tempData_items;
-      // tempData_itemsInTemplates;
-
-  // console.log('action.newData instanceof Array : ', action.newData instanceof Array);
-  // console.log('action.newData instanceof Object : ', action.newData instanceof Object);
-
-  // let temp_items;
-      // temp_itemsInTemplates;
-  // if(action.newData instanceof Object) {
-    // console.log('when instanceof Object is True');
-    // temp_items = ((tempResult = {}) => {
   let temp_items = {},
       tempData_templates = { ...state.templates[action.templateId] };
     // temp_itemsInTemplates = [];
@@ -290,41 +235,10 @@ const addItem = (state, action) => {
       };
       tempData_templates.items.push(parseInt(key));
     };
-
-
-
-
-      // action.newData.items.map(value => {
-      //   temp_items[value.itemId] = {
-      //     ...value,
-      //     template: action.newData.title
-      //   };
-      //   // temp_itemsInTemplates.push(value.itemid);
-      // });
-    // })();
-  // }
-  //   ...action.newData.map(value => value.itemId)
-
-  // action.newData instanceof Object && (const temp_items = ((tempResult = {}) => {
-  //   action.newData.items.map(value => {
-  //     temp_items[value.itemId] = {
-  //       ...value,
-  //       template: action.newData.title
-  //     }
-  //   });
-  // })(););
-  // const result_items = tempData_items || temp_items || {};
-  // const result_itemsInTemplates = tempData_itemsInTemplates || temp_itemsInTemplates || [];
-  // const tempData_itemsOftemplates = action.newData.map(value => value.itemId)
   return {
     ...state,
     items: {
       ...state.items,
-      // [action.newData.itemId]: {
-      //   ...action.newData
-      // }
-      // ...action.newData.map(value => [value.itemId]: value)
-      // ...tempData_items
       ...temp_items
     },
     templates: {
@@ -333,17 +247,6 @@ const addItem = (state, action) => {
         ...tempData_templates
       }
     }
-    // templates: {
-    //   ...state.templates,
-    //   [action.templateId]: {
-    //     ...state.templates[action.newData.templateId],
-    //     // items: [
-    //     //   ...state.templates[action.templateId].items,
-    //     //   ...action.newData.map(value => value.itemId)
-    //     // ]
-    //     items: state.templates[action.newData.templateId].items.concat(result_itemsInTemplates)
-    //   }
-    // }
   }
 }
 
@@ -371,14 +274,6 @@ const modifyItem = (state, action) => {
       desc: action.data[key]
     };
   };
-    // tempData_items = {
-    //   ...tempData_items,
-    //   [key]: {
-    //     ...tempData_items[key],
-    //     desc: action.data[key]
-    //   }
-    // };
-    // action.data[key] == '' ? delete tempData_items[key] : null
   return {
     ...state,
     items: {
@@ -392,13 +287,6 @@ const delItem = (state, action) => {
   delete tempData_items[action.targetItemId];
   let tempData_itemsOfTemplate = [ ...state.templates[action.targetTemplateId].items ];
   const targetIndexOfTemplateItems = tempData_itemsOfTemplate.findIndex(value => value == action.targetItemId);
-  // tempData_templates = {
-  //   ...tempData_templates,
-  //   [action.targetTemplateId]: {
-  //     ...tempData_templates[action.targetTemplateId],
-  //     items:
-  //   }
-  // }
   tempData_itemsOfTemplate = [
     ...tempData_itemsOfTemplate.slice(0, targetIndexOfTemplateItems),
     ...tempData_itemsOfTemplate.slice(targetIndexOfTemplateItems + 1)
@@ -445,11 +333,11 @@ const addTemplateCategory = (state, action) => ({
 })
 
 const modifyTemplateCategory = (state, action) => ({
-
+  ...state,
 })
 
 const delTemplateCategory = (state, action) => ({
-
+  ...state,
 })
 
 const normalizedDataInput = (state, action) => action.data.entities

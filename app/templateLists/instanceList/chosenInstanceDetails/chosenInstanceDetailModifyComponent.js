@@ -26,17 +26,17 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
     super(props)
     this.state = {
       saveButtonVisible: false,
-      tempInstanceName: this.props.route.passProps.chosenInstance.name || '',
-      tempTemplateTitle: this.props.state.chosenTemplate.title || '',
-      prev_tempInstanceName: this.props.route.passProps.chosenInstance.name || '',
-      prev_tempTemplateTitle: this.props.state.chosenTemplate.title || '',
+      tempInstanceName: this.props.chosenInstance.name || '',
+      tempTemplateTitle: this.props.chosenTemplate.title || '',
+      prev_tempInstanceName: this.props.chosenInstance.name || '',
+      prev_tempTemplateTitle: this.props.chosenTemplate.title || '',
       changeValue_tempInstanceName: false,
       changeValue_tempTemplateTitle: false,
       changeValue_items: false,
-      prevItems: Object.freeze(cloneDeep(this.props.state.itemsCustomizedObjectOfChosenInstance)),
-      tempItems: cloneDeep(this.props.state.itemsCustomizedObjectOfChosenInstance),
-      // dataSourceItemsCustomizedOfChosenInstance: cloneDeep(this.props.state.dataSourceItemsCustomizedOfChosenInstance),
-      dataSourceItemsCustomizedOfChosenInstance: this.props.state.dataSourceItemsCustomizedOfChosenInstance,
+      prevItems: Object.freeze(cloneDeep(this.props.itemsCustomizedObjectOfChosenInstance)),
+      tempItems: cloneDeep(this.props.itemsCustomizedObjectOfChosenInstance),
+      // dataSourceItemsCustomizedOfChosenInstance: cloneDeep(this.props.dataSourceItemsCustomizedOfChosenInstance),
+      dataSourceItemsCustomizedOfChosenInstance: this.props.dataSourceItemsCustomizedOfChosenInstance,
       modifyExistingItems: {},
     };
     this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
@@ -53,9 +53,9 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
     // console.log('componentDidUpdate - this.state : ', this.state);
     // console.log('componentDidUpdate - this.props : ', this.props);
     const __navigatorRouteID = this.props.route.__navigatorRouteID,
-          parentTab = this.props.route.passProps.parentTab,
-          navigatePrevent = this.props.state.navigatePrevent,
-          triedNavigateWhenPrevented = this.props.state.triedNavigateWhenPrevented,
+          parentTab = this.props.parentTab,
+          navigatePrevent = this.props.navigatePrevent,
+          triedNavigateWhenPrevented = this.props.triedNavigateWhenPrevented,
           navigatePreventFn = this.props.navigatePreventFn,
           triedNavigateWhenPreventedFn = this.props.triedNavigateWhenPreventedFn;
 
@@ -92,7 +92,12 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
 
   };
 
-  checkIfNavigatePreventOrNot(__navigatorRouteID, parentTab, navigatePrevent, triedNavigateWhenPrevented, navigatePreventFn, triedNavigateWhenPreventedFn) {
+  checkIfNavigatePreventOrNot(__navigatorRouteID = this.props.route.__navigatorRouteID,
+    parentTab = this.props.parentTab,
+    navigatePrevent = this.props.navigatePrevent,
+    triedNavigateWhenPrevented = this.props.triedNavigateWhenPrevented,
+    navigatePreventFn = this.props.navigatePreventFn,
+    triedNavigateWhenPreventedFn = this.props.triedNavigateWhenPreventedFn) {
 
     // Below is for alert let an user know 'save before navigate', then make redux 'alert completed'.
     (this.state.changeValue_tempInstanceName || this.state.changeValue_tempTemplateTitle || this.state.changeValue_items) && (
@@ -100,7 +105,7 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
       navigatePrevent[parentTab] || navigatePreventFn(parentTab, true),
       this.state.saveButtonVisible || this.setState({ saveButtonVisible: true }));
 
-    (!this.state.changeValue_tempInstanceName && !this.state.changeValue_tempTemplateTitle && !this.state.changeValue_items) && (
+    (this.state.changeValue_tempInstanceName || this.state.changeValue_tempTemplateTitle || this.state.changeValue_items) || (
       navigatePrevent[__navigatorRouteID] && navigatePreventFn(__navigatorRouteID, false),
       navigatePrevent[parentTab] && navigatePreventFn(parentTab, false),
       this.state.saveButtonVisible && this.setState({ saveButtonVisible: false }));
@@ -110,7 +115,14 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
     const {
       route,
       navigator,
-      state,
+      navigatePrevent,
+      chosenTemplate,
+      lastId,
+      chosenInstance,
+      parentTab,
+      // countsOfStatusCompleted,
+      itemsCustomizedObjectOfChosenInstance,
+      lastOrderNum,
       chooseCategory,
       navigatePreventFn,
       modifyTemplate,
@@ -119,7 +131,7 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
       addItemsCustomized,
       delInstance,
     } = this.props
-    const { chosenInstance } = route.passProps;
+    // const { chosenInstance } = route.passProps;
     const changeItemText = (tempItemText, rowData, rowId, emptyStatusBoolean) => {
       const commonFn = () => this.setState(prevState => {
         rowId in prevState.tempItems && (prevState.tempItems[rowData.itemCustomizedId].desc == tempItemText ?
@@ -158,6 +170,7 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
         borderColor: this.state.tempItems[rowData.itemCustomizedId].desc !== '' ? '#C1C1C1' : '#FF2A1A',
         borderBottomWidth: 1.3,
         marginHorizontal: 10,
+        marginBottom: 7,
       }}
       >
       <TextInput
@@ -174,16 +187,29 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
     </View>
     const resetData = () => this.setState({
       saveButtonVisible: false,
-      tempInstanceName: this.props.route.passProps.chosenInstance.name || '',
-      tempTemplateTitle: this.props.state.chosenTemplate.title || '',
-      prev_tempInstanceName: this.props.route.passProps.chosenInstance.name || '',
-      prev_tempTemplateTitle: this.props.state.chosenTemplate.title || '',
+      tempInstanceName: this.props.chosenInstance.name || '',
+      tempTemplateTitle: this.props.chosenTemplate.title || '',
+      prev_tempInstanceName: this.props.chosenInstance.name || '',
+      prev_tempTemplateTitle: this.props.chosenTemplate.title || '',
       changeValue_tempInstanceName: false,
       changeValue_tempTemplateTitle: false,
       changeValue_items: false,
-      prevItems: Object.freeze(cloneDeep(this.props.state.itemsCustomizedObjectOfChosenInstance)),
-      tempItems: cloneDeep(this.props.state.itemsCustomizedObjectOfChosenInstance),
-      dataSourceItemsCustomizedOfChosenInstance: this.ds.cloneWithRows(this.state.tempItems),
+      prevItems: Object.freeze(cloneDeep(itemsCustomizedObjectOfChosenInstance)),
+      tempItems: cloneDeep(itemsCustomizedObjectOfChosenInstance),
+      // dataSourceItemsCustomizedOfChosenInstance: cloneDeep(this.props.dataSourceItemsCustomizedOfChosenInstance),
+      dataSourceItemsCustomizedOfChosenInstance: this.props.dataSourceItemsCustomizedOfChosenInstance,
+      modifyExistingItems: {},
+      // saveButtonVisible: false,
+      // tempInstanceName: this.props.chosenInstance.name || '',
+      // tempTemplateTitle: this.props.chosenTemplate.title || '',
+      // prev_tempInstanceName: this.props.chosenInstance.name || '',
+      // prev_tempTemplateTitle: this.props.chosenTemplate.title || '',
+      // changeValue_tempInstanceName: false,
+      // changeValue_tempTemplateTitle: false,
+      // changeValue_items: false,
+      // prevItems: Object.freeze(cloneDeep(itemsCustomizedObjectOfChosenInstance)),
+      // tempItems: cloneDeep(itemsCustomizedObjectOfChosenInstance),
+      // dataSourceItemsCustomizedOfChosenInstance: this.ds.cloneWithRows(this.state.tempItems),
     });
 
     // Below is for change the 'this state of instanceName and templateTitle & changeValue_tempInstanceName and changeValue_tempTemplateTitle'.
@@ -250,7 +276,7 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
             <View
               style={{
                 flex: 1,
-                borderColor: this.state.tempInstanceName ? '#C1C1C1' : '#FF2A1A',
+                borderColor: this.state.changeValue_tempInstanceName ? '#159589' : '#C1C1C1',
                 borderBottomWidth: 1.5,
                 marginHorizontal: 10
               }}
@@ -286,7 +312,7 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
             <View
               style={{
                 flex: 1,
-                borderColor: this.state.tempTemplateTitle.length > 0 ? '#C1C1C1' : '#FF2A1A',
+                borderColor: this.state.changeValue_tempTemplateTitle ? '#159589' : '#C1C1C1',
                 borderBottomWidth: 1.5,
                 marginHorizontal: 10
               }}
@@ -303,9 +329,15 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
               />
             </View>
         </View>
-        <FormLabel>
-          Items : total({state.countsOfStatusCompleted.total})
-        </FormLabel>
+        {/* <FormLabel>
+          Items : total({countsOfStatusCompleted.total})
+        </FormLabel> */}
+        {this.state.changeValue_items ? <FormLabel>
+          Items : total({Object.keys(this.state.tempItems).length}, new item added)
+        </FormLabel> : <FormLabel>
+          {/* Items : total({countsOfStatusCompleted.total}) */}
+          Items : total({Object.keys(this.state.prevItems).length})
+        </FormLabel>}
         <View style={{ height: 10 }} />
         <FormLabel>
           New Item
@@ -316,7 +348,7 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
           <View
             style={{
               flex: 1,
-              // borderWidth: 1
+              // borderWidth: 1,
             }}
             >
             <FormInput
@@ -331,43 +363,30 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
           <View
             style={{
               flex: 0,
+              // borderWidth: 1,
             }}>
             <Button
               title='Add'
               backgroundColor='#159588'
+              buttonStyle={{ borderRadius: 10 }}
               onPress={() => {
                 this.state.tempNewItemDesc !== '' && this.setState(prevState => {
                   const addUniqueCount = Object.keys(prevState.tempItems).length - Object.keys(prevState.prevItems).length
                   prevState.newItemCustomized = {
                     desc: prevState.tempNewItemDesc,
-                    instanceId: route.passProps.chosenInstance.instanceId,
-                    itemCustomizedId: state.lastId.itemsCustomized + 1 + addUniqueCount,
+                    instanceId: chosenInstance.instanceId,
+                    itemCustomizedId: lastId.itemsCustomized + 1 + addUniqueCount,
                     itemId: 999,
-                    orderNum: state.lastOrderNum + 1 + addUniqueCount,
-                    templateId: state.chosenTemplate.templateId,
+                    orderNum: lastOrderNum + 1 + addUniqueCount,
+                    templateId: chosenTemplate.templateId,
                     status: false,
                   };
-                  // prevState.tempItems = [
-                  //   ...prevState.tempItems,
-                  //   {
-                  //     ...prevState.newItemCustomized,
-                  //     desc: prevState.tempNewItemDesc
-                  //   }
-                  // ];
                   prevState.tempItems[prevState.newItemCustomized.itemCustomizedId] = {
                     ...prevState.newItemCustomized
                   };
                   prevState.newItemCustomized.desc = '';
                   ++prevState.newItemCustomized.itemCustomizedId;
-                  // prevState.newItemCustomized = {
-                  //   desc: '',
-                  //   itemId: prevState.newItemCustomized.itemId + 1,
-                  //   orderNum: prevState.newItemCustomized.orderNum,
-                  //   templateId: state.lastId.templates + 1,
-                  // };
                   prevState.tempNewItemDesc = '';
-                  // prevState.tempItems.sort((data1, data2) => data2.orderNum - data1.orderNum);
-                  // prevState.dataSourceNewAddedItems = this.ds.cloneWithRows(prevState.tempItems);
                   prevState.changeValue_items = !isEqual(prevState.prevItems, prevState.tempItems);
                   prevState.dataSourceItemsCustomizedOfChosenInstance = this.ds.cloneWithRows(prevState.tempItems);
                 })
@@ -375,7 +394,7 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
             />
           </View>
         </View>
-        <View style={{ height: 10 }}/>
+        <View style={{ height: 10 }} />
         <List>
           <ListView
             // dataSource={state.dataSourceItemsCustomizedOfChosenInstance}
@@ -383,7 +402,7 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
             renderRow={renderRow}
             enableEmptySections={true}
             removeClippedSubviews={false}
-            style={{ maxHeight: 200 }}
+            style={{ maxHeight: this.state.saveButtonVisible ? 150 : 200 }}
           />
         </List>
         <View style={{ height: 10 }} />
@@ -393,10 +412,11 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
               icon={{ name: 'check' }}
               title='Save'
               backgroundColor='#159589'
+              buttonStyle={{ borderRadius: 10 }}
               onPress={async () => {
                 await this.setState(prevState => {
-                  prevState.changeValue_tempTemplateTitle && (modifyTemplate(state.chosenTemplate.templateId, prevState.tempTemplateTitle.trim()), prevState.prev_tempTemplateTitle = prevState.tempTemplateTitle.trim(), prevState.tempTemplateTitle = prevState.tempTemplateTitle.trim(), prevState.changeValue_tempInstanceName = false);
-                  prevState.changeValue_tempInstanceName && (modifyInstance(route.passProps.chosenInstance.instanceId, prevState.tempInstanceName.trim()), prevState.prev_tempInstanceName = prevState.tempInstanceName.trim(), prevState.tempInstanceName = prevState.tempInstanceName.trim() , prevState.changeValue_tempTemplateTitle = false);
+                  prevState.changeValue_tempTemplateTitle && (modifyTemplate(chosenTemplate.templateId, prevState.tempTemplateTitle.trim()), prevState.prev_tempTemplateTitle = prevState.tempTemplateTitle.trim(), prevState.tempTemplateTitle = prevState.tempTemplateTitle.trim(), prevState.changeValue_tempInstanceName = false);
+                  prevState.changeValue_tempInstanceName && (modifyInstance(chosenInstance.instanceId, prevState.tempInstanceName.trim()), prevState.prev_tempInstanceName = prevState.tempInstanceName.trim(), prevState.tempInstanceName = prevState.tempInstanceName.trim() , prevState.changeValue_tempTemplateTitle = false);
                   for(let key in prevState.modifyExistingItems) {
                   //   delete prevState.tempItems[key]
                     prevState.modifyExistingItems[key].desc = prevState.modifyExistingItems[key].desc.trim();
@@ -410,25 +430,33 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
                     key in prevState.prevItems || tempData_newAddedItemsCustomized.push(prevState.tempItems[key]);
                   }
                   tempData_newAddedItemsCustomized.sort((data1, data2) => data1.itemCustomizedId - data2.itemCustomizedId);
-                  tempData_newAddedItemsCustomized.length > 0 && addItemsCustomized(state.lastId, tempData_newAddedItemsCustomized);
+                  tempData_newAddedItemsCustomized.length > 0 && addItemsCustomized(lastId, tempData_newAddedItemsCustomized);
                   prevState.prevItems = Object.freeze((cloneDeep(prevState.tempItems)));
                   prevState.changeValue_items = false;
                   prevState.dataSourceItemsCustomizedOfChosenInstance = this.ds.cloneWithRows(prevState.tempItems);
                 });
                 (!this.state.changeValue_tempInstanceName && !this.state.changeValue_tempTemplateTitle && !this.state.changeValue_items) && (
-                  state.navigatePrevent[route.__navigatorRouteID] && navigatePreventFn(route.__navigatorRouteID, false),
-                  state.navigatePrevent[route.passProps.parentTab] && navigatePreventFn(route.passProps.parentTab, false));
+                  navigatePrevent[route.__navigatorRouteID] && navigatePreventFn(route.__navigatorRouteID, false),
+                  navigatePrevent[parentTab] && navigatePreventFn(parentTab, false));
                 // state.navigatePrevent[route.__navigatorRouteID] && navigatePreventFn(route.__navigatorRouteID, false);
-                // state.navigatePrevent[route.passProps.parentTab] && navigatePreventFn(route.passProps.parentTab, false);
-                alert('save complete')
+                // state.navigatePrevent[parentTab] && navigatePreventFn(parentTab, false);
+                Alert.alert(
+                  'Completed',
+                  'save complete',
+                [
+                  { text: 'OK' }
+                ]);
               }}
             />
             <View
               style={{ height: 10 }}
             />
             <Button
+              icon={{ name: 'restore' }}
               title='Restore'
-              backgroundColor='#86939D'
+              // backgroundColor='#86939D'
+              backgroundColor='#3D7CAA'
+              buttonStyle={{ borderRadius: 10 }}
               onPress={() => resetData()}
             />
           </View>
@@ -440,13 +468,14 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
           icon={{ name: 'delete' }}
           title='delete instance'
           backgroundColor='#FF7F7C'
+          buttonStyle={{ borderRadius: 10 }}
           onPress={() => Alert.alert(
             'Delete Confirm',
-            `This instance (${this.state.prev_tempInstanceName}) would be deleted. It couldn't restore after deleted.`,
+            `This instance(${this.state.prev_tempInstanceName}) would be deleted. It couldn't restore after deleted.`,
             [
-              { text: 'Cancel Delete' },
-              { text: 'Confirm Delete', onPress: () => {
-                  delInstance(route.passProps.chosenInstance);
+              { text: 'Cancel' },
+              { text: 'OK', onPress: () => {
+                  delInstance(chosenInstance);
                   this.checkIfNavigatePreventOrNot();
                   navigator.pop();
                 }

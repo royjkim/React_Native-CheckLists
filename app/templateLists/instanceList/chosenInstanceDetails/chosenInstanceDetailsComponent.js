@@ -28,14 +28,6 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
     this.state = {
       modalPickerVisible: false,
       pickerValue: 'all'
-      // saveButtonVisible: false,
-      // instanceName: this.props.route.passProps.chosenInstance.name || '',
-      // templateTitle: this.props.state.chosenTemplate.title || '',
-      // prev_instanceName: this.props.route.passProps.chosenInstance.name || '',
-      // prev_templateTitle: this.props.state.chosenTemplate.title || '',
-      // changeValue_instanceName: false,
-      // changeValue_templateTitle: false,
-      // saved: false
     };
   }
 
@@ -50,51 +42,6 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
     nextProps.state.existOrNot_chosenInstance || this.becauseOfExistNotAlertMsgFn();
   }
 
-  // componentDidUpdate() {
-  //   const __navigatorRouteID = this.props.route.__navigatorRouteID,
-  //         parentTab = this.props.route.passProps.parentTab,
-  //         navigatePrevent = this.props.state.navigatePrevent,
-  //         triedNavigateWhenPrevented = this.props.state.triedNavigateWhenPrevented,
-  //         navigatePreventFn = this.props.navigatePreventFn,
-  //         triedNavigateWhenPreventedFn = this.props.triedNavigateWhenPreventedFn;
-  //
-  //   this.checkIfNavigatePreventOrNot(__navigatorRouteID, parentTab, navigatePrevent, triedNavigateWhenPrevented, navigatePreventFn, triedNavigateWhenPreventedFn);
-  //   // !this.state.saveButtonVisible && (this.state.changeValue_instanceName || this.state.changeValue_templateTitle) && this.setState({ saveButtonVisible: true });
-  //
-  //   // // Below is for changeValue of 'instanceName or templateTitle', make redux navigate prevent & hide save button.
-  //   // (this.state.changeValue_instanceName || this.state.changeValue_templateTitle) && (navigatePrevent[__navigatorRouteID] || navigatePreventFn(__navigatorRouteID, true),
-  //   //   navigatePrevent[parentTab] || navigatePreventFn(parentTab, true));
-  //   //
-  //   // // Below is for when the value of 'instanceName or templateTitle' restored , make redux navigate able.
-  //   // (!this.state.changeValue_instanceName && !this.state.changeValue_templateTitle) && (navigatePrevent[__navigatorRouteID] && navigatePreventFn(__navigatorRouteID, false),
-  //   //   navigatePrevent[parentTab] && navigatePreventFn(parentTab, false), (this.state.saveButtonVisible && this.setState({ saveButtonVisible: false })));
-  //
-  //   // Below is for alert let an user know 'save before navigate', then make redux 'alert completed'.
-  //     triedNavigateWhenPrevented[__navigatorRouteID] && (
-  //       this.state.changeValue_instanceName ?
-  //         (alert('press save button to save changed instance name.'), triedNavigateWhenPreventedFn(__navigatorRouteID, false))
-  //           : this.state.changeValue_templateTitle && (alert('press save button to save changed template name.'), this.props.triedNavigateWhenPreventedFn(__navigatorRouteID, false)));
-  //
-  //     triedNavigateWhenPrevented[parentTab] && (
-  //       this.state.changeValue_templateTitle ?
-  //         (alert('press save button to save changed template name.'), triedNavigateWhenPreventedFn(parentTab, false))
-  //           : this.state.changeValue_instanceName && (alert('press save button to save changed instance name.'), triedNavigateWhenPreventedFn(parentTab, false)));
-  // }
-  //
-  // checkIfNavigatePreventOrNot(__navigatorRouteID, parentTab, navigatePrevent, triedNavigateWhenPrevented, navigatePreventFn, triedNavigateWhenPreventedFn) {
-  //
-  //   // Below is for changeValue of 'instanceName or templateTitle', make redux navigate prevent & hide save button.
-  //   (this.state.changeValue_instanceName || this.state.changeValue_templateTitle) && (navigatePrevent[__navigatorRouteID] || navigatePreventFn(__navigatorRouteID, true),
-  //     navigatePrevent[parentTab] || navigatePreventFn(parentTab, true),
-  //     this.state.saveButtonVisible || this.setState({ saveButtonVisible: true }));
-  //
-  //   // Below is for when the value of 'instanceName or templateTitle' restored , make redux navigate able.
-  //   (!this.state.changeValue_instanceName && !this.state.changeValue_templateTitle) && (navigatePrevent[__navigatorRouteID] && navigatePreventFn(__navigatorRouteID, false),
-  //     navigatePrevent[parentTab] && navigatePreventFn(parentTab, false),
-  //     this.state.saveButtonVisible && this.setState({ saveButtonVisible: false }));
-  //
-  // }
-
   becauseOfExistNotAlertMsgFn() {
     const tempFn_becauseOfExistNotAlertMsgFn = this.becauseOfExistNotAlertMsgFn;
     this.becauseOfExistNotAlertMsgFn = () => null;
@@ -103,7 +50,6 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
       'ChosenInstanceDetailsComponent - Because of Current Instance Deleted. Page would be directed to back.',
       [
         { text: 'Confirm', onPress: () => {
-          this.checkIfNavigatePreventOrNot();
           this.becauseOfExistNotAlertMsgFn = tempFn_becauseOfExistNotAlertMsgFn;
           this.props.navigator.pop()
           }
@@ -278,7 +224,8 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
         <Button
           icon={{ name: 'sort', size: 22 }}
           title='Item Sort'
-          backgroundColor='#159588'
+          backgroundColor='#7B84FC'
+          buttonStyle={{ borderRadius: 10 }}
           onPress={() => this.setState({ modalPickerVisible: true })}
         />
         {state.dataSourceItemsCustomizedOfChosenInstance._cachedRowCount !== state.countsOfStatusCompleted.total && <FormLabel>
@@ -294,41 +241,11 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
           />
         </List>
         <View style={{ height: 10 }} />
-        {/* {this.state.saveButtonVisible && (<View>
-            <Button
-              icon={{ name: 'check' }}
-              title='Save'
-              backgroundColor='#159589'
-              onPress={() => {
-                this.state.changeValue_templateTitle && modifyTemplate(state.chosenTemplate.templateId, this.state.templateTitle);
-                this.state.changeValue_instanceName && modifyInstance(route.passProps.chosenInstance.instanceId, this.state.instanceName);
-                this.setState({
-                  saved: true,
-                  prev_templateTitle: this.state.templateTitle,
-                  prev_instanceName: this.state.instanceName,
-                  changeValue_instanceName: false,
-                  changeValue_templateTitle: false
-                })
-                state.navigatePrevent[route.__navigatorRouteID] && navigatePreventFn(route.__navigatorRouteID, false);
-                state.navigatePrevent[route.passProps.parentTab] && navigatePreventFn(route.passProps.parentTab, false);
-                alert('save complete')
-              }}
-            />
-            <View
-              style={{ height: 10 }}
-            />
-            <Button
-              title='Restore'
-              backgroundColor='#86939D'
-              onPress={() => resetData()}
-            />
-          </View>
-        )} */}
-        <View style={{ height: 10 }}/>
         <Button
           icon={{ name: 'edit' }}
           title='Edit instance'
           backgroundColor='#159588'
+          buttonStyle={{ borderRadius: 10 }}
           onPress={() => navigator.push({
               passProps: {
                 leftButton: {
@@ -353,7 +270,10 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
           >
           <View style={{ flex: 1 }}>
             <TouchableOpacity
-              style={{ flex: 1, backgroundColor: 'transparent' }}
+              style={{
+                flex: 1,
+                backgroundColor: 'transparent'
+              }}
               onPress={() => this.setState({ modalPickerVisible: false })}>
             </TouchableOpacity>
             <View

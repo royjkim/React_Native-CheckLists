@@ -17,6 +17,7 @@ export default class ItemsInputedListModalComponent extends React.Component {
     const renderRow = (rowData, sectionID) => <ListItem
       key={sectionID}
       title={rowData}
+      underlayColor='#C0C0C0'
       hideChevron
     />
     return(

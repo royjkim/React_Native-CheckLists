@@ -13,18 +13,24 @@ import ChosenInstanceDetailModifyComponent from './chosenInstanceDetailModifyCom
 import { connect } from 'react-redux'
 import mySelectors from '../../../container/selectors'
 
-const make_mapStateToProps = () => (state, ownProps) => ({
-  state: {
-    itemsCustomizedOfChosenInstance: mySelectors.make_get_itemsCustomizedOfChosenInstance()(state.normalizeReducer, ownProps.route.passProps.chosenInstance),
-    statusPicker: state.configReducer.picker,
-    navigatePrevent: state.configReducer.navigatePrevent,
-    triedNavigateWhenPrevented: state.configReducer.triedNavigateWhenPrevented,
-    chosenTemplate: state.normalizeReducer.entities.templates[ownProps.route.passProps.chosenInstance.template],
-    lastId: state.normalizeReducer.lastId,
-  },
-  route: ownProps.route,
-  navigator: ownProps.navigator
-})
+const make_mapStateToProps = () => (state, ownProps) => {
+  const normalizeReducer = state.normalizeReducer,
+        configReducer = state.configReducer,
+        passProps = ownProps.route.passProps,
+        chosenInstance = passProps.chosenInstance;
+  return {
+    itemsCustomizedOfChosenInstance: mySelectors.make_get_itemsCustomizedOfChosenInstance()(state.normalizeReducer, chosenInstance),
+    statusPicker: configReducer.picker,
+    navigatePrevent: configReducer.navigatePrevent,
+    triedNavigateWhenPrevented: configReducer.triedNavigateWhenPrevented,
+    chosenTemplate: normalizeReducer.entities.templates[chosenInstance.template],
+    lastId: normalizeReducer.lastId,
+    chosenInstance,
+    parentTab: passProps.parentTab,
+    route: ownProps.route,
+    navigator: ownProps.navigator
+  }
+}
 
 const mapDispatchToProps = dispatch => ({
   changeStatusOfItemsCustomized: targetData => dispatch(changeStatusOfItemsCustomized(targetData)),
@@ -40,17 +46,17 @@ const mapDispatchToProps = dispatch => ({
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => ({
   ...ownProps,
-  state: {
-    ...stateProps.state,
-    dataSourceItemsCustomizedOfChosenInstance: mySelectors.make_get_dataSourceItemsOfChosenInstance()(stateProps.state.itemsCustomizedOfChosenInstance, stateProps.state.statusPicker),
-    countsOfStatusCompleted: mySelectors.make_get_badgeValueOfStatusOfChosenInstance()(stateProps.state.itemsCustomizedOfChosenInstance),
-    itemsCustomizedLength: stateProps.state.itemsCustomizedOfChosenInstance.length,
-    itemsCustomizedObjectOfChosenInstance: ((tempResult = {}) => {
-      stateProps.state.itemsCustomizedOfChosenInstance.map(value => tempResult[value.itemCustomizedId] = { ...value })
-      return tempResult
-    })(),
-    lastOrderNum: stateProps.state.itemsCustomizedOfChosenInstance.length > 0 ? stateProps.state.itemsCustomizedOfChosenInstance.slice(-1)[0].orderNum : 0
-  },
+  // state: {
+  ...stateProps,
+  dataSourceItemsCustomizedOfChosenInstance: mySelectors.make_get_dataSourceItemsOfChosenInstance()(stateProps.itemsCustomizedOfChosenInstance, stateProps.statusPicker),
+  // countsOfStatusCompleted: mySelectors.make_get_badgeValueOfStatusOfChosenInstance()(stateProps.itemsCustomizedOfChosenInstance),
+  // itemsCustomizedLength: stateProps.itemsCustomizedOfChosenInstance.length,
+  itemsCustomizedObjectOfChosenInstance: ((tempResult = {}) => {
+    stateProps.itemsCustomizedOfChosenInstance.map(value => tempResult[value.itemCustomizedId] = { ...value })
+    return tempResult
+  })(),
+  lastOrderNum: stateProps.itemsCustomizedOfChosenInstance.length > 0 ? stateProps.itemsCustomizedOfChosenInstance.slice(-1)[0].orderNum : 0,
+  // },
   ...dispatchProps
 })
 

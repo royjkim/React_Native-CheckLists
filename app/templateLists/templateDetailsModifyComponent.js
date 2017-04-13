@@ -75,8 +75,20 @@ export default class TemplateDetailsModifyComponent extends React.Component {
           navigatePrevent[parentTab] && navigatePreventFn(parentTab, false));
 
     // Below is for alert let an user know 'save before navigate', then make redux 'alert completed'.
-    triedNavigateWhenPrevented[__navigatorRouteID] && (alert('press save button to save changes'), triedNavigateWhenPreventedFn(__navigatorRouteID, false));
-    triedNavigateWhenPrevented[parentTab] && (alert('press save button to save changes'), triedNavigateWhenPreventedFn(parentTab, false));
+    triedNavigateWhenPrevented[__navigatorRouteID] && (Alert.alert(
+      'Wanring',
+      'press save button to save changes.',
+      [
+        { text: 'OK' }
+      ]
+    ), triedNavigateWhenPreventedFn(__navigatorRouteID, false));
+    triedNavigateWhenPrevented[parentTab] && (Alert.alert(
+      'Wanring',
+      'press save button to save changes.',
+      [
+        { text: 'OK' }
+      ]
+    ), triedNavigateWhenPreventedFn(parentTab, false));
 
     this.state.addItemModalVisible && (this.refs['newItemTempDescTextInput'].isFocused() || this.refs['newItemTempDescTextInput'].focus());
   };
@@ -170,7 +182,12 @@ export default class TemplateDetailsModifyComponent extends React.Component {
       // this.state.prevItems.length < this.state.tempItems.length && addItem(lastId.items, this.state.tempItems.slice(itemsOfChosenTemplate.length));
 
 
-      alert('save complete');
+      Alert.alert(
+        'Completed',
+        'save complete',
+        [
+          { text: 'OK' }
+        ]);
       // this.props.navigator.pop()
     }
     const changeItemText = (itemText, rowId, target_itemId, emptyStatusBoolean) => prevState => {
@@ -351,7 +368,7 @@ export default class TemplateDetailsModifyComponent extends React.Component {
               <Button
                 icon={{ name: 'check' }}
                 title='Save'
-                backgroundColor='#159589'
+                backgroundColor='#6598F6'
                 disabled={this.state.addItemModalVisible}
                 onPress={() => this.state.emptyItemsRowId.length > 0 ? saveAlertFn() : saveProcessFn() }
               />
@@ -359,6 +376,7 @@ export default class TemplateDetailsModifyComponent extends React.Component {
                 style={{ height: 10 }}
               />
               <Button
+                icon={{ name: 'restore' }}
                 title='Restore'
                 backgroundColor='#86939D'
                 disabled={this.state.addItemModalVisible}
@@ -378,7 +396,8 @@ export default class TemplateDetailsModifyComponent extends React.Component {
             [
               { text: 'Cancel' },
               { text: 'OK', onPress: () => {
-                navigator.pop();
+                // navigator.popN(2);
+                navigator.popToTop();
                 delTemplate(chosenTemplate);
               }}
             ]
@@ -471,6 +490,7 @@ export default class TemplateDetailsModifyComponent extends React.Component {
                   </View>
                   <Button
                     title='Add'
+                    backgroundColor='#008D14'
                     onPress={() => {
                       this.state.newItem.desc !== '' ? (this.setState(prevState => {
                         // prevState.tempItems = [
@@ -491,7 +511,12 @@ export default class TemplateDetailsModifyComponent extends React.Component {
                         [
                           { text: 'OK', onPress: () => this.refs['newItemTempDescTextInput'].isFocused() || this.refs['newItemTempDescTextInput'].focus()}
                         ]
-                      )) : alert('input new item');
+                      )) : Alert.alert(
+                        'Warning',
+                        'input new item',
+                        [
+                          { text: 'OK' }
+                        ]);
 
                     }}
                   />
