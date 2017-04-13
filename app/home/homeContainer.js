@@ -1,7 +1,14 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import HomeComponent from './homeComponent'
-import { searchBarText, navigatePopToTopRequest, triedNavigateWhenPrevented } from '../actions/dataActionCreators'
+import {
+  searchBarText,
+  navigatePopToTopRequest,
+  triedNavigateWhenPrevented,
+  savelocal,
+  loadlocal,
+  deleteAll,
+} from '../actions/dataActionCreators'
 
 import mySelectors from '../container/selectors'
 
@@ -28,7 +35,10 @@ const make_mapStateToProps = () => (state, ownProps) => {
 const mapDispatchToProps = dispatch => ({
   searchBarText: (searchText, attr) => dispatch(searchBarText(searchText, attr)),
   navigatePopToTopRequest: (targetTab, statusBoolean) => dispatch(navigatePopToTopRequest(targetTab, statusBoolean)),
-  triedNavigateWhenPrevented: (parentTab, statusBoolean) => dispatch(triedNavigateWhenPrevented(parentTab, statusBoolean))
+  triedNavigateWhenPrevented: (parentTab, statusBoolean) => dispatch(triedNavigateWhenPrevented(parentTab, statusBoolean)),
+  savelocal: () => dispatch(savelocal()),
+  loadlocal: () => dispatch(loadlocal()),
+  deleteAll: () => dispatch(deleteAll())
 })
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {

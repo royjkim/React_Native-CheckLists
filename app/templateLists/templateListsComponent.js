@@ -93,12 +93,12 @@ export default class TemplateListsComponent extends React.Component {
         {this.state.searchText_templateList !== ''
           ? (
               <FormLabel>
-                Check List Templates : {state.dataSourceTemplates._cachedRowCount}, searched
+                Check List Templates : {state.dataSourceTemplates._cachedRowCount || 0 }, searched
               </FormLabel>
             )
           : (
               <FormLabel>
-                Check List Templates : {state.templatesLength}
+                Check List Templates : {state.templatesLength || 0}
               </FormLabel>
             )
         }

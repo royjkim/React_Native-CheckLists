@@ -1,4 +1,4 @@
-import types from '../actions/dataActions'
+import types from '../actions/dataActions';
 import { cloneDeep } from 'lodash';
 
 const initialState = {
@@ -365,7 +365,7 @@ export default function resultReducer(state = initialState, action) {
     [types.ADD_TEMPLATE_CATEGORY]: addTemplateCategory,
     [types.MODIFY_TEMPLATE_CATEGORY]: modifyTemplateCategory,
     [types.DEL_TEMPLATE_CATEGORY]: delTemplateCategory,
-    [types.INITIATE_NORMALIZED_DATA_INPUT]: normalizedDataInput
+    [types.INITIATE_NORMALIZED_DATA_INPUT]: normalizedDataInput,
   }
   return reducerMap.hasOwnProperty(action.type) ? reducerMap[action.type](state, action) : state
 }

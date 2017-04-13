@@ -3,6 +3,7 @@ import {
   View,
   Text,
   ListView,
+  ScrollView,
 } from 'react-native'
 import styles from '../components/styles'
 
@@ -32,7 +33,7 @@ export default class HomeComponent extends React.Component {
   }
 
   render() {
-    const { route, navigator, state, searchBarText } = this.props
+    const { route, navigator, state, searchBarText, savelocal, loadlocal, deleteAll } = this.props
     const renderRow = (rowData, sectionId) => <ListItem
       key={sectionId}
       title={rowData.name}
@@ -99,7 +100,7 @@ export default class HomeComponent extends React.Component {
           />
         </List>
         <View style={{ height: 10 }} />
-        <Button
+        {state.dataSourceForAllInstances._cachedRowCount > 0 && <Button
           icon={{ name: 'format-list-bulleted' }}
           title='Show instances with all items'
           buttonStyle={{ borderRadius: 10 }}
@@ -121,7 +122,24 @@ export default class HomeComponent extends React.Component {
               component: InstanceListsAllContainer,
             })
           }}
-        />
+        />}
+        <ScrollView>
+          <Button
+            title='Save on local'
+            buttonStyle={{ marginTop: 10 }}
+            onPress={() => savelocal()}
+          />
+          {/* <Button
+            title='Load from local'
+            buttonStyle={{ marginTop: 10 }}
+            onPress={() => loadlocal()}
+          /> */}
+          <Button
+            title='Delete All'
+            buttonStyle={{ marginTop: 10 }}
+            onPress={() => deleteAll()}
+          />
+        </ScrollView>
       </View>
     )
   }

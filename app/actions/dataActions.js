@@ -28,8 +28,12 @@ const ADD_TEMPLATE = 'addTemplate',
       LAST_ID_PLUS_MULTI = 'lastIdPlusMulti',
       LAST_ID_PLUS_MULTI_OBJECT = 'lastIdPlusMultiObject',
       LAST_ID_PLUS_ONE_BY_ONE = 'lastIdPlusOneByOne',
+      LAST_ID_RESKET = 'lastIdReset',
       NAVIGATE_PREVENT = 'navigatePrevent',
-      TRIED_NAVIGATE_WHEN_PREVENTED = 'triedNavigateWhenPrevented';
+      TRIED_NAVIGATE_WHEN_PREVENTED = 'triedNavigateWhenPrevented',
+      SAVE_LOCAL = 'savelocal',
+      LOAD_LOCAL = 'loadlocal',
+      DELETE_ALL = 'deleteAll';
 
 const types = {
   ADD_TEMPLATE,
@@ -64,6 +68,9 @@ const types = {
   LAST_ID_PLUS_ONE_BY_ONE,
   NAVIGATE_PREVENT,
   TRIED_NAVIGATE_WHEN_PREVENTED,
+  SAVE_LOCAL,
+  LOAD_LOCAL,
+  DELETE_ALL
 }
 
 export default types

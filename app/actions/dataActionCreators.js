@@ -389,3 +389,29 @@ export function triedNavigateWhenPrevented(__navigatorRouteID, statusBoolean) {
     status: statusBoolean
   }
 }
+
+export function savelocal() {
+  return {
+    type: types.SAVE_LOCAL
+  }
+}
+const internal_loadlocal = () => ({
+  type: types.LOAD_LOCAL
+})
+export function loadlocal() {
+  return (dispatch, getState) => {
+    dispatch(internal_loadlocal());
+    const prevState = getState();
+    dispatch(findLastId(prevState.result));
+  }
+}
+
+const internal_deleteAll = () => ({
+
+})
+
+export function deleteAll() {
+  return {
+    type: types.DELETE_ALL
+  }
+}
