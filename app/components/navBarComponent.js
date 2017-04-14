@@ -37,27 +37,29 @@ export default class NavBar extends React.Component {
           }}
         />
       } else {
-        return (
-          <Button
-            title='None'
-            color='#9E9E9E'
-            backgroundColor='white'
-            onPress={() => alert('None')}
-          />
-        )
+        return null
+        // return (
+        //   <Button
+        //     title='None'
+        //     color='#9E9E9E'
+        //     backgroundColor='white'
+        //     onPress={() => alert('None')}
+        //   />
+        // )
       }
     }
     const RightButton = (route, navigator, index, navState) => {
       // console.log(`navBarContainer - RightButton - navState : ${JSON.stringify(navState, null, 2)}`)
       if(route.passProps.rightButton.title == '') {
-        return (
-          <Button
-            title='None'
-            color='#9E9E9E'
-            backgroundColor='white'
-            onPress={() => alert('None')}
-          />
-        )
+        return null
+        // return (
+        //   <Button
+        //     title='None'
+        //     color='#9E9E9E'
+        //     backgroundColor='white'
+        //     onPress={() => alert('None')}
+        //   />
+        // )
       } else {
         return (
           <Button

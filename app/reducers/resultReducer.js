@@ -6,7 +6,11 @@ const addTemplate = (state, action) => ({
     ...state.templates,
     action.lastId + 1
   ],
-  items: state.items.concat(action.newData.items.map(value => value.itemId))
+  // items: state.items.concat(action.newData.items.map(value => value.itemId))
+  items: [
+    ...state.items,
+    ...action.newData.items.map(value => value.itemId)
+  ]
 })
 
 const delTemplate = (state, action) => {
@@ -81,13 +85,21 @@ const modifyItemsCustomized = (state, action) => {
 
 const addItemsCustomized = (state, action) => ({
   ...state,
-  itemsCustomized: state.itemsCustomized.concat(Object.values(action.newData).map(value => value.itemCustomizedId))
+  // itemsCustomized: state.itemsCustomized.concat(Object.values(action.newData).map(value => value.itemCustomizedId))
+  itemsCustomized: [
+    ...state.itemsCustomized,
+    ...Object.values(action.newData).map(value => value.itemCustomizedId)
+  ]
 })
 
 const addItemsCustomizedWhenAddInstance = (state, action) => {
   return {
     ...state,
-    itemsCustomized: state.itemsCustomized.concat(action.newData.items)
+    // itemsCustomized: state.itemsCustomized.concat(action.newData.items)
+    itemsCustomized: [
+      ...state.itemsCustomized,
+      ...action.newData.items
+    ]
   }
 }
 
@@ -112,7 +124,11 @@ const addItem = (state, action) => {
   }
   return {
     ...state,
-    items: state.items.concat(tempData_items)
+    // items: state.items.concat(tempData_items)
+    items: [
+      ...state.items,
+      ...tempData_items
+    ]
   }
 }
 
@@ -121,7 +137,11 @@ const addItemWhenAddTemplate = (state, action) => {
   action.newData.items.map(value => tempData_items.push(value.itemId));
   return {
     ...state,
-    items: state.items.concat(tempData_items)
+    // items: state.items.concat(tempData_items)
+    items: [
+      ...state.items,
+      ...tempData_items
+    ]
   }
 }
 
@@ -149,7 +169,11 @@ const delItemWhenDeleteTemplate = (state, action) => {
 
 const addTemplateCategory = (state, action) => ({
   ...state,
-  templateCategories: state.templateCategories.concat(action.lastId + 1)
+  // templateCategories: state.templateCategories.concat(action.lastId + 1)
+  templateCategories: [
+    ...state.templateCategories,
+    action.lastId + 1
+  ]
 })
 
 const delTemplateCategory = (state, action) => ({

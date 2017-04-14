@@ -16,10 +16,8 @@ import {
   List,
   ListItem,
   Icon,
-} from 'react-native-elements'
-// import TemplateCategoryModal from './templateCategoryModal'
-// import ItemsInputedListModalContainer from './itemsInputedListModalContainer'
-import TemplateAddNewContainer from './templateAddNewContainer'
+} from 'react-native-elements';
+import TemplateAddNewContainer from './templateAddNewContainer';
 
 export default class TemplateAddComponent extends React.Component {
   constructor(props) {
@@ -28,15 +26,15 @@ export default class TemplateAddComponent extends React.Component {
       // existingTemplatesVisible: true,
       // templateName: '',
       // templateCategory: '',
-      items: [
-        'Wear life vest',
-        'Get on the boat'
-      ],
-      categoryListModalVisible: false,
-      categoryList: [
-        { title: 'rowing', icon: 'rowing' },
-        { title: 'call', icon: 'call' }
-      ],
+      // items: [
+      //   'Wear life vest',
+      //   'Get on the boat'
+      // ],
+      // categoryListModalVisible: false,
+      // categoryList: [
+      //   { title: 'rowing', icon: 'rowing' },
+      //   { title: 'call', icon: 'call' }
+      // ],
       // ds: new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 }),
       // dataSource: '',
       // dataSourceItems: '',
@@ -51,23 +49,7 @@ export default class TemplateAddComponent extends React.Component {
   //   })
   // }
   render() {
-    const { route, navigator, state } = this.props
-    // const categoryModalToggle = () => this.setState({ categoryListModalVisible: !this.state.categoryListModalVisible })
-    // const categoryChosen = templateCategory => this.setState({ templateCategory })
-    // const categoryAdd = newCategory => {
-    //   this.setState({ categoryList: this.state.categoryList.concat({
-    //       title: newCategory,
-    //       icon: 'rowing'
-    //   })})
-    //   this.setState({
-    //     dataSource: this.state.ds.cloneWithRows(this.state.categoryList)
-    //   })
-    // }
-    // const itemsInputedListModalToggle = () => this.setState({ itemsInputedListModalVisible: !this.state.itemsInputedListModalVisible })
-    // const itemAdd = () => this.setState({
-    //   items: this.state.items.concat(this.state.tempNewItem)
-    // })
-
+    const { route, navigator, dataSourceTemplates } = this.props
     const renderRowTemplates = (rowData, sectionId) => <ListItem
       key={sectionId}
       title={rowData.title}
@@ -97,8 +79,8 @@ export default class TemplateAddComponent extends React.Component {
 
           <View>
             <FormLabel>
-             {/* Choose Template, It'll be copied.({state.dataSourceTemplates._cachedRowCount}) */}
-             Choose Template, It'll be copied.
+             {/* Choose Template, It'll be copied. */}
+             {dataSourceTemplates._cachedRowCount == 0 ? 'There is no template, Add new template first.' : 'Choose Template, It\'ll be copied.'}
             </FormLabel>
             {/* <View
               style={{ alignSelf: 'flex-end' }}>
@@ -113,7 +95,7 @@ export default class TemplateAddComponent extends React.Component {
             </View> */}
             <List>
               <ListView
-                dataSource={state.dataSourceTemplates}
+                dataSource={dataSourceTemplates}
                 renderRow={renderRowTemplates}
                 enableEmptySections={true}
                 removeClippedSubviews={false}

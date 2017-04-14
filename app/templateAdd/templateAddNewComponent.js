@@ -183,7 +183,7 @@ export default class TemplateAddNewComponent extends React.Component {
       <ListItem
         key={rowData.itemId}
         title={String(rowData.desc || 'none')}
-        subtitle={`orderNum : ${String(rowData.orderNum)}, templateId : ${rowData.templateId}, itemId: ${rowData.itemId}`}
+        // subtitle={`orderNum : ${String(rowData.orderNum)}, templateId : ${rowData.templateId}, itemId: ${rowData.itemId}`}
         onPress={() => deleteAlert(rowData, rowId)}
         underlayColor='#C0C0C0'
         hideChevron
@@ -205,7 +205,7 @@ export default class TemplateAddNewComponent extends React.Component {
                 marginLeft: 8
               }}
               >
-              Template Title :
+              Template Name :
             </Text>
             <View
               style={{
@@ -217,7 +217,7 @@ export default class TemplateAddNewComponent extends React.Component {
               >
               <TextInput
                 value={this.state.templateName}
-                onChangeText={templateName => templateName !== '' && (this.setState({ templateName }))}
+                onChangeText={templateName => this.setState({ templateName })}
                 // placeholder='(at leat 3 characters)'
                 // placeholder={route.passProps.chosenTemplate.title || ''}
                 autoFocus={true}
@@ -453,6 +453,7 @@ export default class TemplateAddNewComponent extends React.Component {
                 renderRow={renderRow}
                 enableEmptySections={true}
                 removeClippedSubviews={false}
+                style={{ maxHeight: 280 }}
               />
             </List>
           </View>

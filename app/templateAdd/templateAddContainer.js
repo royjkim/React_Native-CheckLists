@@ -3,10 +3,7 @@ import TemplateAddComponent from './templateAddComponent'
 import mySelectors from '../container/selectors'
 
 const mapStateToProps = (state, ownProps) => ({
-  state: {
-    dataSourceTemplates: mySelectors.make_get_dataSourceTemplates()(state.normalizeReducer),
-    
-  },
+  dataSourceTemplates: mySelectors.make_get_dataSourceTemplates()(state.normalizeReducer),
   route: ownProps.route,
   navigator: ownProps.navigator
 })

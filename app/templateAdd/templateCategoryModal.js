@@ -26,28 +26,35 @@ export default class TemplateCategoryModal extends React.Component {
   }
 
   render() {
-    const { addTemplateCategory, lastId, closeFn, categoryChosen, dataSourceTemplateCategories } = this.props
-    const renderRow = (rowData, sectionID) => <ListItem
-      key={sectionID}
+    const { addTemplateCategory,
+            lastId,
+            closeFn,
+            categoryChosen,
+            dataSourceTemplateCategories } = this.props,
+            emptyOrNot = dataSourceTemplateCategories._cachedRowCount == 0;
+
+    const renderRow = rowData => <ListItem
+      key={rowData.templateCategoriesId}
       title={rowData.title}
-      leftIcon={rowData.icon}
+      // leftIcon={rowData.icon}
       underlayColor='#C0C0C0'
+      // underlayColor='red'
       onPress={() => {
         categoryChosen(rowData.title);
         closeFn();
       }}
-      underlayColor='#C0C0C0'
       hideChevron
     />
     return(
       <View style={{
         flex: 1,
         backgroundColor: 'transparent',
-        justifyContent: 'flex-end'
+        justifyContent: 'flex-end',
+        marginBottom: 48,
       }}>
         <TouchableOpacity
           style={{
-            flex: 1,
+            flex: emptyOrNot ? 5 : 1,
           }}
           onPress={() => this.state.newCategory ? Alert.alert(
             'Close Disable',
@@ -62,9 +69,9 @@ export default class TemplateCategoryModal extends React.Component {
           style={{
             flex: 1,
             backgroundColor: 'white',
-            borderColor: 'lightgray',
+            // borderColor: 'lightgray',
             // borderTopWidth: 1,
-            // marginBottom: 3,
+            // marginBottom: 48,
           }}
           behavior={'position'}
           contentContainerStyle={{
@@ -75,44 +82,57 @@ export default class TemplateCategoryModal extends React.Component {
             // borderWidth: 1
           }}
           >
-          <List>
-            <FormLabel
-              containerStyle={{
-                marginBottom: 23
-              }}>
-              Categories : {dataSourceTemplateCategories._cachedRowCount}
-            </FormLabel>
-            <ListView
-              dataSource={dataSourceTemplateCategories}
-              enableEmptySections={true}
-              renderRow={renderRow}
-              removeClippedSubviews={false}
-              style={{
-                maxHeight: 150
-              }}
-            />
-          </List>
+          {emptyOrNot || <View
+            style={{
+              marginBottom: 0,
+              // backgroundColor: 'blue'
+            }}
+            >
+            <List>
+              <FormLabel
+                containerStyle={{
+                  // marginBottom: 23
+                  marginBottom: 5
+                }}>
+                Categories : {dataSourceTemplateCategories._cachedRowCount}
+              </FormLabel>
+              <ListView
+                dataSource={dataSourceTemplateCategories}
+                enableEmptySections={true}
+                renderRow={renderRow}
+                removeClippedSubviews={false}
+                style={{
+                  maxHeight: 150
+                }}
+              />
+            </List>
+          </View>
+          }
           <FormLabel>
             New Category
           </FormLabel>
           <View
             style={{
-              flex: 1,
+              flex: 0,
+              // height: 200,
               flexDirection: 'row',
               marginHorizontal: 20,
               // marginVertical: 10
-              marginBottom: 20
+              // justifyContent: 'flex-start',
+              // marginBottom: 20
             }}
             >
               <View
                 style={{
                   flex: 1,
+                  height: 45,
                   borderColor: '#C1C1C1',
                   borderBottomWidth: 1,
-                  marginBottom: 10
+                  marginBottom: 10,
                 }}
                 >
                 <TextInput
+                  ref='newCategoryTextInput'
                   value={this.state.newCategory}
                   onChangeText={newCategory => this.setState({ newCategory })}
                   // placeholder='input new category'
@@ -140,13 +160,14 @@ export default class TemplateCategoryModal extends React.Component {
                       'Warning',
                       'Please input new category or choose one from the category list.',
                       [
-                        { text: 'Confirm' }
+                        { text: 'Confirm', onPress: () => this.refs['newCategoryTextInput'].focus() }
                       ]
                     )
                   }
                 }}
               />
           </View>
+          {/* <View style={{ height: 48, postition: ''}}/> */}
         </KeyboardAvoidingView>
       </View>
     )

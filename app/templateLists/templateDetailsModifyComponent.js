@@ -167,7 +167,7 @@ export default class TemplateDetailsModifyComponent extends React.Component {
       for(let key in this.state.tempItems) {
         (key in this.state.prevItems) || (newAddedItems[key] = { ...this.state.tempItems[key] });
       };
-      Object.keys(newAddedItems).length > 0 && addItem(lastId.items, newAddedItems, chosenTemplate.templateId);
+      Object.keys(newAddedItems).length > 0 && addItem(lastId, newAddedItems, chosenTemplate.templateId);
       await this.setState(prevState => {
         prevState.changeValue = false;
         prevState.emptyItemsRowId.length > 0 && (

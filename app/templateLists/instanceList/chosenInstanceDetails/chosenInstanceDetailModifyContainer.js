@@ -19,7 +19,8 @@ const make_mapStateToProps = () => (state, ownProps) => {
         passProps = ownProps.route.passProps,
         chosenInstance = passProps.chosenInstance;
   return {
-    itemsCustomizedOfChosenInstance: mySelectors.make_get_itemsCustomizedOfChosenInstance()(state.normalizeReducer, chosenInstance),
+    // itemsCustomizedOfChosenInstanceArray: mySelectors.make_get_itemsCustomizedOfChosenInstance()(state.normalizeReducer, chosenInstance),
+    itemsCustomizedOfChosenInstanceObject: mySelectors.make_get_itemsCustomizedOfChosenInstance()(state.normalizeReducer, chosenInstance),
     statusPicker: configReducer.picker,
     navigatePrevent: configReducer.navigatePrevent,
     triedNavigateWhenPrevented: configReducer.triedNavigateWhenPrevented,
@@ -46,17 +47,15 @@ const mapDispatchToProps = dispatch => ({
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => ({
   ...ownProps,
-  // state: {
   ...stateProps,
-  dataSourceItemsCustomizedOfChosenInstance: mySelectors.make_get_dataSourceItemsOfChosenInstance()(stateProps.itemsCustomizedOfChosenInstance, stateProps.statusPicker),
-  // countsOfStatusCompleted: mySelectors.make_get_badgeValueOfStatusOfChosenInstance()(stateProps.itemsCustomizedOfChosenInstance),
-  // itemsCustomizedLength: stateProps.itemsCustomizedOfChosenInstance.length,
-  itemsCustomizedObjectOfChosenInstance: ((tempResult = {}) => {
-    stateProps.itemsCustomizedOfChosenInstance.map(value => tempResult[value.itemCustomizedId] = { ...value })
-    return tempResult
-  })(),
-  lastOrderNum: stateProps.itemsCustomizedOfChosenInstance.length > 0 ? stateProps.itemsCustomizedOfChosenInstance.slice(-1)[0].orderNum : 0,
-  // },
+  dataSourceItemsCustomizedOfChosenInstance: mySelectors.make_get_dataSourceItemsOfChosenInstance()(stateProps.itemsCustomizedOfChosenInstanceObject, stateProps.statusPicker),
+  // itemsCustomizedObjectOfChosenInstanceObject: ((tempResult = {}) => {
+  //   stateProps.itemsCustomizedOfChosenInstanceArray.map(value => tempResult[value.itemCustomizedId] = { ...value })
+  //   return tempResult
+  // })(),
+  // lastOrderNum: stateProps.itemsCustomizedOfChosenInstanceArray.length > 0 ? stateProps.itemsCustomizedOfChosenInstanceArray.slice(-1)[0].orderNum : 0,
+  lastOrderNum: Object.values(stateProps.itemsCustomizedOfChosenInstanceObject).sort((data1, data2) => data2.orderNum - data1.orderNum)[0].orderNum || 0,
+  // tempResult.sort((data1, data2) => data1.orderNum - data2.orderNum);
   ...dispatchProps
 })
 

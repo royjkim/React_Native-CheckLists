@@ -17,7 +17,7 @@ import {
   SearchBar,
 } from 'react-native-elements'
 
-import InstancesListContainer from '../templateLists/instanceList/instanceListContainer'
+import TemplateDetailsContainer from '../templateLists/templateDetailsContainer';
 
 export default class ItemsListsAllComponent extends React.Component {
   constructor(props) {
@@ -61,7 +61,7 @@ export default class ItemsListsAllComponent extends React.Component {
                   chosenTemplate: state.templates[sectionId]
                 },
                 title: `${state.templates[sectionId].title}`,
-                component: InstancesListContainer,
+                component: TemplateDetailsContainer,
               }
             )
           }}

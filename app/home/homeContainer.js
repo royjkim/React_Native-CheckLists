@@ -22,7 +22,8 @@ const make_mapStateToProps = () => (state, ownProps) => {
       templates: entities.templates,
       navigatePrevent: configReducer.navigatePrevent,
       navigatePopToTopRequest: configReducer.navigatePopToTopRequest,
-      triedNavigateWhenPrevented: configReducer.triedNavigateWhenPrevented
+      triedNavigateWhenPrevented: configReducer.triedNavigateWhenPrevented,
+      checkInstanceEmptyOrNot: Object.keys(entities.instances).length == 0
     },
     route: ownProps.route,
     navigator: ownProps.navigator
@@ -39,7 +40,8 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
   return {
     state: {
       ...stateProps.state,
-      templateLength: stateProps.state.dataSourceForAllInstances._cachedRowCount
+      templateLength: stateProps.state.dataSourceForAllInstances._cachedRowCount,
+      checkTemplateEmptyOrNot: stateProps.state.dataSourceForAllInstances._cachedRowCount == 0,
     },
     ...dispatchProps,
     ...ownProps,

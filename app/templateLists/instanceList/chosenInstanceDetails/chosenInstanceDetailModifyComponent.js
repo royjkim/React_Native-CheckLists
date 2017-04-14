@@ -33,20 +33,30 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
       changeValue_tempInstanceName: false,
       changeValue_tempTemplateTitle: false,
       changeValue_items: false,
-      prevItems: Object.freeze(cloneDeep(this.props.itemsCustomizedObjectOfChosenInstance)),
-      tempItems: cloneDeep(this.props.itemsCustomizedObjectOfChosenInstance),
-      // dataSourceItemsCustomizedOfChosenInstance: cloneDeep(this.props.dataSourceItemsCustomizedOfChosenInstance),
-      dataSourceItemsCustomizedOfChosenInstance: this.props.dataSourceItemsCustomizedOfChosenInstance,
+      prevItems: Object.freeze(cloneDeep(this.props.itemsCustomizedOfChosenInstanceObject)),
+      tempItems: cloneDeep(this.props.itemsCustomizedOfChosenInstanceObject),
+      tempNewItemDesc: '',
+      dataSourceItemsCustomizedOfChosenInstance: cloneDeep(this.props.dataSourceItemsCustomizedOfChosenInstance),
+      // dataSourceItemsCustomizedOfChosenInstance: this.props.dataSourceItemsCustomizedOfChosenInstance,
       modifyExistingItems: {},
     };
     this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
   }
   componentWillMount() {
-    // console.log('componentWillMount - this.state : ', this.state);
-    // console.log('componentWillMount - this.props : ', this.props);
+    console.log('componentWillMount - this.state : ', this.state);
+    console.log('componentWillMount - this.props : ', this.props);
     this.setState({
       dataSourceItemsCustomizedOfChosenInstance: this.ds.cloneWithRows(this.state.tempItems)
     })
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    console.log('componentWillUpdate - nextProps.itemsCustomizedOfChosenInstanceObject : ', nextProps.itemsCustomizedOfChosenInstanceObject);
+    console.log('componentWillUpdate - nextState.tempItems : ', JSON.stringify(nextState.tempItems, null, 1));
+    console.log('componentWillUpdate - nextState.prevItems : ', JSON.stringify(nextState.prevItems, null, 1));
+    console.log('componentWillUpdate - nextState.dataSourceItemsCustomizedOfChosenInstance._dataBlob : ', JSON.stringify(nextState.dataSourceItemsCustomizedOfChosenInstance._dataBlob, null, 1));
+    // console.log('componentWillUpdate - nextState.tempItems : ', JSON.stringify(this.state.tempItems, null, 1));
+
   }
 
   componentDidUpdate() {
@@ -121,7 +131,7 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
       chosenInstance,
       parentTab,
       // countsOfStatusCompleted,
-      itemsCustomizedObjectOfChosenInstance,
+      itemsCustomizedOfChosenInstanceObject,
       lastOrderNum,
       chooseCategory,
       navigatePreventFn,
@@ -134,13 +144,20 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
     // const { chosenInstance } = route.passProps;
     const changeItemText = (tempItemText, rowData, rowId, emptyStatusBoolean) => {
       const commonFn = () => this.setState(prevState => {
-        rowId in prevState.tempItems && (prevState.tempItems[rowData.itemCustomizedId].desc == tempItemText ?
-          (prevState.modifyExistingItems.hasOwnProperty(rowData.itemCustomizedId) && delete prevState.modifyExistingItems[rowData.itemCustomizedId])
-            : prevState.modifyExistingItems[rowData.itemCustomizedId] = {
-                ...prevState.tempItems[rowData.itemCustomizedId],
+        rowId in prevState.tempItems && (prevState.tempItems[rowId].desc == tempItemText ?
+          (prevState.modifyExistingItems.hasOwnProperty(rowId) && delete prevState.modifyExistingItems[rowId])
+            : prevState.modifyExistingItems[rowId] = {
+                ...prevState.tempItems[rowId],
                 desc: tempItemText
             });
-        prevState.tempItems[rowData.itemCustomizedId].desc = tempItemText;
+        prevState.tempItems[rowId].desc = tempItemText;
+        // rowId in prevState.tempItems && (prevState.tempItems[rowData.itemCustomizedId].desc == tempItemText ?
+        //   (prevState.modifyExistingItems.hasOwnProperty(rowData.itemCustomizedId) && delete prevState.modifyExistingItems[rowData.itemCustomizedId])
+        //     : prevState.modifyExistingItems[rowData.itemCustomizedId] = {
+        //         ...prevState.tempItems[rowData.itemCustomizedId],
+        //         desc: tempItemText
+        //     });
+        // prevState.tempItems[rowData.itemCustomizedId].desc = tempItemText;
 
         prevState.changeValue_items = !isEqual(prevState.tempItems, prevState.prevItems);
         prevState.changeValue_items && (prevState.dataSourceItemsCustomizedOfChosenInstance = this.ds.cloneWithRows(prevState.tempItems));
@@ -153,8 +170,10 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
           {
             text: 'Confirm', onPress: () => {
               this.setState(prevState => {
-                prevState.prevItems.hasOwnProperty(rowData.itemCustomizedId) && (prevState.tempItems[rowData.itemCustomizedId].desc = prevState.prevItems[rowData.itemCustomizedId].desc);
-                prevState.modifyExistingItems.hasOwnProperty(rowData.itemCustomizedId) && delete prevState.modifyExistingItems[rowData.itemCustomizedId];
+                prevState.prevItems.hasOwnProperty(rowId) && (prevState.tempItems[rowId].desc = prevState.prevItems[rowId].desc);
+                prevState.modifyExistingItems.hasOwnProperty(rowId) && delete prevState.modifyExistingItems[rowId];
+                // prevState.prevItems.hasOwnProperty(rowData.itemCustomizedId) && (prevState.tempItems[rowData.itemCustomizedId].desc = prevState.prevItems[rowData.itemCustomizedId].desc);
+                // prevState.modifyExistingItems.hasOwnProperty(rowData.itemCustomizedId) && delete prevState.modifyExistingItems[rowData.itemCustomizedId];
                 prevState.changeValue_items = !isEqual(prevState.tempItems, prevState.prevItems);
                 prevState.changeValue_items && (prevState.dataSourceItemsCustomizedOfChosenInstance = this.ds.cloneWithRows(prevState.tempItems));
               });
@@ -165,26 +184,32 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
       );
       // commonFn();
       }
-    const renderRow = (rowData, sectionId, rowId) => <View
-      style={{
-        borderColor: this.state.tempItems[rowData.itemCustomizedId].desc !== '' ? '#C1C1C1' : '#FF2A1A',
-        borderBottomWidth: 1.3,
-        marginHorizontal: 10,
-        marginBottom: 7,
-      }}
-      >
-      <TextInput
-        value={this.state.tempItems[rowData.itemCustomizedId].desc}
-        // value={rowData.desc}
-        onChangeText={tempItemText => changeItemText(tempItemText, rowData, rowId, tempItemText == '')}
-        placeholder={this.state.prevItems.hasOwnProperty(rowData.itemCustomizedId) ? this.state.prevItems[rowData.itemCustomizedId].desc : this.state.tempItems[rowData.itemCustomizedId].desc}
+    const renderRow = (rowData, undefined, rowId) => {
+      // this.state.tempItems.hasOwnProperty(rowData.itemCustomizedId) || console.log(`rowData.itemCustomizedId : ${rowData.itemCustomizedId}\nthis.state.tempItems : `, this.state.tempItems);
+      // this.state.tempItems.hasOwnProperty(rowId) || console.log(`rowId : ${rowId}\nthis.state.tempItems : `, this.state.tempItems);
+      return <View
+        key={rowId}
         style={{
-          height: 30,
-          textAlign: 'center',
-          color: this.state.prevItems.hasOwnProperty(rowData.itemCustomizedId) ? this.state.tempItems[rowData.itemCustomizedId].desc == this.state.prevItems[rowData.itemCustomizedId].desc ? '#605E60' : '#159588' : '#159588',
+          // borderColor: this.state.tempItems[rowData.itemCustomizedId].desc !== '' ? '#C1C1C1' : '#FF2A1A',
+          borderColor: this.state.tempItems[rowId].desc !== '' ? '#C1C1C1' : '#FF2A1A',
+          borderBottomWidth: 1.3,
+          marginHorizontal: 10,
+          marginBottom: 7,
         }}
-      />
-    </View>
+        >
+        <TextInput
+          value={this.state.tempItems[rowId].desc}
+          // value={rowData.desc}
+          onChangeText={tempItemText => changeItemText(tempItemText, rowData, rowId, tempItemText == '')}
+          placeholder={this.state.prevItems.hasOwnProperty(rowId) ? this.state.prevItems[rowId].desc : this.state.tempItems[rowId].desc}
+          style={{
+            height: 30,
+            textAlign: 'center',
+            color: this.state.prevItems.hasOwnProperty(rowId) ? this.state.tempItems[rowId].desc == this.state.prevItems[rowId].desc ? '#605E60' : '#159588' : '#159588',
+          }}
+        />
+      </View>
+    }
     const resetData = () => this.setState({
       saveButtonVisible: false,
       tempInstanceName: this.props.chosenInstance.name || '',
@@ -194,10 +219,10 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
       changeValue_tempInstanceName: false,
       changeValue_tempTemplateTitle: false,
       changeValue_items: false,
-      prevItems: Object.freeze(cloneDeep(itemsCustomizedObjectOfChosenInstance)),
-      tempItems: cloneDeep(itemsCustomizedObjectOfChosenInstance),
-      // dataSourceItemsCustomizedOfChosenInstance: cloneDeep(this.props.dataSourceItemsCustomizedOfChosenInstance),
-      dataSourceItemsCustomizedOfChosenInstance: this.props.dataSourceItemsCustomizedOfChosenInstance,
+      prevItems: Object.freeze(cloneDeep(itemsCustomizedOfChosenInstanceObject)),
+      tempItems: cloneDeep(itemsCustomizedOfChosenInstanceObject),
+      dataSourceItemsCustomizedOfChosenInstance: cloneDeep(this.props.dataSourceItemsCustomizedOfChosenInstance),
+      // dataSourceItemsCustomizedOfChosenInstance: this.props.dataSourceItemsCustomizedOfChosenInstance,
       modifyExistingItems: {},
       // saveButtonVisible: false,
       // tempInstanceName: this.props.chosenInstance.name || '',
@@ -207,8 +232,8 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
       // changeValue_tempInstanceName: false,
       // changeValue_tempTemplateTitle: false,
       // changeValue_items: false,
-      // prevItems: Object.freeze(cloneDeep(itemsCustomizedObjectOfChosenInstance)),
-      // tempItems: cloneDeep(itemsCustomizedObjectOfChosenInstance),
+      // prevItems: Object.freeze(cloneDeep(itemsCustomizedOfChosenInstanceObject)),
+      // tempItems: cloneDeep(itemsCustomizedOfChosenInstanceObject),
       // dataSourceItemsCustomizedOfChosenInstance: this.ds.cloneWithRows(this.state.tempItems),
     });
 
@@ -414,6 +439,16 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
               backgroundColor='#159589'
               buttonStyle={{ borderRadius: 10 }}
               onPress={async () => {
+                if(this.state.tempNewItemDesc !== '') {
+                  Alert.alert(
+                    'Warning',
+                    'Inputted new item doesn\'t be added. Press Add button.',
+                    [
+                      { text: 'OK', onPress: () => this.refs['newItemFormInput'].refs['newItemText'].focus() }
+                    ]
+                  )
+                  return null
+                }
                 await this.setState(prevState => {
                   prevState.changeValue_tempTemplateTitle && (modifyTemplate(chosenTemplate.templateId, prevState.tempTemplateTitle.trim()), prevState.prev_tempTemplateTitle = prevState.tempTemplateTitle.trim(), prevState.tempTemplateTitle = prevState.tempTemplateTitle.trim(), prevState.changeValue_tempInstanceName = false);
                   prevState.changeValue_tempInstanceName && (modifyInstance(chosenInstance.instanceId, prevState.tempInstanceName.trim()), prevState.prev_tempInstanceName = prevState.tempInstanceName.trim(), prevState.tempInstanceName = prevState.tempInstanceName.trim() , prevState.changeValue_tempTemplateTitle = false);

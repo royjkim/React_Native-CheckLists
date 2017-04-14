@@ -1,50 +1,42 @@
 import {
   changeStatusOfItemsCustomized,
   chooseCategory,
-  navigatePrevent,
-  triedNavigateWhenPrevented,
-  modifyTemplate,
-  modifyInstance
 } from '../../../actions/dataActionCreators';
 import ChosenInstanceDetailsComponent from './chosenInstanceDetailsComponent'
 import { connect } from 'react-redux'
 import mySelectors from '../../../container/selectors'
 
-const make_mapStateToProps = () => (state, ownProps) => ({
-  state: {
-    chosenTemplate: {
-      ...state.normalizeReducer.entities.templates[ownProps.route.passProps.chosenInstance.template]
-    },
-    chosenInstance: ownProps.route.passProps.chosenInstance,
-    itemsCustomizedOfChosenInstance: mySelectors.make_get_itemsCustomizedOfChosenInstance()(state.normalizeReducer, ownProps.route.passProps.chosenInstance),
-    statusPicker: state.configReducer.picker,
-    navigatePrevent: state.configReducer.navigatePrevent,
-    triedNavigateWhenPrevented: state.configReducer.triedNavigateWhenPrevented,
-    existOrNot_chosenInstance: state.normalizeReducer.entities.instances.hasOwnProperty(ownProps.route.passProps.chosenInstance.instanceId)
-  },
-  route: ownProps.route,
-  navigator: ownProps.navigator
-})
+const make_mapStateToProps = () => (state, ownProps) => {
+  const entities = state.normalizeReducer.entities,
+        configReducer = state.configReducer,
+        chosenInstance = ownProps.route.passProps.chosenInstance;
+  return {
+    chosenTemplate: entities.templates[chosenInstance.template],
+    chosenInstance,
+    itemsCustomizedOfChosenInstanceObject: mySelectors.make_get_itemsCustomizedOfChosenInstance()(state.normalizeReducer, chosenInstance),
+    statusPicker: configReducer.picker,
+    existOrNot_chosenInstance: entities.instances.hasOwnProperty(chosenInstance.instanceId),
+    route: ownProps.route,
+    navigator: ownProps.navigator
+  }
+}
 
 const mapDispatchToProps = dispatch => ({
   changeStatusOfItemsCustomized: targetData => dispatch(changeStatusOfItemsCustomized(targetData)),
-  chooseCategory: (__navigatorRouteID, pickerValue) => dispatch(chooseCategory(__navigatorRouteID, pickerValue)),
-  navigatePreventFn: (routeTitle, statusBoolean) => dispatch(navigatePrevent(routeTitle, statusBoolean)),
-  triedNavigateWhenPreventedFn: (__navigatorRouteID, statusBoolean) => dispatch(triedNavigateWhenPrevented(__navigatorRouteID, statusBoolean)),
-  modifyTemplate: (targetTemplateId, data) => dispatch(modifyTemplate(targetTemplateId, data)),
-  modifyInstance: (targetInstanceId, data) => dispatch(modifyInstance(targetInstanceId, data))
+  chooseCategory: (__navigatorRouteID, pickerValue) => dispatch(chooseCategory(__navigatorRouteID, pickerValue))
 })
 
-const mergeProps = (stateProps, dispatchProps, ownProps) => ({
-  ...ownProps,
-  state: {
-    ...stateProps.state,
-    // dataSourceItemsCustomizedOfChosenInstance: mySelectors.make_get_dataSourceItemsOfChosenInstance()(stateProps.state.itemsCustomizedOfChosenInstance, stateProps.state.statusPicker),
-    dataSourceItemsCustomizedOfChosenInstance: mySelectors.make_get_dataSourceItemsOfChosenInstance()(stateProps.state.itemsCustomizedOfChosenInstance, stateProps.state.statusPicker[stateProps.route.__navigatorRouteID]),
-    countsOfStatusCompleted: mySelectors.make_get_badgeValueOfStatusOfChosenInstance()(stateProps.state.itemsCustomizedOfChosenInstance),
-    itemsCustomizedLength: stateProps.state.itemsCustomizedOfChosenInstance.length
-  },
-  ...dispatchProps
-})
+const mergeProps = (stateProps, dispatchProps, ownProps) => {
+  const itemsCustomizedOfChosenInstanceObject = stateProps.itemsCustomizedOfChosenInstanceObject;
+  return {
+    ...ownProps,
+    ...stateProps,
+    // dataSourceItemsCustomizedOfChosenInstance: mySelectors.make_get_dataSourceItemsOfChosenInstance()(stateProps.itemsCustomizedOfChosenInstance, stateProps.statusPicker),
+    dataSourceItemsCustomizedOfChosenInstance: mySelectors.make_get_dataSourceItemsOfChosenInstance()(itemsCustomizedOfChosenInstanceObject, stateProps.statusPicker[stateProps.route.__navigatorRouteID]),
+    countsOfStatusCompleted: mySelectors.make_get_badgeValueOfStatusOfChosenInstance()(Object.values(itemsCustomizedOfChosenInstanceObject)),
+    itemsCustomizedLength: Object.keys(itemsCustomizedOfChosenInstanceObject).length,
+    ...dispatchProps
+  }
+}
 
 export default connect(make_mapStateToProps, mapDispatchToProps, mergeProps)(ChosenInstanceDetailsComponent)

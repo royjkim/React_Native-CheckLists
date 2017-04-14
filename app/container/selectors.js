@@ -114,81 +114,6 @@ let dataInputHistory = {
   }
 }
 
-// let dataResultHistory = {
-//   make_get_last_orderNum: {
-//     past: [],
-//     // present: [], future: []
-//   },
-//   make_get_dataSourceTemplates: {
-//     past: [],
-//     // present: [], future: []
-//   },
-//   make_get_dataSourceInstances: {
-//     past: [],
-//     // present: [], future: []
-//   },
-//   make_get_dataSourceItems: {
-//     past: [],
-//     // present: [], future: []
-//   },
-//   make_get_dataSourceInstancesOfChosenTemplate: {
-//     past: [],
-//     // present: [], future: []
-//   },
-//   make_get_dataSourceOfItemsOfChosenTemplate: {
-//     past: [],
-//     // present: [], future: []
-//   },
-//   make_get_dataSourceItemsOfChosenInstance: {
-//     past: [],
-//     // present: [], future: []
-//   },
-//   make_get_dataSourceForAllInstances: {
-//     past: [],
-//     // present: [], future: []
-//   },
-//   make_get_dataSourceTemplateCategories: {
-//     past: [],
-//     // present: [], future: []
-//   },
-//   make_get_badgeValueOfInstancesOfChosenTemplates: {
-//     past: [],
-//     // present: [], future: []
-//   },
-//   make_get_badgeValueOfStatusOfEachInstanceOfChosenTemplate: {
-//     past: [],
-//     // present: [], future: []
-//   },
-//   make_get_badgeValueOfStatusOfChosenInstance: {
-//     past: [],
-//     // present: [], future: []
-//   },
-//   make_get_badgeValueOfStatusOfAllInstances: {
-//     past: [],
-//     // present: [], future: []
-//   },
-//   make_get_instancesOfChosenTemplate: {
-//     past: [],
-//     // present: [], future: []
-//   },
-//   make_get_itemsOfChosenTemplate: {
-//     past: [],
-//     // present: [], future: []
-//   },
-//   make_get_itemsCustomizedOfChosenInstance: {
-//     past: [],
-//     // present: [], future: []
-//   },
-//   make_get_itemsCustomizedOfAllItems: {
-//     past: [],
-//     // present: [], future: []
-//   },
-//   make_get_itemsCustomizedOfEachInstanceOfChosenTemplate: {
-//     past: [],
-//     // present: [], future: []
-//   }
-// };
-
 let dataResultHistory = cloneDeep(dataInputHistory);
 
 const compareInputHistory = (attr, args) => {
@@ -417,13 +342,13 @@ const make_get_badgeValueOfStatusOfEachInstanceOfChosenTemplate = () => createSe
 
 const make_get_badgeValueOfStatusOfChosenInstance = () => createSelector(
   data => data,
-  itemsCustomizedOfChosenInstance => {
+  itemsCustomizedOfChosenInstanceArray => {
     const currentAttr = 'make_get_badgeValueOfStatusOfChosenInstance'
-    compareInputHistory(currentAttr, itemsCustomizedOfChosenInstance)
+    compareInputHistory(currentAttr, itemsCustomizedOfChosenInstanceArray)
     const tempResult_badgeValueOfStatusOfChosenInstance = {
-      total: itemsCustomizedOfChosenInstance.length,
-      completed: itemsCustomizedOfChosenInstance.filter(value => value.status == true).length,
-      uncompleted: itemsCustomizedOfChosenInstance.filter(value => value.status == false).length
+      total: itemsCustomizedOfChosenInstanceArray.length,
+      completed: itemsCustomizedOfChosenInstanceArray.filter(value => value.status == true).length,
+      uncompleted: itemsCustomizedOfChosenInstanceArray.filter(value => value.status == false).length
     }
     addResultHistory(currentAttr, tempResult_badgeValueOfStatusOfChosenInstance)
     return tempResult_badgeValueOfStatusOfChosenInstance
@@ -461,7 +386,6 @@ const make_get_badgeValueOfStatusOfAllInstances = () => createSelector(
   }
 )
 
-
 const make_get_itemsCustomizedOfChosenInstance = () => createSelector(
   itemsCustomized,
   chosenInstance,
@@ -469,17 +393,33 @@ const make_get_itemsCustomizedOfChosenInstance = () => createSelector(
     const currentAttr = 'make_get_itemsCustomizedOfChosenInstance';
     chosenInstance.items = chosenInstance.items.filter(value => itemsCustomized.hasOwnProperty(value));
     compareInputHistory(currentAttr, itemsCustomized, chosenInstance)
-    let tempResult = []
-    chosenInstance.items.map(data => {
-      tempResult.push({
-        ...itemsCustomized[data]
-      })
-      tempResult.sort((data1, data2) => data1.orderNum - data2.orderNum);
+    let tempResult = {};
+    chosenInstance.items.map(data => tempResult[data] = {
+      ...itemsCustomized[data]
     })
     addResultHistory(currentAttr, tempResult)
     return tempResult
   }
 )
+
+// const make_get_itemsCustomizedOfChosenInstance = () => createSelector(
+//   itemsCustomized,
+//   chosenInstance,
+//   (itemsCustomized, chosenInstance) => {
+//     const currentAttr = 'make_get_itemsCustomizedOfChosenInstance';
+//     chosenInstance.items = chosenInstance.items.filter(value => itemsCustomized.hasOwnProperty(value));
+//     compareInputHistory(currentAttr, itemsCustomized, chosenInstance)
+//     let tempResult = []
+//     chosenInstance.items.map(data => {
+//       tempResult.push({
+//         ...itemsCustomized[data]
+//       })
+//       tempResult.sort((data1, data2) => data1.orderNum - data2.orderNum);
+//     })
+//     addResultHistory(currentAttr, tempResult)
+//     return tempResult
+//   }
+// )
 
 const make_get_itemsOfChosenTemplate = () => createSelector(
   items,

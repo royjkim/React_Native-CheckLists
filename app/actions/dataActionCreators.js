@@ -10,28 +10,33 @@ const checkIdOverlapOrNot = (attr, lastId, newData, requestAction) => {
       ...newData,
       templateId: newData.templateId + 1
     },
-    // addItem: (attr, lastId, newData) => newData[attr][0].itemId > lastId[attr] ? newData : newData[attr].map((value, index) => value.itemId = lastId[attr] + 1 + index),
     addItem: (attr, lastId, newData) => {
-      const temp1 = Object.values(newData).sort((data1, data2) => data2.itemId - data1.itemId);
-      console.log('temp1 : ', temp1);
-      const tempData_min_itemID = parseInt(Object.values(newData).sort((data1, data2) => data2.itemId - data1.itemId)[0].itemId);
-      console.log('tempData_min_itemID : ', tempData_min_itemID);
-      // tempData_items[0].itemId > lastId[attr] ? newData : newData[attr].map((value, index) => value.itemId = lastId[attr] + 1 + index)
-      if(tempData_min_itemID > lastId[attr]) {
+      const tempData_min_itemID = parseInt(Object.values(newData).sort((data1, data2) => data1.itemId - data2.itemId)[0].itemId);
+      if(tempData_min_itemID == lastId[attr] + 1) {
         return newData
       } else {
-        const plusValue = lastId[attr] + 1 - tempData_min_itemID;
+        let count = 0;
         for(let key in newData) {
-          newData[key].itemId += plusValue;
+          count++;
+          const newItemId = lastId[attr] + count;
+          newData[newItemId] = {
+            ...newData[key],
+            itemId: newItemId
+          };
+          delete newData[key]
         }
         return newData
       }
     },
     addTemplateCategory: (attr, lastId, newData) => {
-      newData.id = lastId[attr] + 1
+      newData.templateCategoriesId = lastId[attr] + 1
       return newData
     },
-    addItemsCustomized: (attr, lastId, newData) => newData[0].itemCustomizedId > lastId[attr] ? newData : newData.map((value, index) => value.itemCustomizedId = lastId[attr] + 1 + index)
+    addItemsCustomized: (attr, lastId, newData) => newData[0].itemCustomizedId == lastId[attr] + 1 ? newData : newData.map((value, index) => {
+      console.log('value : ', JSON.stringify(value, null, 1));
+      value.itemCustomizedId = lastId[attr] + 1 + index
+      return value
+    })
   };
 
   return requestActionMapper.hasOwnProperty(requestAction) ? requestActionMapper[requestAction](attr, lastId, newData) : newData
@@ -155,13 +160,30 @@ const internal_addItemsCustomized = (lastId, newData) => ({
 
 export function addItemsCustomized(lastId, newData) {
   newData = checkIdOverlapOrNot('itemsCustomized', lastId, newData, 'addItemsCustomized');
-  return dispatch => {
+  return (dispatch, getState) => {
     dispatch(internal_addItemsCustomized(lastId, newData));
     dispatch(lastIdPlusMulti('itemsCustomized', lastId, {
       items: [ ...newData ]
     }));
+    // const targetInstanceId = newData[0].instanceId;
+    // const prevState = getState();
+    // prevState.
+    // const itemsCustomizedOfTargetInstance = cloneDeep(((tempResult = [])
+    //   prevState.instances[targetInstanceId].items.map(value => tempResult.push(prevState.itemsCustomized[value]))
+    // )())
+    // itemsCustomizedOfTargetInstance.sort((data1, data2) => data1.orderNum - data2.orderNum).map((value, index) => {
+    //   value.orderNum = index + 1;
+    //   return value
+    // });
+    // itemsCustomizedOfTargetInstance.map((value, index) => value.orderNum)
+    //
+    // dispatch(checkOrderNumOverlapOrNot('itemsCustomized', 'addItemsCustomized'))
   }
 }
+
+// const checkOrderNumOverlapOrNot = (attr, lastId, requestAction,  prevState) => {
+//
+// }
 
 export function delItemsCustomized(targetData) {
   return {
@@ -194,10 +216,6 @@ const delInstancesWhenDelTemplate = targetData => ({
   type: types.DELETE_INSTANCE_WHEN_DELETE_TEMPLATE,
   targetData
 })
-
-function internal_modifyInstance() {
-
-}
 
 export function modifyInstance(targetInstanceId, data) {
   return {
@@ -232,7 +250,7 @@ const internal_addItem = (lastId, newData, templateId) => ({
 })
 
 export function addItem(lastId, newData, targetTemplateId) {
-  // newData = checkIdOverlapOrNot('items', lastId, newData, 'addItem');
+  newData = checkIdOverlapOrNot('items', lastId, newData, 'addItem');
   return dispatch => {
     dispatch(internal_addItem(lastId, newData, targetTemplateId));
     // dispatch(lastIdPlus('items', lastId, newData));

@@ -35,13 +35,13 @@ export default class InstanceListComponent extends React.Component {
   }
 
   render() {
-    const {
-      route,
-      navigator,
-      state,
-      searchBarText,
-      addInstance,
-    } = this.props;
+    const { route,
+            navigator,
+            state,
+            searchBarText,
+            addInstance,
+          } = this.props,
+          checkInstanceEmptyOrNot = state.instancesOfChosenTemplate.length == 0;
     const renderRowInstances = (rowData, sectionId) => <ListItem
       key={sectionId}
       title={rowData.name}
@@ -89,6 +89,7 @@ export default class InstanceListComponent extends React.Component {
         style={styles.bodyContainer}
         >
         <View>
+          <View>
           <View style={{ marginVertical: 10, height: 2 }} />
           <SearchBar
             lightTheme
@@ -130,6 +131,7 @@ export default class InstanceListComponent extends React.Component {
               buttonStyle={{ borderRadius: 10 }}
               onPress={() => this.setState({ addNewInstanceModalVisible: true })}
             />
+          </View>
             <Modal
               animationType={'slide'}
               transparent={true}
@@ -230,26 +232,36 @@ export default class InstanceListComponent extends React.Component {
                       <View style={{ height: 10 }} />
                       <Button
                         icon={{ name: 'note-add' }}
-                        title='Move to add new template'
+                        title='Page move to add new template'
                         backgroundColor='#339AED'
                         buttonStyle={{ borderRadius: 10 }}
                         onPress={() => {
-                          this.setState({ addNewInstanceModalVisible: false })
-                          navigator.push({
-                            passProps: {
-                              leftButton: {
-                                title: 'back',
-                                component: ''
+                          const pageMoveFn = () => {
+                            this.setState({ addNewInstanceModalVisible: false, tempInstanceName: '' });
+                            navigator.push({
+                              passProps: {
+                                leftButton: {
+                                  title: 'back',
+                                  component: ''
+                                },
+                                rightButton: {
+                                  title: '',
+                                  component: ''
+                                },
+                                parentTab: route.passProps.parentTab
                               },
-                              rightButton: {
-                                title: '',
-                                component: ''
-                              },
-                              parentTab: route.passProps.parentTab
-                            },
-                            title: 'Template Add',
-                            component: TemplateAddContainer
-                          })
+                              title: 'Template Add',
+                              component: TemplateAddContainer
+                            });
+                          };
+                          this.state.tempInstanceName == '' ? pageMoveFn() : Alert.alert(
+                              'Warning',
+                              'You already inputted new instance name. If you want to ignore it, press OK.',
+                              [
+                                { text: 'Cancel', onPress: () => this.refs['tempInstanceName'].focus() },
+                                { text: 'OK', onPress: () => pageMoveFn()}
+                              ]
+                            )
                         }}
                       />
                   </KeyboardAvoidingView>

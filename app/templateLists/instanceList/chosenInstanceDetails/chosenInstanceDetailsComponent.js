@@ -32,14 +32,16 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
   }
 
   componentWillMount() {
-    this.props.state.existOrNot_chosenInstance || this.becauseOfExistNotAlertMsgFn();
+    this.props.existOrNot_chosenInstance || this.becauseOfExistNotAlertMsgFn();
+    const __navigatorRouteID = this.props.route.__navigatorRouteID,
+          statusPicker = this.props.statusPicker;
     this.setState({
-      pickerValue: this.props.state.statusPicker.hasOwnProperty(this.props.route.__navigatorRouteID) ? this.props.state.statusPicker[this.props.route.__navigatorRouteID] : 'all'
+      pickerValue: statusPicker.hasOwnProperty(__navigatorRouteID) ? statusPicker[__navigatorRouteID] : 'all'
     });
   }
 
   componentWillUpdate(nextProps) {
-    nextProps.state.existOrNot_chosenInstance || this.becauseOfExistNotAlertMsgFn();
+    nextProps.existOrNot_chosenInstance || this.becauseOfExistNotAlertMsgFn();
   }
 
   becauseOfExistNotAlertMsgFn() {
@@ -59,23 +61,21 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
   }
 
   render() {
-    const {
-        route,
-        navigator,
-        state,
-        changeStatusOfItemsCustomized,
-        chooseCategory,
-        // navigatePreventFn,
-        // modifyTemplate,
-        // modifyInstance,
-      } = this.props,
-      { __navigatorRouteID } = route,
-      { chosenInstance } = route.passProps;
+    const { route,
+            navigator,
+            chosenInstance,
+            chosenTemplate,
+            changeStatusOfItemsCustomized,
+            countsOfStatusCompleted,
+            dataSourceItemsCustomizedOfChosenInstance,
+            statusPicker,
+            chooseCategory } = this.props,
+          { __navigatorRouteID } = route;
     const renderRow = (rowData, sectionId) => (
       <View>
         <CheckBox
-          // title={rowData.desc}
-          title={`${rowData.desc}, orderNum : ${rowData.orderNum}`}
+          title={rowData.desc}
+          // title={`${rowData.desc}, orderNum : ${rowData.orderNum}`}
           checked={rowData.status}
           onPress={() => changeStatusOfItemsCustomized(rowData)}
         />
@@ -85,9 +85,9 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
       this.setState({
         modalPickerVisible: false,
         instanceName: this.props.route.passProps.chosenInstance.name || '',
-        templateTitle: this.props.state.chosenTemplate.title || '',
+        templateTitle: this.props.chosenTemplate.title || '',
         prev_instanceName: this.props.route.passProps.chosenInstance.name || '',
-        prev_templateTitle: this.props.state.chosenTemplate.title || '',
+        prev_templateTitle: this.props.chosenTemplate.title || '',
         changeValue_instanceName: false,
         changeValue_templateTitle: false,
         saved: false
@@ -138,7 +138,7 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
     return(
       <View style={styles.bodyContainer}>
         <FormLabel>
-          Instance Name : {state.chosenInstance.name}
+          Instance Name : {chosenInstance.name}
         </FormLabel>
         {/* <View
           style={{
@@ -178,7 +178,7 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
             </View>
         </View> */}
         <FormLabel>
-          Template Name : {state.chosenTemplate.title}
+          Template Name : {chosenTemplate.title}
         </FormLabel>
         {/* <View
           style={{
@@ -218,7 +218,7 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
             </View>
         </View> */}
         <FormLabel>
-          Items : total({state.countsOfStatusCompleted.total}), complete({state.countsOfStatusCompleted.completed}), uncomplete({state.countsOfStatusCompleted.uncompleted})
+          Items : total({countsOfStatusCompleted.total}), complete({countsOfStatusCompleted.completed}), uncomplete({countsOfStatusCompleted.uncompleted})
         </FormLabel>
         <View style={{ height: 10 }}/>
         <Button
@@ -228,16 +228,16 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
           buttonStyle={{ borderRadius: 10 }}
           onPress={() => this.setState({ modalPickerVisible: true })}
         />
-        {state.dataSourceItemsCustomizedOfChosenInstance._cachedRowCount !== state.countsOfStatusCompleted.total && <FormLabel>
-          Filter : {state.statusPicker[__navigatorRouteID]}({state.dataSourceItemsCustomizedOfChosenInstance._cachedRowCount})
+        {dataSourceItemsCustomizedOfChosenInstance._cachedRowCount !== countsOfStatusCompleted.total && <FormLabel>
+          Filter : {statusPicker[__navigatorRouteID]}({dataSourceItemsCustomizedOfChosenInstance._cachedRowCount})
         </FormLabel>}
         <List>
           <ListView
-            dataSource={state.dataSourceItemsCustomizedOfChosenInstance}
+            dataSource={dataSourceItemsCustomizedOfChosenInstance}
             renderRow={renderRow}
             enableEmptySections={true}
             removeClippedSubviews={false}
-            style={{ maxHeight: 200 }}
+            style={{ maxHeight: 300 }}
           />
         </List>
         <View style={{ height: 10 }} />

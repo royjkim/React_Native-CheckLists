@@ -34,7 +34,10 @@ const lastIdPlusMulti = (state, action) => {
 }
 
 const lastIdPlusMultiObject = (state, action) => {
+  const sortedItem = Object.values(action.newData).sort((data1, data2) => data2.itemId - data1.itemId);
+  console.log('lastIdReducer - sortedItem : ', sortedItem);
   const lastItemId = Object.values(action.newData).sort((data1, data2) => data2.itemId - data1.itemId)[0].itemId;
+  console.log('lastIdReducer - lastItemId : ', lastItemId);
   return {
     ...state,
     [action.attr]: parseInt(lastItemId)

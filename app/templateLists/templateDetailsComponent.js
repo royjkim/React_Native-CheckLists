@@ -114,6 +114,7 @@ export default class TemplateDetailsComponent extends React.Component {
         </List>
         <View style={{ height: 10 }} />
         <Button
+          icon={{ name: 'list' }}
           title={`Show instances of this template(${length_instancesOfChosenTemplate})`}
           backgroundColor='#3D7CAA'
           // backgroundColor='#6296F9'

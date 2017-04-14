@@ -13,7 +13,7 @@ import {
   SearchBar,
 } from 'react-native-elements'
 
-// import InstanceListContainer from './instanceList/instanceListContainer'
+import TemplateAddContainer from '../templateAdd/templateAddContainer';
 import TemplateDetailsContainer from './templateDetailsContainer'
 
 export default class TemplateListsComponent extends React.Component {
@@ -29,7 +29,25 @@ export default class TemplateListsComponent extends React.Component {
   //   nextProps.state.navigatePopToTopRequest.templateList ? (this.props.navigatePopToTopRequestFn('templateList', false), tempResult = false, this.props.navigator.popToTop()) : null
   //   return tempResult
   // }
-
+  componentDidMount() {
+    this.props.state.dataSourceTemplates._cachedRowCount == 0 && this.props.navigator.push(
+      {
+        passProps: {
+          leftButton: {
+            title: 'back',
+            component: ''
+          },
+          rightButton: {
+            title: '',
+            component: ''
+          },
+          parentTab: 'templateList'
+        },
+        title: 'Template Add',
+        component: TemplateAddContainer
+      }
+    );
+  }
   componentDidUpdate() {
     this.props.state.navigatePopToTopRequest.templateList && (this.props.navigatePopToTopRequestFn('templateList', false), this.props.navigator.popToTop());
   }
