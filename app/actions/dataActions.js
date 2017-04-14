@@ -33,7 +33,8 @@ const ADD_TEMPLATE = 'addTemplate',
       TRIED_NAVIGATE_WHEN_PREVENTED = 'triedNavigateWhenPrevented',
       SAVE_LOCAL = 'savelocal',
       LOAD_LOCAL = 'loadlocal',
-      DELETE_ALL = 'deleteAll';
+      DELETE_ALL = 'deleteAll',
+      DELETE_DATA_ON_LOCAL_STORAGE = 'deleteLocalStorage';
 
 const types = {
   ADD_TEMPLATE,
@@ -70,7 +71,8 @@ const types = {
   TRIED_NAVIGATE_WHEN_PREVENTED,
   SAVE_LOCAL,
   LOAD_LOCAL,
-  DELETE_ALL
+  DELETE_ALL,
+  DELETE_DATA_ON_LOCAL_STORAGE
 }
 
 export default types

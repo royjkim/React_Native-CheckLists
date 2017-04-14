@@ -1,4 +1,7 @@
-import types from './dataActions'
+import types from './dataActions';
+import { AsyncStorage, Alert } from 'react-native';
+import { cloneDeep } from 'lodash';
+
 
 // Below is for after adding new template(including items), check if the uniqueId is overlapped or not.
 const checkIdOverlapOrNot = (attr, lastId, newData, requestAction) => {
@@ -391,27 +394,72 @@ export function triedNavigateWhenPrevented(__navigatorRouteID, statusBoolean) {
 }
 
 export function savelocal() {
-  return {
-    type: types.SAVE_LOCAL
-  }
-}
-const internal_loadlocal = () => ({
-  type: types.LOAD_LOCAL
-})
-export function loadlocal() {
+  // return {
+  //   type: types.SAVE_LOCAL
+  // }
   return (dispatch, getState) => {
-    dispatch(internal_loadlocal());
-    const prevState = getState();
-    dispatch(findLastId(prevState.result));
+    const prevState = getState(),
+          tempResult = cloneDeep(prevState.normalizeReducer);
+    delete tempResult.searchBarText;
+    delete tempResult.lastId;
+    AsyncStorage.setItem('checklist', JSON.stringify(tempResult), Alert.alert(
+      'Completed',
+      'Save on local completed.',
+      [
+        { text: 'OK' }
+      ]
+    ));
   }
 }
 
-const internal_deleteAll = () => ({
-
+const internal_loadlocal = loadedState => ({
+  type: types.LOAD_LOCAL,
+  loadedState
 })
+
+export function loadlocal() {
+  return async (dispatch, getState) => {
+    const loadedState = await AsyncStorage.getItem('checklist')
+                                .then(resolve => JSON.parse(resolve))
+                                .catch(reject => console.log('error : ', reject));
+    if(!loadedState) {
+      Alert.alert(
+        'Warning',
+        'There is no data.',
+        [
+          { text: 'OK' }
+        ]
+      )
+      return null;
+    }
+    dispatch(internal_loadlocal(loadedState));
+    const prevState = getState();
+    prevState.hasOwnProperty('result') && dispatch(findLastId(prevState.result));
+  }
+}
 
 export function deleteAll() {
+  Alert.alert(
+    'Completed',
+    'Delete Completed.'
+    [
+      { text: 'OK' }
+    ]
+  )
   return {
     type: types.DELETE_ALL
   }
+}
+
+export function deleteLocalStorage() {
+  AsyncStorage.removeItem('checklist').then(resolve => Alert.alert(
+    'Completed',
+    'Delete data on local storage. This doesn\'t affect current data.',
+    [
+      { text: 'OK' }
+    ]
+  )).catch(error => console.log('error : ', error))
+ return {
+   type: types.DELETE_DATA_ON_LOCAL_STORAGE
+ }
 }

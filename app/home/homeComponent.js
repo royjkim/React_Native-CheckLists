@@ -33,7 +33,7 @@ export default class HomeComponent extends React.Component {
   }
 
   render() {
-    const { route, navigator, state, searchBarText, savelocal, loadlocal, deleteAll } = this.props
+    const { route, navigator, state, searchBarText, savelocal, loadlocal, deleteAll, deleteLocalStorage } = this.props
     const renderRow = (rowData, sectionId) => <ListItem
       key={sectionId}
       title={rowData.name}
@@ -129,15 +129,20 @@ export default class HomeComponent extends React.Component {
             buttonStyle={{ marginTop: 10 }}
             onPress={() => savelocal()}
           />
-          {/* <Button
+          <Button
             title='Load from local'
             buttonStyle={{ marginTop: 10 }}
             onPress={() => loadlocal()}
-          /> */}
+          />
           <Button
             title='Delete All'
             buttonStyle={{ marginTop: 10 }}
             onPress={() => deleteAll()}
+          />
+          <Button
+            title='Delete Data on local Storage'
+            buttonStyle={{ marginTop: 10 }}
+            onPress={() => deleteLocalStorage()}
           />
         </ScrollView>
       </View>

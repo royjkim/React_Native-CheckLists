@@ -8,6 +8,7 @@ import {
   savelocal,
   loadlocal,
   deleteAll,
+  deleteLocalStorage,
 } from '../actions/dataActionCreators'
 
 import mySelectors from '../container/selectors'
@@ -38,7 +39,8 @@ const mapDispatchToProps = dispatch => ({
   triedNavigateWhenPrevented: (parentTab, statusBoolean) => dispatch(triedNavigateWhenPrevented(parentTab, statusBoolean)),
   savelocal: () => dispatch(savelocal()),
   loadlocal: () => dispatch(loadlocal()),
-  deleteAll: () => dispatch(deleteAll())
+  deleteAll: () => dispatch(deleteAll()),
+  deleteLocalStorage: () => dispatch(deleteLocalStorage())
 })
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
