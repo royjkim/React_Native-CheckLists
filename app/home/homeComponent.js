@@ -3,7 +3,7 @@ import {
   View,
   Text,
   ListView,
-  ScrollView,
+  Alert,
 } from 'react-native'
 import styles from '../components/styles'
 
@@ -123,28 +123,6 @@ export default class HomeComponent extends React.Component {
             })
           }}
         />}
-        <ScrollView>
-          <Button
-            title='Save on local'
-            buttonStyle={{ marginTop: 10 }}
-            onPress={() => savelocal()}
-          />
-          <Button
-            title='Load from local'
-            buttonStyle={{ marginTop: 10 }}
-            onPress={() => loadlocal()}
-          />
-          <Button
-            title='Delete All'
-            buttonStyle={{ marginTop: 10 }}
-            onPress={() => deleteAll()}
-          />
-          <Button
-            title='Delete Data on local Storage'
-            buttonStyle={{ marginTop: 10 }}
-            onPress={() => deleteLocalStorage()}
-          />
-        </ScrollView>
       </View>
     )
   }

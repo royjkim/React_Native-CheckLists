@@ -5,11 +5,7 @@ import {
   searchBarText,
   navigatePopToTopRequest,
   triedNavigateWhenPrevented,
-  savelocal,
-  loadlocal,
-  deleteAll,
-  deleteLocalStorage,
-} from '../actions/dataActionCreators'
+} from '../actions/dataActionCreators';
 
 import mySelectors from '../container/selectors'
 
@@ -36,11 +32,7 @@ const make_mapStateToProps = () => (state, ownProps) => {
 const mapDispatchToProps = dispatch => ({
   searchBarText: (searchText, attr) => dispatch(searchBarText(searchText, attr)),
   navigatePopToTopRequest: (targetTab, statusBoolean) => dispatch(navigatePopToTopRequest(targetTab, statusBoolean)),
-  triedNavigateWhenPrevented: (parentTab, statusBoolean) => dispatch(triedNavigateWhenPrevented(parentTab, statusBoolean)),
-  savelocal: () => dispatch(savelocal()),
-  loadlocal: () => dispatch(loadlocal()),
-  deleteAll: () => dispatch(deleteAll()),
-  deleteLocalStorage: () => dispatch(deleteLocalStorage())
+  triedNavigateWhenPrevented: (parentTab, statusBoolean) => dispatch(triedNavigateWhenPrevented(parentTab, statusBoolean))
 })
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {

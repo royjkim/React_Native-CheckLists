@@ -24,6 +24,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 10
   },
+  buttonStyle: {
+    marginTop: 10,
+    borderRadius: 10
+  },
 })
 
 export default styles

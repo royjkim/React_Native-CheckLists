@@ -2,7 +2,6 @@ import types from './dataActions';
 import { AsyncStorage, Alert } from 'react-native';
 import { cloneDeep } from 'lodash';
 
-
 // Below is for after adding new template(including items), check if the uniqueId is overlapped or not.
 const checkIdOverlapOrNot = (attr, lastId, newData, requestAction) => {
 
@@ -433,6 +432,13 @@ export function loadlocal() {
       return null;
     }
     dispatch(internal_loadlocal(loadedState));
+    Alert.alert(
+      'Completed',
+      'Load data from local storage is completed.',
+      [
+        { text: 'OK' }
+      ]
+    )
     const prevState = getState();
     prevState.hasOwnProperty('result') && dispatch(findLastId(prevState.result));
   }
@@ -441,7 +447,7 @@ export function loadlocal() {
 export function deleteAll() {
   Alert.alert(
     'Completed',
-    'Delete Completed.'
+    'Delete Completed.',
     [
       { text: 'OK' }
     ]
@@ -454,7 +460,7 @@ export function deleteAll() {
 export function deleteLocalStorage() {
   AsyncStorage.removeItem('checklist').then(resolve => Alert.alert(
     'Completed',
-    'Delete data on local storage. This doesn\'t affect current data.',
+    'Data on local storage is deleted.',
     [
       { text: 'OK' }
     ]
