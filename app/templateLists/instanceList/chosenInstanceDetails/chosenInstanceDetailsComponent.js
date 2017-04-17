@@ -268,19 +268,28 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
           visible={this.state.modalPickerVisible}
           transparent={true}
           >
-          <View style={{ flex: 1 }}>
+          <View style={{
+            flex: 1,
+            marginBottom: 48
+          }}
+          >
             <TouchableOpacity
               style={{
                 flex: 1,
-                backgroundColor: 'transparent'
+                backgroundColor: 'transparent',
               }}
               onPress={() => this.setState({ modalPickerVisible: false })}>
+              <View style={{
+                flex: 1,
+                backgroundColor: 'white',
+                opacity: 0.6
+              }}/>
             </TouchableOpacity>
             <View
               style={{
                 flex: 0,
                 justifyContent: 'flex-end',
-                marginBottom: 30,
+                // marginBottom: 30,
                 backgroundColor: 'white',
                 borderTopWidth: 1,
                 borderColor: '#C1C1C1'

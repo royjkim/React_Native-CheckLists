@@ -43,20 +43,11 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
     this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
   }
   componentWillMount() {
-    console.log('componentWillMount - this.state : ', this.state);
-    console.log('componentWillMount - this.props : ', this.props);
+    // console.log('componentWillMount - this.state : ', this.state);
+    // console.log('componentWillMount - this.props : ', this.props);
     this.setState({
       dataSourceItemsCustomizedOfChosenInstance: this.ds.cloneWithRows(this.state.tempItems)
     })
-  }
-
-  componentWillUpdate(nextProps, nextState) {
-    console.log('componentWillUpdate - nextProps.itemsCustomizedOfChosenInstanceObject : ', nextProps.itemsCustomizedOfChosenInstanceObject);
-    console.log('componentWillUpdate - nextState.tempItems : ', JSON.stringify(nextState.tempItems, null, 1));
-    console.log('componentWillUpdate - nextState.prevItems : ', JSON.stringify(nextState.prevItems, null, 1));
-    console.log('componentWillUpdate - nextState.dataSourceItemsCustomizedOfChosenInstance._dataBlob : ', JSON.stringify(nextState.dataSourceItemsCustomizedOfChosenInstance._dataBlob, null, 1));
-    // console.log('componentWillUpdate - nextState.tempItems : ', JSON.stringify(this.state.tempItems, null, 1));
-
   }
 
   componentDidUpdate() {
@@ -395,7 +386,7 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
               backgroundColor='#159588'
               buttonStyle={{ borderRadius: 10 }}
               onPress={() => {
-                this.state.tempNewItemDesc !== '' && this.setState(prevState => {
+                this.state.tempNewItemDesc !== '' ? this.setState(prevState => {
                   const addUniqueCount = Object.keys(prevState.tempItems).length - Object.keys(prevState.prevItems).length
                   prevState.newItemCustomized = {
                     desc: prevState.tempNewItemDesc,
@@ -414,7 +405,13 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
                   prevState.tempNewItemDesc = '';
                   prevState.changeValue_items = !isEqual(prevState.prevItems, prevState.tempItems);
                   prevState.dataSourceItemsCustomizedOfChosenInstance = this.ds.cloneWithRows(prevState.tempItems);
-                })
+                }) : Alert.alert(
+                  'Warning',
+                  'Input new item.',
+                  [
+                    { text: 'OK', onPress: () => this.refs['newItemFormInput'].refs['newItemText'].focus() }
+                  ]
+                )
               }}
             />
           </View>
@@ -510,9 +507,10 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
             [
               { text: 'Cancel' },
               { text: 'OK', onPress: () => {
+                  navigator.pop();
                   delInstance(chosenInstance);
                   this.checkIfNavigatePreventOrNot();
-                  navigator.pop();
+
                 }
               }
             ]

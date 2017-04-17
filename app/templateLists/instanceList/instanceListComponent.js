@@ -19,6 +19,7 @@ import {
   Icon,
 } from 'react-native-elements'
 
+import InstanceAddModal from './instanceAddModal';
 import TemplateAddContainer from '../../templateAdd/templateAddContainer'
 import ChosenInstanceDetailsContainer from './chosenInstanceDetails/chosenInstanceDetailsContainer'
 
@@ -28,9 +29,9 @@ export default class InstanceListComponent extends React.Component {
     this.state = {
       searchText: '',
       addNewInstanceModalVisible: false,
-      chosenTemplateForAdd: this.props.route.passProps.chosenTemplate.title,
-      chosenTemplateForAddTemplateId: this.props.route.passProps.chosenTemplate.templateId,
-      tempInstanceName: ''
+      chosenTemplateForAdd: this.props.chosenTemplate.title,
+      chosenTemplateForAddTemplateId: this.props.chosenTemplate.templateId,
+      // tempInstanceName: ''
     }
   }
 
@@ -40,8 +41,9 @@ export default class InstanceListComponent extends React.Component {
             state,
             searchBarText,
             addInstance,
-          } = this.props,
-          checkInstanceEmptyOrNot = state.instancesOfChosenTemplate.length == 0;
+            chosenTemplate,
+          } = this.props;
+          // checkInstanceEmptyOrNot = state.instancesOfChosenTemplate.length == 0;
     const renderRowInstances = (rowData, sectionId) => <ListItem
       key={sectionId}
       title={rowData.name}
@@ -71,24 +73,66 @@ export default class InstanceListComponent extends React.Component {
         }
       )}
     />;
-    const renderRowTemplates = rowData => <ListItem
-      key={rowData.templateId}
-      title={rowData.title}
-      subtitle={rowData.title == route.passProps.chosenTemplate.title ? 'This is current template.' : null}
-      underlayColor='#C0C0C0'
-      onPress={() => {
-        this.setState({
-          chosenTemplateForAdd: rowData.title,
-          chosenTemplateForAddTemplateId: rowData.templateId
-        });
-        this.refs['tempInstanceName'].focus();
-      }}
-    />
+    const addInstanceModalVisibleToggleFn = () => this.state.addNewInstanceModalVisible ? this.setState({
+      addNewInstanceModalVisible: false,
+      chosenTemplateForAdd: '',
+      // tempInstanceName: ''
+    }) : this.setState({
+      addNewInstanceModalVisible: true
+    });
+    const addInstanceTemplateChosenCompletedFn = async tempInstanceName => {
+      // this.setState({
+      //   addNewInstanceModalVisible: false,
+      //   tempInstanceName: '',
+      //   chosenTemplateForAdd: ''
+      // }),
+      await addInstanceModalVisibleToggleFn();
+      addInstance(state.lastId, {
+        instanceId: state.lastId.instances + 1,
+        items: [],
+        name: tempInstanceName,
+        template: this.state.chosenTemplateForAddTemplateId
+      })
+    };
+    const templateChosenFn = (templateTitle, templateId) => this.setState({
+      chosenTemplateForAdd: templateTitle,
+      chosenTemplateForAddTemplateId: templateId
+    });
+    const pageMoveFn = () => {
+      addInstanceModalVisibleToggleFn();
+      // this.setState({ addNewInstanceModalVisible: false, tempInstanceName: '' });
+      navigator.push({
+        passProps: {
+          leftButton: {
+            title: 'back',
+            component: ''
+          },
+          rightButton: {
+            title: '',
+            component: ''
+          },
+          parentTab: route.passProps.parentTab
+        },
+        title: 'Template Add',
+        component: TemplateAddContainer
+      });
+    };
     return(
       <View
         style={styles.bodyContainer}
         >
-        <View>
+        {state.checkInstanceEmptyOrNot ? <View>
+          <FormLabel>
+            There is no instance of this template({chosenTemplate.title}), you need to add instance.
+          </FormLabel>
+          <Button
+            icon={{ name: 'add' }}
+            backgroundColor='#008D14'
+            title='Add Instance'
+            buttonStyle={{ borderRadius: 10, marginTop: 10 }}
+            onPress={() => this.setState({ addNewInstanceModalVisible: true })}
+          />
+        </View> : <View>
           <View>
           <View style={{ marginVertical: 10, height: 2 }} />
           <SearchBar
@@ -132,142 +176,152 @@ export default class InstanceListComponent extends React.Component {
               onPress={() => this.setState({ addNewInstanceModalVisible: true })}
             />
           </View>
-            <Modal
-              animationType={'slide'}
-              transparent={true}
-              visible={this.state.addNewInstanceModalVisible}
-              >
-              <View
-                style={{ flex: 1 }}
+        </View>}
+        <Modal
+          animationType={'slide'}
+          transparent={true}
+          visible={this.state.addNewInstanceModalVisible}
+          >
+            <InstanceAddModal
+              dataSourceTemplates={state.dataSourceTemplates}
+              chosenTemplateForAdd={this.state.chosenTemplateForAdd}
+              chosenTemplateForAddTemplateId={this.state.chosenTemplateForAddTemplateId}
+              addInstanceModalVisibleToggleFn={addInstanceModalVisibleToggleFn.bind(this)}
+              templateChosenFn={templateChosenFn.bind(this)}
+              addInstanceTemplateChosenCompletedFn={addInstanceTemplateChosenCompletedFn.bind(this)}
+              pageMoveFn={pageMoveFn.bind(this)}
+              chosenTemplateTitle={chosenTemplate.title}
+            />
+          {/* <View
+            style={{ flex: 1 }}
+            >
+              <TouchableOpacity
+                style={{
+                  flex: 1,
+                }}
+                onPress={() => this.state.tempInstanceName =='' ? this.setState({ addNewInstanceModalVisible: false, chosenTemplateForAdd: '', tempInstanceName: '' }) : Alert.alert(
+                  'Warning',
+                  'After input instance name, press submit button.',
+                  [
+                    { text: 'OK', onPress: () => this.refs['tempInstanceName'].focus() }
+                  ]
+                )}
                 >
-                  <TouchableOpacity
+              </TouchableOpacity>
+              <KeyboardAvoidingView
+                behavior='position'
+                contentContainerStyle={{
+                  flex: 0,
+                  backgroundColor: 'white',
+                  borderTopWidth: 1,
+                  borderColor: '#86939D',
+                  paddingBottom: 20
+                }}
+                >
+                  <FormLabel>
+                    {this.state.chosenTemplateForAdd ? `Chosen Template : ${this.state.chosenTemplateForAdd}` : 'Choose Template from below list.'}
+                  </FormLabel>
+                  <List>
+                    <ListView
+                      dataSource={state.dataSourceTemplates}
+                      renderRow={renderRowTemplates}
+                      enableEmptySections={true}
+                      removeClippedSubviews={false}
+                      style={{ maxHeight: 200 }}
+                    />
+                  </List>
+                  <View
                     style={{
-                      flex: 1,
-                    }}
-                    onPress={() => this.state.tempInstanceName =='' ? this.setState({ addNewInstanceModalVisible: false, chosenTemplateForAdd: '', tempInstanceName: '' }) : Alert.alert(
-                      'Warning',
-                      'After input instance name, press submit button.',
-                      [
-                        { text: 'OK', onPress: () => this.refs['tempInstanceName'].focus() }
-                      ]
-                    )}
-                    >
-                  </TouchableOpacity>
-                  <KeyboardAvoidingView
-                    behavior='position'
-                    contentContainerStyle={{
                       flex: 0,
-                      backgroundColor: 'white',
-                      borderTopWidth: 1,
-                      borderColor: '#86939D',
-                      paddingBottom: 20
+                      flexDirection: 'row',
+                      marginHorizontal: 10,
+                      marginVertical: 15
+                      // marginBottom: 15
                     }}
                     >
-                      <FormLabel>
-                        {this.state.chosenTemplateForAdd ? `Chosen Template : ${this.state.chosenTemplateForAdd}` : 'Choose Template from below list.'}
-                      </FormLabel>
-                      <List>
-                        <ListView
-                          dataSource={state.dataSourceTemplates}
-                          renderRow={renderRowTemplates}
-                          enableEmptySections={true}
-                          removeClippedSubviews={false}
-                          style={{ maxHeight: 200 }}
-                        />
-                      </List>
                       <View
                         style={{
-                          flex: 0,
-                          flexDirection: 'row',
-                          marginHorizontal: 10,
-                          marginVertical: 15
-                          // marginBottom: 15
+                          flex: 1,
+                          borderColor: '#C1C1C1',
+                          borderBottomWidth: 1,
+                          // marginBottom: 10
                         }}
                         >
-                          <View
-                            style={{
-                              flex: 1,
-                              borderColor: '#C1C1C1',
-                              borderBottomWidth: 1,
-                              // marginBottom: 10
-                            }}
-                            >
-                            <TextInput
-                              ref='tempInstanceName'
-                              value={this.state.tempInstanceName}
-                              autoFocus={true}
-                              onChangeText={tempInstanceName => this.setState({ tempInstanceName })}
-                              placeholder={this.state.chosenTemplateForAdd ? 'input name for new instance.' : 'Choose Template First.'}
-                              editable={this.state.chosenTemplateForAdd !== ''}
-                              style={{
-                                flex: 1,
-                                color: this.state.tempInstanceName ? '#605E60' : '#9E9E9E',
-                                textAlign: 'center'
-                                // marginHorizontal: 10
-                              }}
-                            />
-                          </View>
-                          <Button
-                            title='Submit'
-                            backgroundColor='#008D14'
-                            buttonStyle={{ borderRadius: 10 }}
-                            onPress={() => this.state.tempInstanceName == '' ? Alert.alert(
-                              'Warning',
-                              'input new category',
-                              [
-                                { text: 'OK' }
-                              ]) : (this.setState({
-                              addNewInstanceModalVisible: false,
-                              tempInstanceName: '',
-                              chosenTemplateForAdd: ''
-                            }), addInstance(state.lastId, {
-                              instanceId: state.lastId.instances + 1,
-                              items: [],
-                              name: this.state.tempInstanceName,
-                              template: this.state.chosenTemplateForAddTemplateId
-                            }))
-                            }
-                          />
+                        <TextInput
+                          ref='tempInstanceName'
+                          value={this.state.tempInstanceName}
+                          autoFocus={true}
+                          onChangeText={tempInstanceName => this.setState({ tempInstanceName })}
+                          placeholder={this.state.chosenTemplateForAdd ? 'input name for new instance.' : 'Choose Template First.'}
+                          editable={this.state.chosenTemplateForAdd !== ''}
+                          style={{
+                            flex: 1,
+                            color: this.state.tempInstanceName ? '#605E60' : '#9E9E9E',
+                            textAlign: 'center'
+                            // marginHorizontal: 10
+                          }}
+                        />
                       </View>
-                      <View style={{ height: 10 }} />
                       <Button
-                        icon={{ name: 'note-add' }}
-                        title='Page move to add new template'
-                        backgroundColor='#339AED'
+                        title='Submit'
+                        backgroundColor='#008D14'
                         buttonStyle={{ borderRadius: 10 }}
-                        onPress={() => {
-                          const pageMoveFn = () => {
-                            this.setState({ addNewInstanceModalVisible: false, tempInstanceName: '' });
-                            navigator.push({
-                              passProps: {
-                                leftButton: {
-                                  title: 'back',
-                                  component: ''
-                                },
-                                rightButton: {
-                                  title: '',
-                                  component: ''
-                                },
-                                parentTab: route.passProps.parentTab
-                              },
-                              title: 'Template Add',
-                              component: TemplateAddContainer
-                            });
-                          };
-                          this.state.tempInstanceName == '' ? pageMoveFn() : Alert.alert(
-                              'Warning',
-                              'You already inputted new instance name. If you want to ignore it, press OK.',
-                              [
-                                { text: 'Cancel', onPress: () => this.refs['tempInstanceName'].focus() },
-                                { text: 'OK', onPress: () => pageMoveFn()}
-                              ]
-                            )
-                        }}
+                        onPress={() => this.state.tempInstanceName == '' ? Alert.alert(
+                          'Warning',
+                          'input new category',
+                          [
+                            { text: 'OK' }
+                          ]) : (this.setState({
+                          addNewInstanceModalVisible: false,
+                          tempInstanceName: '',
+                          chosenTemplateForAdd: ''
+                        }), addInstance(state.lastId, {
+                          instanceId: state.lastId.instances + 1,
+                          items: [],
+                          name: this.state.tempInstanceName,
+                          template: this.state.chosenTemplateForAddTemplateId
+                        }))
+                        }
                       />
-                  </KeyboardAvoidingView>
-              </View>
-            </Modal>
-        </View>
+                  </View>
+                  <View style={{ height: 10 }} />
+                  <Button
+                    icon={{ name: 'note-add' }}
+                    title='Page move to add new template'
+                    backgroundColor='#339AED'
+                    buttonStyle={{ borderRadius: 10 }}
+                    onPress={() => {
+                      const pageMoveFn = () => {
+                        this.setState({ addNewInstanceModalVisible: false, tempInstanceName: '' });
+                        navigator.push({
+                          passProps: {
+                            leftButton: {
+                              title: 'back',
+                              component: ''
+                            },
+                            rightButton: {
+                              title: '',
+                              component: ''
+                            },
+                            parentTab: route.passProps.parentTab
+                          },
+                          title: 'Template Add',
+                          component: TemplateAddContainer
+                        });
+                      };
+                      this.state.tempInstanceName == '' ? pageMoveFn() : Alert.alert(
+                          'Warning',
+                          'You already inputted new instance name. If you want to ignore it, press OK.',
+                          [
+                            { text: 'Cancel', onPress: () => this.refs['tempInstanceName'].focus() },
+                            { text: 'OK', onPress: () => pageMoveFn()}
+                          ]
+                        )
+                    }}
+                  />
+              </KeyboardAvoidingView>
+          </View> */}
+        </Modal>
       </View>
     )
   }

@@ -18,8 +18,9 @@ const make_mapStateToProps = () => (state, ownProps) => {
       itemsCustomized: normalizeReducer.entities.itemsCustomized,
       itemsOfChosenTemplate: mySelectors.make_get_itemsOfChosenTemplate()(normalizeReducer, chosenTemplate),
       dataSourceTemplates: mySelectors.make_get_dataSourceTemplates()(normalizeReducer),
-      lastId: normalizeReducer.lastId
+      lastId: normalizeReducer.lastId,
     },
+    chosenTemplate,
     route: ownProps.route,
     navigator: ownProps.navigator
   }
@@ -32,9 +33,11 @@ const mapDispatchToProps = dispatch => ({
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => ({
   ...ownProps,
+  ...stateProps,
   state: {
     ...stateProps.state,
     dataSourceInstancesOfChosenTemplate: mySelectors.make_get_dataSourceInstancesOfChosenTemplate()(stateProps.state.instancesOfChosenTemplate),
+    checkInstanceEmptyOrNot: stateProps.state.instancesOfChosenTemplate.length == 0,
     badgeValueOfStatusOfEachInstanceOfChosenTemplate: mySelectors.make_get_badgeValueOfStatusOfEachInstanceOfChosenTemplate()(stateProps.state.itemsCustomized, stateProps.state.instancesOfChosenTemplate),
   },
   ...dispatchProps

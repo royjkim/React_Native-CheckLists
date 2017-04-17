@@ -130,17 +130,27 @@ export default class TemplateAddNewComponent extends React.Component {
       navigatePreventFn,
     } = this.props
     const categoryModalToggle = () => this.setState({ categoryListModalVisible: !this.state.categoryListModalVisible })
-    const categoryChosen = chosenCategory => this.setState({ chosenCategory })
+    const categoryChosen = chosenCategory => {
+      this.setState({ chosenCategory });
+      this.refs['newItemFormInput'].refs['newItemText'].focus();
+    };
     const categoryAdd = newCategory => {
-      this.setState({
-        categoryList: this.state.categoryList.concat({
+      this.setState(prevState => {
+        prevState.categoryList = prevState.categoryList.concat({
           title: newCategory,
           icon: 'rowing'
-        })
-      })
-      this.setState({
-        dataSource: this.ds.cloneWithRows(this.state.categoryList)
-      })
+        });
+        prevState.dataSource = this.ds.cloneWithRows(prevState.categoryList);
+      });
+      // this.setState({
+      //   categoryList: this.state.categoryList.concat({
+      //     title: newCategory,
+      //     icon: 'rowing'
+      //   })
+      // })
+      // this.setState({
+      //   dataSource: this.ds.cloneWithRows(this.state.categoryList)
+      // })
     }
     const itemsInputedListModalToggle = () => this.setState({ itemsInputedListModalVisible: !this.state.itemsInputedListModalVisible })
     const deleteAlert = (chosen_rowData, rowId) => {
@@ -216,6 +226,7 @@ export default class TemplateAddNewComponent extends React.Component {
               }}
               >
               <TextInput
+                ref='templateNameTextInput'
                 value={this.state.templateName}
                 onChangeText={templateName => this.setState({ templateName })}
                 // placeholder='(at leat 3 characters)'
@@ -365,7 +376,27 @@ export default class TemplateAddNewComponent extends React.Component {
                 'Completed',
                 'save completed',
                 [
-                  { text: 'OK', onPress: () => navigator.replacePreviousAndPop({
+                  { text: 'OK', onPress: () => route.passProps.parentTab !== 'home' ? navigator.replacePreviousAndPop({
+                    passProps: {
+                      leftButton: {
+                        title: 'back',
+                        component: ''
+                      },
+                      rightButton: {
+                        title: '',
+                        component: ''
+                      },
+                      parentTab: route.passProps.parentTab,
+                      chosenTemplate: {
+                        ...newData,
+                        items: [
+                          ...newData.items.map(value => value.itemId)
+                        ]
+                      },
+                    },
+                    title: 'Instance List',
+                    component: InstanceListContainer
+                  }) : navigator.replace({
                     passProps: {
                       leftButton: {
                         title: 'back',
@@ -410,11 +441,11 @@ export default class TemplateAddNewComponent extends React.Component {
               //   component: InstanceListContainer
               // }));
             } else {
-              this.state.templateName.length < 4 ? Alert.alert(
+              this.state.templateName.length < 1 ? Alert.alert(
                 'Warning',
-                'template name should be at least 3 characters.',
+                'template name should be at least 1 characters.',
                 [
-                  { text: 'Confirm' }
+                  { text: 'Confirm', onPress: () => this.refs['templateNameTextInput'].focus() }
                 ]
               ) : !this.state.chosenCategory ? Alert.alert(
                 'Warning',
@@ -426,7 +457,7 @@ export default class TemplateAddNewComponent extends React.Component {
                 'Warning',
                 'Each template should have at least 1 item.',
                 [
-                  { text: 'Confirm' }
+                  { text: 'Confirm', onPress: () => this.refs['newItemFormInput'].refs['newItemText'].focus() }
                 ]
               ) : this.state.tempNewItemDesc !== '' ? Alert.alert(
                 'Warning',

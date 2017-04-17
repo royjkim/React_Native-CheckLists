@@ -132,18 +132,18 @@ const addItem = (state, action) => {
   }
 }
 
-const addItemWhenAddTemplate = (state, action) => {
-  let tempData_items = [];
-  action.newData.items.map(value => tempData_items.push(value.itemId));
-  return {
-    ...state,
-    // items: state.items.concat(tempData_items)
-    items: [
-      ...state.items,
-      ...tempData_items
-    ]
-  }
-}
+// const addItemWhenAddTemplate = (state, action) => {
+//   let tempData_items = [];
+//   action.newData.items.map(value => tempData_items.push(value.itemId));
+//   return {
+//     ...state,
+//     // items: state.items.concat(tempData_items)
+//     items: [
+//       ...state.items,
+//       ...tempData_items
+//     ]
+//   }
+// }
 
 const delItem = (state, action) => ({
   ...state,
@@ -194,7 +194,7 @@ export default function resultReducer(state, action) {
     [types.ADD_ITEMS_CUSTOMIZED_WHEN_ADD_INSTNACE]: addItemsCustomizedWhenAddInstance,
     [types.DEL_ITEMS_CUSTOMIZED]: delItemsCustomized,
     [types.ADD_ITEM]: addItem,
-    [types.ADD_ITEM_WHEN_ADD_TEMPLATE]: addItemWhenAddTemplate,
+    // [types.ADD_ITEM_WHEN_ADD_TEMPLATE]: addItemWhenAddTemplate,
     [types.DEL_ITEM]: delItem,
     [types.DEL_ITEM_MULTI_WHEN_DEL_TEMPLATE]: delItemWhenDeleteTemplate,
     [types.ADD_TEMPLATE_CATEGORY]: addTemplateCategory,

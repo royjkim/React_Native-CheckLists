@@ -37,7 +37,7 @@ export default class ItemsListsAllComponent extends React.Component {
     const renderRow = (rowData, sectionId) => <ListItem
       key={sectionId}
       title={rowData.desc}
-      subtitle={`orderNum : ${rowData.orderNum} / itemId : ${rowData.itemId}`}
+      // subtitle={`orderNum : ${rowData.orderNum} / itemId : ${rowData.itemId}`}
       underlayColor='#C0C0C0'
       hideChevron
     />
@@ -79,6 +79,7 @@ export default class ItemsListsAllComponent extends React.Component {
                   >
                   {/* Template : {state.templates[sectionId].title}, Items : {sectionData.length} */}
                   Template : {tempData.title}, Items : {sectionData.length}
+                  {/* Template : {tempData.title}, Items({sectionData.length}) */}
                 </Text>
                 <View style={{ flex: 1 }}>
                   <Icon

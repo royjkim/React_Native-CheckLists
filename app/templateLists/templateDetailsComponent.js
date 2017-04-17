@@ -45,7 +45,7 @@ export default class TemplateDetailsComponent extends React.Component {
     const tempFn_becauseOfExistNotAlertMsgFn = this.becauseOfExistNotAlertMsgFn;
     this.becauseOfExistNotAlertMsgFn = () => null;
     Alert.alert(
-      'Template Deleted',
+      'Template Deleted - templateDetailsComponent',
       'Because of Current Template Deleted. Page would be directed to back.',
       [
         { text: 'Confirm', onPress: () => {
@@ -74,6 +74,25 @@ export default class TemplateDetailsComponent extends React.Component {
       subtitle={`itemId : ${rowData.itemId}, orderNum : ${rowData.orderNum}`}
       hideChevron
     />;
+    const pageMoveToInstanceListFn = () => navigator.push(
+      {
+        passProps: {
+          leftButton: {
+            title: 'back',
+            component: ''
+          },
+          rightButton: {
+            title: '',
+            component: ''
+          },
+          parentTab: route.passProps.parentTab,
+          chosenTemplate
+        },
+        // title: `Instance List of ${route.title}`,
+        title: 'Instance List',
+        component: InstanceListContainer,
+      }
+    );
     return(
       <View style={styles.bodyContainerOnSideMenu}>
         <SearchBar
@@ -113,32 +132,20 @@ export default class TemplateDetailsComponent extends React.Component {
           />
         </List>
         <View style={{ height: 10 }} />
-        <Button
+        {length_instancesOfChosenTemplate == 0 ? <Button
+          icon={{ name: 'add' }}
+          backgroundColor='#008D14'
+          title='Page move to add instance'
+          buttonStyle={{ borderRadius: 10 }}
+          onPress={() => pageMoveToInstanceListFn()}
+        /> : <Button
           icon={{ name: 'list' }}
-          title={`Show instances of this template(${length_instancesOfChosenTemplate})`}
+          title={`Show instances(${length_instancesOfChosenTemplate}) of this template`}
           backgroundColor='#3D7CAA'
           // backgroundColor='#6296F9'
           buttonStyle={{ borderRadius: 10 }}
-          onPress={() => navigator.push(
-            {
-              passProps: {
-                leftButton: {
-                  title: 'back',
-                  component: ''
-                },
-                rightButton: {
-                  title: '',
-                  component: ''
-                },
-                parentTab: route.passProps.parentTab,
-                chosenTemplate
-              },
-              // title: `Instance List of ${route.title}`,
-              title: 'Instance List',
-              component: InstanceListContainer,
-            }
-          )}
-        />
+          onPress={() => pageMoveToInstanceListFn()}
+        />}
         <View style={{ height: 10 }} />
         <Button
           icon={{ name: 'edit' }}

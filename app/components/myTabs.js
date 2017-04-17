@@ -44,14 +44,6 @@ export default class MyTabs extends React.Component {
             : state.navigatePopToTopRequest[attr] || navigatePopToTopRequest(attr, true)
                   : this.setState({ selectedTab: attr });
 
-      // this.prevTab == attr ?
-      //   state.navigatePrevent[attr] ?
-      //     state.triedNavigateWhenPrevented[attr] ?
-      //       null : triedNavigateWhenPrevented(attr, true)
-      //         : state.navigatePopToTopRequest.home ?
-      //           null : navigatePopToTopRequest(attr, true)
-      //             : this.setState({ selectedTab: attr })
-
       this.prevTab = attr;
     }
     return(

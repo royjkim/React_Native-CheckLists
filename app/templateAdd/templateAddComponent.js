@@ -112,6 +112,7 @@ export default class TemplateAddComponent extends React.Component {
           icon={{ name: 'add' }}
           title='Make New Template'
           backgroundColor='#008D14'
+          buttonStyle={{ borderRadius: 10 }}
           onPress={() => navigator.push(
             {
               passProps: {

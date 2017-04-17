@@ -97,7 +97,7 @@ export default class TemplateDetailsModifyComponent extends React.Component {
     const tempFn_becauseOfExistNotAlertMsgFn = this.becauseOfExistNotAlertMsgFn;
     this.becauseOfExistNotAlertMsgFn = () => null;
     Alert.alert(
-      'Template Deleted',
+      'Template Deleted - TemplateDetailsModifyComponent ',
       'Because of Current Template Deleted. Page would be directed to back.',
       [
         { text: 'Confirm', onPress: () => {
@@ -369,6 +369,7 @@ export default class TemplateDetailsModifyComponent extends React.Component {
                 icon={{ name: 'check' }}
                 title='Save'
                 backgroundColor='#6598F6'
+                buttonStyle={{ borderRadius: 10 }}
                 disabled={this.state.addItemModalVisible}
                 onPress={() => this.state.emptyItemsRowId.length > 0 ? saveAlertFn() : saveProcessFn() }
               />
@@ -379,6 +380,7 @@ export default class TemplateDetailsModifyComponent extends React.Component {
                 icon={{ name: 'restore' }}
                 title='Restore'
                 backgroundColor='#86939D'
+                buttonStyle={{ borderRadius: 10 }}
                 disabled={this.state.addItemModalVisible}
                 onPress={() => resetData()}
               />
@@ -389,6 +391,7 @@ export default class TemplateDetailsModifyComponent extends React.Component {
           icon={{ name: 'delete-forever' }}
           title='Delete template'
           backgroundColor='#FF7F7C'
+          buttonStyle={{ borderRadius: 10 }}
           disabled={this.state.addItemModalVisible}
           onPress={() => Alert.alert(
             'Confim Delete',

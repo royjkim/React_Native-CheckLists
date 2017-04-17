@@ -273,8 +273,8 @@ const make_get_dataSourceTemplateCategories = () => createSelector(
     const currentAttr = 'make_get_dataSourceTemplateCategories'
     compareInputHistory(currentAttr, templateCategories)
     return make_dataSource_cloneWithRows(currentAttr, Object.values(templateCategories).sort((data1, data2) => {
-      const value1 = data1.title.toLowerCase()
-      const value2 = data2.title.toLowerCase()
+      const value1 = data1.title.toLowerCase(),
+            value2 = data2.title.toLowerCase();
       return value1 == value2 ? 0 : value1 > value2 ? 1 : -1
     }))
   }
@@ -359,30 +359,34 @@ const make_get_badgeValueOfStatusOfAllInstances = () => createSelector(
   itemsCustomized,
   itemsCustomized => {
     const currentAttr = 'make_get_badgeValueOfStatusOfAllInstances'
-    compareInputHistory(currentAttr, itemsCustomized)
-    let temp_object_ListOfitemsCustomizedOfChosenInstance = {}
-    const addFn = (targetData, attr, statusValue) => {
-      const tempMapper = {
-        true: 'completed',
-        false: 'uncompleted'
+    compareInputHistory(currentAttr, itemsCustomized);
+    if(itemsCustomized) {
+      let tempResult = {};
+      const addFn = (targetData, instanceId, statusValue) => {
+        const tempMapper = {
+          true: 'completed',
+          false: 'uncompleted'
+        }
+        const statusType = tempMapper[statusValue]
+        targetData[instanceId].total++;
+        targetData[instanceId][statusType]++;
+        return targetData
       }
-      const statusType = tempMapper[statusValue]
-      targetData[attr].total++
-      targetData[attr][statusType]++
-      return targetData
+      for(let key in itemsCustomized) {
+        // key is itemsCustomizedId.
+        const targetItemsCustomized = itemsCustomized[key];
+        tempResult.hasOwnProperty(targetItemsCustomized.instanceId) || (tempResult[targetItemsCustomized.instanceId] = {
+          total: 0,
+          completed: 0,
+          uncompleted: 0
+        });
+        addFn(tempResult, targetItemsCustomized.instanceId, targetItemsCustomized.status)
+      };
+      addResultHistory(currentAttr, tempResult)
+      return tempResult
+    } else {
+      return {}
     }
-    for(let key in itemsCustomized) {
-      // key is itemsCustomizedId.
-      const targetItemsCustomized = itemsCustomized[key];
-      temp_object_ListOfitemsCustomizedOfChosenInstance.hasOwnProperty(targetItemsCustomized.instanceId) || (temp_object_ListOfitemsCustomizedOfChosenInstance[targetItemsCustomized.instanceId] = {
-        total: 0,
-        completed: 0,
-        uncompleted: 0
-      });
-      addFn(temp_object_ListOfitemsCustomizedOfChosenInstance, targetItemsCustomized.instanceId, targetItemsCustomized.status)
-    }
-    addResultHistory(currentAttr, temp_object_ListOfitemsCustomizedOfChosenInstance)
-    return temp_object_ListOfitemsCustomizedOfChosenInstance
   }
 )
 

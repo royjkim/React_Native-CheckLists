@@ -17,16 +17,18 @@ const make_mapStateToProps = () => (state, ownProps) => {
   const normalizeReducer = state.normalizeReducer,
         configReducer = state.configReducer,
         passProps = ownProps.route.passProps,
-        chosenInstance = passProps.chosenInstance;
+        chosenInstance = passProps.chosenInstance,
+        checkChosenInstanceExistOrNot = normalizeReducer.entities.instances.hasOwnProperty(chosenInstance.instanceId);
   return {
     // itemsCustomizedOfChosenInstanceArray: mySelectors.make_get_itemsCustomizedOfChosenInstance()(state.normalizeReducer, chosenInstance),
-    itemsCustomizedOfChosenInstanceObject: mySelectors.make_get_itemsCustomizedOfChosenInstance()(state.normalizeReducer, chosenInstance),
+    itemsCustomizedOfChosenInstanceObject: checkChosenInstanceExistOrNot ? mySelectors.make_get_itemsCustomizedOfChosenInstance()(state.normalizeReducer, chosenInstance) : {},
     statusPicker: configReducer.picker,
     navigatePrevent: configReducer.navigatePrevent,
     triedNavigateWhenPrevented: configReducer.triedNavigateWhenPrevented,
-    chosenTemplate: normalizeReducer.entities.templates[chosenInstance.template],
+    chosenTemplate: normalizeReducer.entities.templates.hasOwnProperty(chosenInstance.template) ? normalizeReducer.entities.templates[chosenInstance.template] : {},
     lastId: normalizeReducer.lastId,
-    chosenInstance,
+    chosenInstance: checkChosenInstanceExistOrNot ? chosenInstance : {},
+    checkChosenInstanceExistOrNot,
     parentTab: passProps.parentTab,
     route: ownProps.route,
     navigator: ownProps.navigator
@@ -54,7 +56,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
   //   return tempResult
   // })(),
   // lastOrderNum: stateProps.itemsCustomizedOfChosenInstanceArray.length > 0 ? stateProps.itemsCustomizedOfChosenInstanceArray.slice(-1)[0].orderNum : 0,
-  lastOrderNum: Object.values(stateProps.itemsCustomizedOfChosenInstanceObject).sort((data1, data2) => data2.orderNum - data1.orderNum)[0].orderNum || 0,
+  lastOrderNum: stateProps.checkChosenInstanceExistOrNot ? Object.values(stateProps.itemsCustomizedOfChosenInstanceObject).sort((data1, data2) => data2.orderNum - data1.orderNum)[0].orderNum || 0 : 0,
   // tempResult.sort((data1, data2) => data1.orderNum - data2.orderNum);
   ...dispatchProps
 })

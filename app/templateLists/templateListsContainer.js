@@ -4,13 +4,12 @@ import mySelectors from '../container/selectors'
 import { searchBarText, navigatePopToTopRequest } from '../actions/dataActionCreators'
 
 const make_mapStateToProps = () => (state, ownProps) => ({
-  state: {
-    templates: state.normalizeReducer.entities.templates,
-    templatesLength: state.normalizeReducer.result.templates.length,
-    dataSourceTemplates: mySelectors.make_get_dataSourceTemplates()(state.normalizeReducer),
-    badgeValueOfInstancesOfChosenTemplates: mySelectors.make_get_badgeValueOfInstancesOfChosenTemplates()(state.normalizeReducer),
-    navigatePopToTopRequest: state.configReducer.navigatePopToTopRequest
-  },
+  templates: state.normalizeReducer.entities.templates,
+  templatesLength: state.normalizeReducer.result.templates.length,
+  dataSourceTemplates: mySelectors.make_get_dataSourceTemplates()(state.normalizeReducer),
+  badgeValueOfInstancesOfChosenTemplates: mySelectors.make_get_badgeValueOfInstancesOfChosenTemplates()(state.normalizeReducer),
+  navigatePopToTopRequest: state.configReducer.navigatePopToTopRequest,
+  checkTemplateEmptyOrNot: Object.keys(state.normalizeReducer.entities.templates).length == 0,
   route: ownProps.route,
   navigator: ownProps.navigator
 })

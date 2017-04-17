@@ -17,7 +17,9 @@ import {
   SearchBar,
 } from 'react-native-elements'
 
-import ChosenInstanceDetailsContainer from '../templateLists/instanceList/chosenInstanceDetails/chosenInstanceDetailsContainer'
+import ChosenInstanceDetailsContainer from '../templateLists/instanceList/chosenInstanceDetails/chosenInstanceDetailsContainer';
+import TemplateAddContainer from '../templateAdd/templateAddContainer';
+
 
 export default class InstanceListsAllComponent extends React.Component {
   constructor(props) {
@@ -34,8 +36,8 @@ export default class InstanceListsAllComponent extends React.Component {
       // title={rowData.desc}
       underlayColor='#C0C0C0'
       title={<CheckBox
-        // title={rowData.desc}
-        title={`${rowData.desc}, orderNum : ${rowData.orderNum}`}
+        title={rowData.desc}
+        // title={`${rowData.desc}, orderNum : ${rowData.orderNum}`}
         checked={rowData.status}
         onPress={() => changeStatusOfItemsCustomized(rowData)}
         />
@@ -123,23 +125,23 @@ export default class InstanceListsAllComponent extends React.Component {
         <Button
           icon={{ name: 'note-add' }}
           title='Add Template'
-          onPress={() => {
-            navigator.push({
-              passProps: {
-                leftButton: {
-                  title: 'Back',
-                  component: '',
-                },
-                rightButton: {
-                  title: '',
-                  component: '',
-                },
-                parentTab: route.passProps.parentTab
+          backgroundColor='#008D14'
+          buttonStyle={{ borderRadius: 10 }}
+          onPress={() => navigator.push({
+            passProps: {
+              leftButton: {
+                title: 'Back',
+                component: '',
               },
-              title: 'Template Add',
-              component: TemplateAdd,
-            })
-          }}
+              rightButton: {
+                title: '',
+                component: '',
+              },
+              parentTab: route.passProps.parentTab
+            },
+            title: 'Template Add',
+            component: TemplateAddContainer,
+          })}
         />
       </View>
     )
