@@ -40,7 +40,7 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
     });
   }
 
-  componentWillUpdate(nextProps) {
+  componentWillReceiveProps(nextProps) {
     nextProps.existOrNot_chosenInstance || this.becauseOfExistNotAlertMsgFn();
   }
 
@@ -49,7 +49,7 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
     this.becauseOfExistNotAlertMsgFn = () => null;
     Alert.alert(
       'Instance Deleted',
-      'ChosenInstanceDetailsComponent - Because of Current Instance Deleted. Page would be directed to back.',
+      'Because of Current Instance Deleted. Page would be directed to back.',
       [
         { text: 'Confirm', onPress: () => {
           this.becauseOfExistNotAlertMsgFn = tempFn_becauseOfExistNotAlertMsgFn;

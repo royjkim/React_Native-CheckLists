@@ -18,7 +18,7 @@ import {
   SearchBar,
   Icon,
 } from 'react-native-elements'
-import { isEqual, cloneDeep } from 'lodash'
+import { isEqual, cloneDeep } from 'lodash';
 
 import TemplateDetailsModifyContainer from './templateDetailsModifyContainer';
 import ChosenInstanceDetailsContainer from './instanceList/chosenInstanceDetails/chosenInstanceDetailsContainer';
@@ -36,26 +36,27 @@ export default class TemplateDetailsComponent extends React.Component {
     this.props.existOrNot_chosenTemplate || this.becauseOfExistNotAlertMsgFn();
   }
 
-  componentWillUpdate(nextProps) {
+  componentWillReceiveProps(nextProps) {
     // Below could be cause ignoring 'navigate prevent data' which is to be canceled.
-    nextProps.existOrNot_chosenTemplate || this.becauseOfExistNotAlertMsgFn();
+    nextProps.existOrNot_chosenTemplate || this.becauseOfExistNotAlertMsgFn(nextProps.route);
   }
 
-  becauseOfExistNotAlertMsgFn() {
+  becauseOfExistNotAlertMsgFn(nextPropsRoute) {
     const tempFn_becauseOfExistNotAlertMsgFn = this.becauseOfExistNotAlertMsgFn;
     this.becauseOfExistNotAlertMsgFn = () => null;
-    Alert.alert(
-      'Template Deleted - templateDetailsComponent',
-      'Because of Current Template Deleted. Page would be directed to back.',
-      [
-        { text: 'Confirm', onPress: () => {
-          this.becauseOfExistNotAlertMsgFn = tempFn_becauseOfExistNotAlertMsgFn;
-          this.props.navigator.pop();
-          }
-        }
-      ]
-    )
-
+    this.becauseOfExistNotAlertMsgFn = tempFn_becauseOfExistNotAlertMsgFn;
+    this.props.navigator.pop();
+    // Alert.alert(
+    //   'Template Deleted',
+    //   'Because of Current Template Deleted. Page would be directed to back.',
+    //   [
+    //     { text: 'Confirm', onPress: () => {
+    //       this.becauseOfExistNotAlertMsgFn = tempFn_becauseOfExistNotAlertMsgFn;
+    //       this.props.navigator.pop();
+    //       }
+    //     }
+    //   ]
+    // )
   }
   render() {
     const { route,
@@ -94,7 +95,7 @@ export default class TemplateDetailsComponent extends React.Component {
       }
     );
     return(
-      <View style={styles.bodyContainerOnSideMenu}>
+      <View style={styles.bodyContainer}>
         <SearchBar
           lightTheme
           round={true}

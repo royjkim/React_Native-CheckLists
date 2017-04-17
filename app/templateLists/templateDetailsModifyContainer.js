@@ -26,7 +26,7 @@ const make_mapStateToProps = () => (state, ownProps) => {
     navigatePrevent: configReducer.navigatePrevent,
     triedNavigateWhenPrevented: configReducer.triedNavigateWhenPrevented,
     lastId,
-    chosenTemplate,
+    chosenTemplate: existOrNot_chosenTemplate ? chosenTemplate : {},
     last_orderNum: existOrNot_chosenTemplate ? mySelectors.make_get_last_orderNum()(normalizeReducer, chosenTemplate) : 0,
     existOrNot_chosenTemplate,
     route: ownProps.route,

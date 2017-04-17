@@ -25,31 +25,6 @@ export default class TemplateListsComponent extends React.Component {
     }
   }
 
-  // shouldComponentUpdate(nextProps) {
-  //   let tempResult = true
-  //   nextProps.navigatePopToTopRequest.templateList ? (this.props.navigatePopToTopRequestFn('templateList', false), tempResult = false, this.props.navigator.popToTop()) : null
-  //   return tempResult
-  // }
-  componentDidMount() {
-    // this.props.dataSourceTemplates._cachedRowCount
-    //  this.props.checkTemplateEmptyOrNot && this.props.navigator.push(
-    //   {
-    //     passProps: {
-    //       leftButton: {
-    //         title: 'back',
-    //         component: ''
-    //       },
-    //       rightButton: {
-    //         title: '',
-    //         component: ''
-    //       },
-    //       parentTab: 'templateList'
-    //     },
-    //     title: 'Template Add',
-    //     component: TemplateAddContainer
-    //   }
-    // );
-  }
   componentDidUpdate() {
     this.props.navigatePopToTopRequest.templateList && (this.props.navigatePopToTopRequestFn('templateList', false), this.props.navigator.popToTop());
   }
@@ -109,11 +84,14 @@ export default class TemplateListsComponent extends React.Component {
     return(
       <View style={styles.bodyContainer}>
         {checkTemplateEmptyOrNot ? <View>
+          <FormLabel>
+            There is no template, you need to make template first.
+          </FormLabel>
           <Button
             icon={{ name: 'add' }}
             title='Make New Template'
             backgroundColor='#008D14'
-            buttonStyle={{ borderRadius: 10 }}
+            buttonStyle={{ borderRadius: 10, marginTop: 10 }}
             onPress={() => navigator.push(
               {
                 passProps: {

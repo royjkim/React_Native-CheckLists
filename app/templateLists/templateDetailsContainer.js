@@ -25,7 +25,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
   ...ownProps,
   ...stateProps,
   dataSourceOfItemsOfChosenTemplate: mySelectors.make_get_dataSourceOfItemsOfChosenTemplate()(stateProps.itemsOfChosenTemplate),
-  itemsLengthOfChosenTemplate: stateProps.itemsOfChosenTemplate.length,
+  itemsLengthOfChosenTemplate: Object.keys(stateProps.itemsOfChosenTemplate).length,
   ...dispatchProps
 })
 

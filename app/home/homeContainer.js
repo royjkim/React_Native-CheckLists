@@ -4,6 +4,7 @@ import HomeComponent from './homeComponent'
 import {
   searchBarText,
   navigatePopToTopRequest,
+  loadlocal
   // triedNavigateWhenPrevented,
 } from '../actions/dataActionCreators';
 
@@ -36,6 +37,7 @@ const mapDispatchToProps = dispatch => ({
   searchBarText: (searchText, attr) => dispatch(searchBarText(searchText, attr)),
   navigatePopToTopRequestFn: (targetTab, statusBoolean) => dispatch(navigatePopToTopRequest(targetTab, statusBoolean)),
   // triedNavigateWhenPrevented: (parentTab, statusBoolean) => dispatch(triedNavigateWhenPrevented(parentTab, statusBoolean))
+  loadlocal: () => dispatch(loadlocal())
 })
 
 export default connect(make_mapStateToProps, mapDispatchToProps)(HomeComponent)

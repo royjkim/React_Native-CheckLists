@@ -175,7 +175,8 @@ const make_get_dataSourceTemplates = () => createSelector(
   (templates, searchBarText) => {
     const currentAttr = 'make_get_dataSourceTemplates';
     compareInputHistory(currentAttr, templates, searchBarText);
-    return make_dataSource_cloneWithRows(currentAttr, Object.values(templates).filter(value => value.title.toLowerCase().includes(searchBarText)).sort((data1, data2) => data2.templateId - data1.templateId))
+    const tempDate_templates = Object.values(templates);
+    return tempDate_templates.length == 0 ? make_dataSource_cloneWithRows(currentAttr, []) : make_dataSource_cloneWithRows(currentAttr, Object.values(templates).filter(value => value.title.toLowerCase().includes(searchBarText)).sort((data1, data2) => data2.templateId - data1.templateId))
   }
 )
 
@@ -202,14 +203,20 @@ const make_get_dataSourceItems = () => createSelector(
   // items,
   searchBarTextItemList,
   (items, templates, searchBarText) => {
-    const currentAttr = 'make_get_dataSourceItems'
+    const currentAttr = 'make_get_dataSourceItems';
     compareInputHistory(currentAttr, items, templates, searchBarText)
     let tempResult = {}
     Object.values(templates).map(value1 => {
       tempResult[value1.templateId] = [];
       value1.items.map(value2 => {
-        const temp_targetItem = items[value2] || { desc: '' }
-        return temp_targetItem.desc.toLowerCase().includes(searchBarText) && tempResult[value1.templateId].push(temp_targetItem)
+        if(items.hasOwnProperty(value2)) {
+          const temp_targetItem = items[value2] || { desc: '' }
+          return temp_targetItem.desc.toLowerCase().includes(searchBarText) && tempResult[value1.templateId].push(temp_targetItem)
+        } else {
+          return null
+        }
+        // const temp_targetItem = items[value2] || { desc: '' }
+        // return temp_targetItem.desc.toLowerCase().includes(searchBarText) && tempResult[value1.templateId].push(temp_targetItem)
         // return items[value2].desc.toLowerCase().includes(searchBarText) && tempResult[value1.templateId].push(items[value2])
       });
       tempResult[value1.templateId].sort((data1, data2) => data1.orderNum - data2.orderNum);
