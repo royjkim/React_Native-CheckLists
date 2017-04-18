@@ -33,7 +33,6 @@ const checkIdOverlapOrNot = (attr, lastId, newData, requestAction) => {
       return newData
     },
     addItemsCustomized: (attr, lastId, newData) => newData[0].itemCustomizedId == lastId[attr] + 1 ? newData : newData.map((value, index) => {
-      console.log('value : ', JSON.stringify(value, null, 1));
       value.itemCustomizedId = lastId[attr] + 1 + index
       return value
     })
@@ -453,7 +452,7 @@ export function triedNavigateWhenPrevented(__navigatorRouteID, statusBoolean) {
     status: statusBoolean
   }
 }
-let count = 0;
+
 export function savelocal(alertNeedBoolean) {
   // return {
   //   type: types.SAVE_LOCAL
@@ -470,7 +469,6 @@ export function savelocal(alertNeedBoolean) {
         { text: 'OK' }
       ]
     ));
-    console.log('save completed - count : ', ++count);
   }
 }
 
@@ -503,7 +501,6 @@ export function loadlocal(alertNeedBoolean) {
       ]
     )
     const prevState = getState();
-    console.log('loadlocal - prevState : ', prevState)
     prevState.normalizeReducer.hasOwnProperty('result') && dispatch(findLastId(prevState.normalizeReducer.result));
   }
 }

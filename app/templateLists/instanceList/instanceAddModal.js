@@ -57,6 +57,11 @@ export default class InstanceAddModal extends React.Component {
               ]
             )}
             >
+            <View style={{
+              flex: 1,
+              backgroundColor: 'white',
+              opacity: 0.6
+            }}/>
           </TouchableOpacity>
           <KeyboardAvoidingView
             behavior='position'
