@@ -103,8 +103,7 @@ export default class TemplateListsComponent extends React.Component {
                     title: '',
                     component: ''
                   },
-                  parentTab: route.passProps.parentTab,
-                  chosenTemplate: rowData
+                  parentTab: route.passProps.parentTab
                 },
                 title: `Copy from ${rowData.title}`,
                 component: TemplateAddNewContainer

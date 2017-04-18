@@ -10,7 +10,7 @@ import {
 
 import mySelectors from '../container/selectors'
 
-const make_mapStateToProps = () => (state, ownProps) => {
+const mapStateToProps = (state, ownProps) => {
   const configReducer = state.configReducer,
         normalizeReducer = state.normalizeReducer,
         entities = normalizeReducer.entities,
@@ -33,11 +33,35 @@ const make_mapStateToProps = () => (state, ownProps) => {
   }
 }
 
+// const make_mapStateToProps = () => (state, ownProps) => {
+//   const configReducer = state.configReducer,
+//         normalizeReducer = state.normalizeReducer,
+//         entities = normalizeReducer.entities,
+//         checkbadgeValueOfStatusOfAllInstancesEmptyOrNot = Object.keys(entities.itemsCustomized).length == 0;
+//
+//   return {
+//     dataSourceForAllInstances: mySelectors.make_get_dataSourceInstances()(normalizeReducer),
+//     badgeValueOfStatusOfAllInstances: checkbadgeValueOfStatusOfAllInstancesEmptyOrNot ? {} : mySelectors.make_get_badgeValueOfStatusOfAllInstances()(normalizeReducer),
+//     // checkbadgeValueOfStatusOfAllInstancesEmptyOrNot,
+//     instances: entities.instances,
+//     templates: entities.templates,
+//     navigatePrevent: configReducer.navigatePrevent,
+//     navigatePopToTopRequest: configReducer.navigatePopToTopRequest,
+//     triedNavigateWhenPrevented: configReducer.triedNavigateWhenPrevented,
+//     checkTemplateEmptyOrNot: Object.keys(entities.templates).length == 0,
+//     checkInstanceEmptyOrNot: Object.keys(entities.instances).length == 0,
+//     allItemslength: normalizeReducer.result.items.length,
+//     route: ownProps.route,
+//     navigator: ownProps.navigator
+//   }
+// }
+
 const mapDispatchToProps = dispatch => ({
   searchBarText: (searchText, attr) => dispatch(searchBarText(searchText, attr)),
   navigatePopToTopRequestFn: (targetTab, statusBoolean) => dispatch(navigatePopToTopRequest(targetTab, statusBoolean)),
   // triedNavigateWhenPrevented: (parentTab, statusBoolean) => dispatch(triedNavigateWhenPrevented(parentTab, statusBoolean))
-  loadlocal: () => dispatch(loadlocal())
+  loadlocal: alertNeedBoolean => dispatch(loadlocal(alertNeedBoolean))
 })
 
-export default connect(make_mapStateToProps, mapDispatchToProps)(HomeComponent)
+// export default connect(make_mapStateToProps, mapDispatchToProps)(HomeComponent)
+export default connect(mapStateToProps, mapDispatchToProps)(HomeComponent)

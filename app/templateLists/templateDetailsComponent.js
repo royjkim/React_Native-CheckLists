@@ -38,10 +38,11 @@ export default class TemplateDetailsComponent extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     // Below could be cause ignoring 'navigate prevent data' which is to be canceled.
-    nextProps.existOrNot_chosenTemplate || this.becauseOfExistNotAlertMsgFn(nextProps.route);
+    // nextProps.existOrNot_chosenTemplate || this.becauseOfExistNotAlertMsgFn();
+    nextProps.existOrNot_chosenTemplate || this.becauseOfExistNotAlertMsgFn();
   }
 
-  becauseOfExistNotAlertMsgFn(nextPropsRoute) {
+  becauseOfExistNotAlertMsgFn() {
     const tempFn_becauseOfExistNotAlertMsgFn = this.becauseOfExistNotAlertMsgFn;
     this.becauseOfExistNotAlertMsgFn = () => null;
     this.becauseOfExistNotAlertMsgFn = tempFn_becauseOfExistNotAlertMsgFn;
@@ -50,11 +51,12 @@ export default class TemplateDetailsComponent extends React.Component {
     //   'Template Deleted',
     //   'Because of Current Template Deleted. Page would be directed to back.',
     //   [
-    //     { text: 'Confirm', onPress: () => {
-    //       this.becauseOfExistNotAlertMsgFn = tempFn_becauseOfExistNotAlertMsgFn;
-    //       this.props.navigator.pop();
-    //       }
-    //     }
+    //     { text: 'OK' }
+    //     // { text: 'Confirm', onPress: () => {
+    //     //   this.becauseOfExistNotAlertMsgFn = tempFn_becauseOfExistNotAlertMsgFn;
+    //     //   this.props.navigator.pop();
+    //     //   }
+    //     // }
     //   ]
     // )
   }

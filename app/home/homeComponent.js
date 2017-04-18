@@ -29,10 +29,6 @@ export default class HomeComponent extends React.Component {
     }
   }
 
-  componentWillMount() {
-    this.props.loadlocal()
-  }
-
   shouldComponentUpdate(nextProps) {
     let tempResult = true;
     // Below is for let this presentational component knows need to be navigate.popToTop().

@@ -6,16 +6,20 @@ import ChosenInstanceDetailsComponent from './chosenInstanceDetailsComponent'
 import { connect } from 'react-redux'
 import mySelectors from '../../../container/selectors'
 
-const make_mapStateToProps = () => (state, ownProps) => {
+const mapStateToProps = (state, ownProps) => {
   const entities = state.normalizeReducer.entities,
         configReducer = state.configReducer,
-        chosenInstance = ownProps.route.passProps.chosenInstance;
+        chosenInstance = ownProps.route.passProps.chosenInstance,
+        existOrNot_chosenTemplate = mySelectors.make_get_existOrNot_chosenTemplate()(entities.templates, chosenInstance.template);
+        existOrNot_chosenInstance = mySelectors.make_get_existOrNot_chosenInstance()(entities.instances, chosenInstance.instanceId);
   return {
-    chosenTemplate: entities.templates[chosenInstance.template],
+    chosenTemplate: existOrNot_chosenTemplate ? entities.templates[chosenInstance.template] : {},
     chosenInstance,
     itemsCustomizedOfChosenInstanceObject: mySelectors.make_get_itemsCustomizedOfChosenInstance()(state.normalizeReducer, chosenInstance),
     statusPicker: configReducer.picker,
-    existOrNot_chosenInstance: entities.instances.hasOwnProperty(chosenInstance.instanceId),
+    existOrNot_chosenTemplate,
+    // existOrNot_chosenInstance: entities.instances.hasOwnProperty(chosenInstance.instanceId),
+    existOrNot_chosenInstance,
     route: ownProps.route,
     navigator: ownProps.navigator
   }
@@ -39,4 +43,5 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
   }
 }
 
-export default connect(make_mapStateToProps, mapDispatchToProps, mergeProps)(ChosenInstanceDetailsComponent)
+// export default connect(make_mapStateToProps, mapDispatchToProps, mergeProps)(ChosenInstanceDetailsComponent)
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps, { pure: false })(ChosenInstanceDetailsComponent)

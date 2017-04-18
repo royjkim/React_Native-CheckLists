@@ -32,7 +32,8 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
   }
 
   componentWillMount() {
-    this.props.existOrNot_chosenInstance || this.becauseOfExistNotAlertMsgFn();
+    // this.props.existOrNot_chosenInstance || this.becauseOfExistNotAlertMsgFn();
+    (!this.props.existOrNot_chosenTemplate || !this.props.existOrNot_chosenInstance) && this.becauseOfExistNotAlertMsgFn();
     const __navigatorRouteID = this.props.route.__navigatorRouteID,
           statusPicker = this.props.statusPicker;
     this.setState({
@@ -41,23 +42,28 @@ export default class ChosenInstanceDetailsComponent extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    nextProps.existOrNot_chosenInstance || this.becauseOfExistNotAlertMsgFn();
+    // console.log('nextProps.existOrNot_chosenInstance : ', String(nextProps.existOrNot_chosenInstance))
+    (!nextProps.existOrNot_chosenTemplate || !nextProps.existOrNot_chosenInstance) && this.becauseOfExistNotAlertMsgFn();
+    // nextProps.existOrNot_chosenInstance || this.becauseOfExistNotAlertMsgFn();
   }
 
   becauseOfExistNotAlertMsgFn() {
     const tempFn_becauseOfExistNotAlertMsgFn = this.becauseOfExistNotAlertMsgFn;
     this.becauseOfExistNotAlertMsgFn = () => null;
-    Alert.alert(
-      'Instance Deleted',
-      'Because of Current Instance Deleted. Page would be directed to back.',
-      [
-        { text: 'Confirm', onPress: () => {
-          this.becauseOfExistNotAlertMsgFn = tempFn_becauseOfExistNotAlertMsgFn;
-          this.props.navigator.pop()
-          }
-        }
-      ]
-    )
+    this.becauseOfExistNotAlertMsgFn = tempFn_becauseOfExistNotAlertMsgFn;
+    this.props.navigator.pop();
+    // Alert.alert(
+    //   'Instance Deleted',
+    //   'Because of Current Instance Deleted. Page would be directed to back.',
+    //   [
+    //     { text: 'OK' }
+    //     // { text: 'Confirm', onPress: () => {
+    //     //   this.becauseOfExistNotAlertMsgFn = tempFn_becauseOfExistNotAlertMsgFn;
+    //     //   this.props.navigator.pop()
+    //     //   }
+    //     // }
+    //   ]
+    // )
   }
 
   render() {

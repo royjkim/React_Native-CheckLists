@@ -410,7 +410,7 @@ export function triedNavigateWhenPrevented(__navigatorRouteID, statusBoolean) {
   }
 }
 
-export function savelocal() {
+export function savelocal(alertNeedBoolean) {
   // return {
   //   type: types.SAVE_LOCAL
   // }
@@ -419,7 +419,7 @@ export function savelocal() {
           tempResult = cloneDeep(prevState.normalizeReducer);
     delete tempResult.searchBarText;
     delete tempResult.lastId;
-    AsyncStorage.setItem('checklist', JSON.stringify(tempResult), Alert.alert(
+    AsyncStorage.setItem('checklist', JSON.stringify(tempResult), alertNeedBoolean && Alert.alert(
       'Completed',
       'Save on local completed.',
       [
@@ -434,23 +434,23 @@ const internal_loadlocal = loadedState => ({
   loadedState
 })
 
-export function loadlocal() {
+export function loadlocal(alertNeedBoolean) {
   return async (dispatch, getState) => {
     const loadedState = await AsyncStorage.getItem('checklist')
                                 .then(resolve => JSON.parse(resolve))
                                 .catch(reject => console.log('error : ', reject));
     if(!loadedState) {
-      Alert.alert(
+      alertNeedBoolean && Alert.alert(
         'Warning',
         'There is no data.',
         [
           { text: 'OK' }
         ]
-      )
+      );
       return null;
     }
     dispatch(internal_loadlocal(loadedState));
-    Alert.alert(
+    alertNeedBoolean && Alert.alert(
       'Completed',
       'Load data from local storage is completed.',
       [

@@ -28,7 +28,9 @@ const countTest = {
   make_get_itemsOfChosenTemplate: 0,
   make_get_itemsCustomizedOfChosenInstance: 0,
   make_get_itemsCustomizedOfAllItems: 0,
-  make_get_itemsCustomizedOfEachInstanceOfChosenTemplate: 0
+  make_get_itemsCustomizedOfEachInstanceOfChosenTemplate: 0,
+  make_get_existOrNot_chosenTemplate: 0,
+  make_get_existOrNot_chosenInstance: 0
 }
 
 const addCount = attr => ++countTest[attr]
@@ -111,6 +113,14 @@ let dataInputHistory = {
   make_get_itemsCustomizedOfEachInstanceOfChosenTemplate: {
     past: [],
     // present: [], future: []
+  },
+  make_get_existOrNot_chosenTemplate: {
+    past: [],
+    // present: [], future: []
+  },
+  make_get_existOrNot_chosenInstance: {
+    past: [],
+    // present: [], future: []
   }
 }
 
@@ -134,7 +144,7 @@ const templates = state => state.entities.templates
 const instances = state => state.entities.instances;
 const chosenTemplate = (undefined, chosenTemplate) => chosenTemplate;
 
-const chosenInstance = (state, chosenInstance) => chosenInstance;
+const chosenInstance = (undefined, chosenInstance) => chosenInstance;
 const items = state => state.entities.items;
 const itemsCustomized = state => state.entities.itemsCustomized
 // const sideMenuVisible = state => state.sideMenuVisible
@@ -441,7 +451,7 @@ const make_get_itemsOfChosenTemplate = () => createSelector(
     compareInputHistory(currentAttr, items, chosenTemplate, searchBarText)
     // let tempResult = [];
     let tempResult = {}
-    chosenTemplate.items.map(value => items.hasOwnProperty(value) && items[value].desc.toLowerCase().includes(searchBarText) && (tempResult[value] = { ...items[value] }))
+    chosenTemplate.items.map(value => items.hasOwnProperty(value) && items[value].desc.toLowerCase().includes(searchBarText) && (tempResult[value] = { ...items[value] }));
     // chosenTemplate.items.map(value => items.hasOwnProperty(value) && items[value].desc.toLowerCase().includes(searchBarText) && tempResult.push(items[value]))
     // chosenTemplate.items.map(value => items[value].desc.toLowerCase().includes(searchBarText) ? tempResult.push(items[value]) : null)
     // chosenTemplate.items.map(value => items[value].desc.toLowerCase().includes(searchBarText) ? tempResult = tempResult.concat(items[value]) : null)
@@ -491,6 +501,30 @@ const make_get_itemsCustomizedOfEachInstanceOfChosenTemplate = () => createSelec
     addResultHistory(currentAttr, tempResult)
     return tempResult
   }
+);
+
+const make_get_existOrNot_chosenTemplate = () => createSelector(
+  data1 => data1,
+  (undefined, data2) => data2,
+  (templates, chosenTemplate) => {
+    const currentAttr = 'make_get_existOrNot_chosenTemplate';
+    compareInputHistory(currentAttr, templates, chosenTemplate);
+    const tempResult = templates.hasOwnProperty(chosenTemplate);
+    addResultHistory(currentAttr, tempResult);
+    return tempResult
+  }
+);
+
+const make_get_existOrNot_chosenInstance = () => createSelector(
+  data1 => data1,
+  (undefined, data2) => data2,
+  (instances, chosenInstance) => {
+    const currentAttr = 'make_get_existOrNot_chosenInstance';
+    compareInputHistory(currentAttr, instances, chosenInstance)
+    tempResult = instances.hasOwnProperty(chosenInstance);
+    addResultHistory(currentAttr, tempResult);
+    return tempResult
+  }
 )
 
 const mySelectors = {
@@ -512,6 +546,8 @@ const mySelectors = {
   make_get_itemsCustomizedOfChosenInstance,
   make_get_itemsCustomizedOfAllItems,
   make_get_itemsCustomizedOfEachInstanceOfChosenTemplate,
+  make_get_existOrNot_chosenTemplate,
+  make_get_existOrNot_chosenInstance,
 }
 
 export default mySelectors

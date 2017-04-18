@@ -9,17 +9,18 @@ import {
   addInstance,
 } from '../../actions/dataActionCreators'
 
-const make_mapStateToProps = () => (state, ownProps) => {
+const mapStateToProps = (state, ownProps) => {
   const normalizeReducer = state.normalizeReducer,
-        chosenTemplate = ownProps.route.passProps.chosenTemplate;
+        entities = normalizeReducer.entities,
+        chosenTemplate = ownProps.route.passProps.chosenTemplate,
+        existOrNot_chosenTemplate = mySelectors.make_get_existOrNot_chosenTemplate()(entities.templates, chosenTemplate.templateId);
   return {
-    state: {
-      instancesOfChosenTemplate: mySelectors.make_get_instancesOfChosenTemplate()(normalizeReducer, chosenTemplate),
-      itemsCustomized: normalizeReducer.entities.itemsCustomized,
-      itemsOfChosenTemplate: mySelectors.make_get_itemsOfChosenTemplate()(normalizeReducer, chosenTemplate),
-      dataSourceTemplates: mySelectors.make_get_dataSourceTemplates()(normalizeReducer),
-      lastId: normalizeReducer.lastId,
-    },
+    instancesOfChosenTemplate: mySelectors.make_get_instancesOfChosenTemplate()(normalizeReducer, chosenTemplate),
+    itemsCustomized: entities.itemsCustomized,
+    itemsOfChosenTemplate: mySelectors.make_get_itemsOfChosenTemplate()(normalizeReducer, chosenTemplate),
+    dataSourceTemplates: mySelectors.make_get_dataSourceTemplates()(normalizeReducer),
+    lastId: normalizeReducer.lastId,
+    existOrNot_chosenTemplate,
     chosenTemplate,
     route: ownProps.route,
     navigator: ownProps.navigator
@@ -34,13 +35,11 @@ const mapDispatchToProps = dispatch => ({
 const mergeProps = (stateProps, dispatchProps, ownProps) => ({
   ...ownProps,
   ...stateProps,
-  state: {
-    ...stateProps.state,
-    dataSourceInstancesOfChosenTemplate: mySelectors.make_get_dataSourceInstancesOfChosenTemplate()(stateProps.state.instancesOfChosenTemplate),
-    checkInstanceEmptyOrNot: stateProps.state.instancesOfChosenTemplate.length == 0,
-    badgeValueOfStatusOfEachInstanceOfChosenTemplate: mySelectors.make_get_badgeValueOfStatusOfEachInstanceOfChosenTemplate()(stateProps.state.itemsCustomized, stateProps.state.instancesOfChosenTemplate),
-  },
+  dataSourceInstancesOfChosenTemplate: mySelectors.make_get_dataSourceInstancesOfChosenTemplate()(stateProps.instancesOfChosenTemplate),
+  // checkInstanceEmptyOrNot: stateProps.instancesOfChosenTemplate.length == 0,
+  badgeValueOfStatusOfEachInstanceOfChosenTemplate: mySelectors.make_get_badgeValueOfStatusOfEachInstanceOfChosenTemplate()(stateProps.itemsCustomized, stateProps.instancesOfChosenTemplate),
   ...dispatchProps
 })
 
-export default connect(make_mapStateToProps, mapDispatchToProps, mergeProps)(InstanceListComponent)
+// export default connect(make_mapStateToProps, mapDispatchToProps, mergeProps)(InstanceListComponent)
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps, { pure: false })(InstanceListComponent)

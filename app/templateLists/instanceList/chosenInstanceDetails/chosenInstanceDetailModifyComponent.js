@@ -47,7 +47,8 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
     // console.log('componentWillMount - this.props : ', this.props);
     this.setState({
       dataSourceItemsCustomizedOfChosenInstance: this.ds.cloneWithRows(this.state.tempItems)
-    })
+    });
+    (!this.props.existOrNot_chosenTemplate || !this.props.existOrNot_chosenInstance) && this.becauseOfExistNotAlertMsgFn();
   }
 
   componentDidUpdate() {
@@ -92,6 +93,29 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
       triedNavigateWhenPreventedFn(parentTab, false));
 
   };
+
+  componentWillReceiveProps(nextProps) {
+    (!nextProps.existOrNot_chosenTemplate || !nextProps.existOrNot_chosenInstance) && this.becauseOfExistNotAlertMsgFn();
+  }
+
+  becauseOfExistNotAlertMsgFn() {
+    const tempFn_becauseOfExistNotAlertMsgFn = this.becauseOfExistNotAlertMsgFn;
+    this.becauseOfExistNotAlertMsgFn = () => null;
+    this.becauseOfExistNotAlertMsgFn = tempFn_becauseOfExistNotAlertMsgFn;
+    this.props.navigator.pop();
+    // Alert.alert(
+    //   'Instance Deleted',
+    //   'Because of Current Instance Deleted. Page would be directed to back.',
+    //   [
+    //     { text: 'OK' }
+    //     // { text: 'Confirm', onPress: () => {
+    //     //   this.becauseOfExistNotAlertMsgFn = tempFn_becauseOfExistNotAlertMsgFn;
+    //     //   this.props.navigator.pop()
+    //     //   }
+    //     // }
+    //   ]
+    // )
+  }
 
   checkIfNavigatePreventOrNot(__navigatorRouteID = this.props.route.__navigatorRouteID,
     parentTab = this.props.parentTab,

@@ -3,7 +3,7 @@ import createLogger from 'redux-logger'
 import thunk from 'redux-thunk'
 import Reactotron from 'reactotron-react-native'
 import reducer from '../reducers/reducer'
-import { normalizedDataInput, findLastId } from '../actions/dataActionCreators'
+import { normalizedDataInput, findLastId, loadlocal } from '../actions/dataActionCreators'
 
 import HomeContainer from '../home/homeContainer'
 import normalizeStore from './normalizeStore'
@@ -123,7 +123,6 @@ export default function initializeStore() {
   //   { itemId: 3, desc: 'Get on the boat', templateId: 1, orderNum: 1 },
   //   { itemId: 4, desc: 'Close Door', templateId: 2, orderNum: 10 },
   //   { itemId: 5, desc: 'Open Door', templateId: 2, orderNum: 8 },
-  //   { itemId: 5, desc: 'Open Door', templateId: 2, orderNum: 8 },
   //   { itemId: 6, desc: 'Open Door', templateId: 1, orderNum: 8 },
   //   { itemId: 7, desc: 'Watching TV', templateId: 2, orderNum: 3  },
   //   { itemId: 8, desc: 'Open Door', templateId: 3, orderNum: 8 },
@@ -153,14 +152,14 @@ export default function initializeStore() {
   //   { itemCustomizedId: 10, itemId: 2, instanceId: 4, desc: 'Watching TV', orderNum: 1, status: true },
   //   { itemCustomizedId: 11, itemId: 5, instanceId: 4, desc: 'Open Door', orderNum: 2, status: false }
   // )
+  // initialData = normalizeStore.my_normalize(initialData)
   //
-  // // setTimeout(() => store.dispatch(my_normalize()), 4000)
-  //
-  initialData = normalizeStore.my_normalize(initialData)
-  console.log('After normalize - initialData : ', initialData)
-  //
+  // console.log('After normalize - initialData : ', initialData)
+  // //
   // store.dispatch(normalizedDataInput(initialData))
   // const tempResult = store.getState()
   // store.dispatch(findLastId(tempResult.normalizeReducer.result))
+
+  store.dispatch(loadlocal(false));
   return store
 }

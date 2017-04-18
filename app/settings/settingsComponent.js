@@ -32,7 +32,7 @@ const SettingsComponent = props => {
         title='Save on local'
         backgroundColor='#6598F6'
         buttonStyle={styles.buttonStyle}
-        onPress={() => savelocal()}
+        onPress={() => savelocal(true)}
       />
       <Button
         icon={{ name: 'get-app' }}
@@ -44,7 +44,7 @@ const SettingsComponent = props => {
           'Current data would be replaced with data from local storage.',
           [
             { text: 'Cancel' },
-            { text: 'OK', onPress: () => loadlocal() }
+            { text: 'OK', onPress: () => loadlocal(true) }
           ]
         )}
       />
