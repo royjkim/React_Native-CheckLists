@@ -37,9 +37,9 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
   ...stateProps,
   dataSourceInstancesOfChosenTemplate: mySelectors.make_get_dataSourceInstancesOfChosenTemplate()(stateProps.instancesOfChosenTemplate),
   // checkInstanceEmptyOrNot: stateProps.instancesOfChosenTemplate.length == 0,
+  existOrNot_instancesOfChosenTemplate: stateProps.instancesOfChosenTemplate.length == 0,
   badgeValueOfStatusOfEachInstanceOfChosenTemplate: mySelectors.make_get_badgeValueOfStatusOfEachInstanceOfChosenTemplate()(stateProps.itemsCustomized, stateProps.instancesOfChosenTemplate),
   ...dispatchProps
 })
 
-// export default connect(make_mapStateToProps, mapDispatchToProps, mergeProps)(InstanceListComponent)
 export default connect(mapStateToProps, mapDispatchToProps, mergeProps, { pure: false })(InstanceListComponent)

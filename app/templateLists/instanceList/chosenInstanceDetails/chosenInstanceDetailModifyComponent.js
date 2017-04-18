@@ -369,15 +369,6 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
               />
             </View>
         </View>
-        {/* <FormLabel>
-          Items : total({countsOfStatusCompleted.total})
-        </FormLabel> */}
-        {this.state.changeValue_items ? <FormLabel>
-          Items : total({Object.keys(this.state.tempItems).length}, new item added)
-        </FormLabel> : <FormLabel>
-          {/* Items : total({countsOfStatusCompleted.total}) */}
-          Items : total({Object.keys(this.state.prevItems).length})
-        </FormLabel>}
         <View style={{ height: 10 }} />
         <FormLabel>
           New Item
@@ -409,37 +400,44 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
               title='Add'
               backgroundColor='#159588'
               buttonStyle={{ borderRadius: 10 }}
-              onPress={() => {
-                this.state.tempNewItemDesc !== '' ? this.setState(prevState => {
-                  const addUniqueCount = Object.keys(prevState.tempItems).length - Object.keys(prevState.prevItems).length
-                  prevState.newItemCustomized = {
-                    desc: prevState.tempNewItemDesc,
-                    instanceId: chosenInstance.instanceId,
-                    itemCustomizedId: lastId.itemsCustomized + 1 + addUniqueCount,
-                    itemId: 999,
-                    orderNum: lastOrderNum + 1 + addUniqueCount,
-                    templateId: chosenTemplate.templateId,
-                    status: false,
-                  };
-                  prevState.tempItems[prevState.newItemCustomized.itemCustomizedId] = {
-                    ...prevState.newItemCustomized
-                  };
-                  prevState.newItemCustomized.desc = '';
-                  ++prevState.newItemCustomized.itemCustomizedId;
-                  prevState.tempNewItemDesc = '';
-                  prevState.changeValue_items = !isEqual(prevState.prevItems, prevState.tempItems);
-                  prevState.dataSourceItemsCustomizedOfChosenInstance = this.ds.cloneWithRows(prevState.tempItems);
-                }) : Alert.alert(
-                  'Warning',
-                  'Input new item.',
-                  [
-                    { text: 'OK', onPress: () => this.refs['newItemFormInput'].refs['newItemText'].focus() }
-                  ]
-                )
-              }}
+              onPress={() => this.state.tempNewItemDesc !== '' ? this.setState(prevState => {
+                const addUniqueCount = Object.keys(prevState.tempItems).length - Object.keys(prevState.prevItems).length
+                prevState.newItemCustomized = {
+                  desc: prevState.tempNewItemDesc,
+                  instanceId: chosenInstance.instanceId,
+                  itemCustomizedId: lastId.itemsCustomized + 1 + addUniqueCount,
+                  itemId: 999,
+                  orderNum: lastOrderNum + 1 + addUniqueCount,
+                  templateId: chosenTemplate.templateId,
+                  status: false,
+                };
+                prevState.tempItems[prevState.newItemCustomized.itemCustomizedId] = {
+                  ...prevState.newItemCustomized
+                };
+                prevState.newItemCustomized.desc = '';
+                ++prevState.newItemCustomized.itemCustomizedId;
+                prevState.tempNewItemDesc = '';
+                prevState.changeValue_items = !isEqual(prevState.prevItems, prevState.tempItems);
+                prevState.dataSourceItemsCustomizedOfChosenInstance = this.ds.cloneWithRows(prevState.tempItems);
+              }) : Alert.alert(
+                'Warning',
+                'Input new item.',
+                [
+                  { text: 'OK', onPress: () => this.refs['newItemFormInput'].refs['newItemText'].focus() }
+                ]
+              )}
             />
           </View>
         </View>
+        {/* <FormLabel>
+          Items : total({countsOfStatusCompleted.total})
+        </FormLabel> */}
+        {this.state.changeValue_items ? <FormLabel>
+          Items : total({Object.keys(this.state.tempItems).length}, new item added)
+        </FormLabel> : <FormLabel>
+          {/* Items : total({countsOfStatusCompleted.total}) */}
+          Items : total({Object.keys(this.state.prevItems).length})
+        </FormLabel>}
         <View style={{ height: 10 }} />
         <List>
           <ListView
@@ -471,8 +469,8 @@ export default class ChosenInstanceDetailModifyComponent extends React.Component
                   return null
                 }
                 await this.setState(prevState => {
-                  prevState.changeValue_tempTemplateTitle && (modifyTemplate(chosenTemplate.templateId, prevState.tempTemplateTitle.trim()), prevState.prev_tempTemplateTitle = prevState.tempTemplateTitle.trim(), prevState.tempTemplateTitle = prevState.tempTemplateTitle.trim(), prevState.changeValue_tempInstanceName = false);
-                  prevState.changeValue_tempInstanceName && (modifyInstance(chosenInstance.instanceId, prevState.tempInstanceName.trim()), prevState.prev_tempInstanceName = prevState.tempInstanceName.trim(), prevState.tempInstanceName = prevState.tempInstanceName.trim() , prevState.changeValue_tempTemplateTitle = false);
+                  prevState.changeValue_tempTemplateTitle && (modifyTemplate(chosenTemplate.templateId, prevState.tempTemplateTitle.trim()), prevState.tempTemplateTitle = prevState.tempTemplateTitle.trim(), prevState.prev_tempTemplateTitle = prevState.tempTemplateTitle,  prevState.changeValue_tempTemplateTitle = false);
+                  prevState.changeValue_tempInstanceName && (modifyInstance(chosenInstance.instanceId, prevState.tempInstanceName.trim()), prevState.tempInstanceName = prevState.tempInstanceName.trim(), prevState.prev_tempInstanceName = prevState.tempInstanceName, prevState.changeValue_tempInstanceName = false);
                   for(let key in prevState.modifyExistingItems) {
                   //   delete prevState.tempItems[key]
                     prevState.modifyExistingItems[key].desc = prevState.modifyExistingItems[key].desc.trim();

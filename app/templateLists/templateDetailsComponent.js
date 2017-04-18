@@ -74,7 +74,7 @@ export default class TemplateDetailsComponent extends React.Component {
       key={rowData.itemId}
       title={rowData.desc}
       underlayColor='#C0C0C0'
-      subtitle={`itemId : ${rowData.itemId}, orderNum : ${rowData.orderNum}`}
+      // subtitle={`itemId : ${rowData.itemId}, orderNum : ${rowData.orderNum}`}
       hideChevron
     />;
     const pageMoveToInstanceListFn = () => navigator.push(

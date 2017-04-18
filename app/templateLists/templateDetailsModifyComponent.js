@@ -114,7 +114,7 @@ export default class TemplateDetailsModifyComponent extends React.Component {
   render() {
     const { route,
             navigator,
-            searchBarText,
+            // searchBarText,
             navigatePreventFn,
             addItem,
             modifyItem,
@@ -311,9 +311,14 @@ export default class TemplateDetailsModifyComponent extends React.Component {
               </FormLabel>
             )
           : this.state.changeValue ? (
-            <FormLabel>
-              Category : {chosenTemplate.category} / Items({Object.keys(this.state.tempItems).length}), new item added)
-            </FormLabel>
+            <View>
+              <FormLabel>
+                Category : {chosenTemplate.category}
+              </FormLabel>
+              <FormLabel>
+                Items : {Object.keys(this.state.tempItems).length}(new item added)
+              </FormLabel>
+            </View>
           ) : (
                 <FormLabel>
                   Category : {chosenTemplate.category} / Items({Object.keys(this.state.prevItems).length})
@@ -326,7 +331,7 @@ export default class TemplateDetailsModifyComponent extends React.Component {
             enableEmptySections={true}
             renderRow={renderRowItems}
             removeClippedSubviews={false}
-            style={{ maxHeight: 250 }}
+            style={{ maxHeight: 230 }}
           />
         </List>
         <View
@@ -346,7 +351,7 @@ export default class TemplateDetailsModifyComponent extends React.Component {
                   searchText: '',
                   addItemModalVisible: true
                 })
-                searchBarText('', 'itemsOfChosenTemplate')
+                // searchBarText('', 'itemsOfChosenTemplate')
             }}
               >
               <Icon
@@ -434,7 +439,13 @@ export default class TemplateDetailsModifyComponent extends React.Component {
                   flex: 1,
                 }}
                 onPress={() => this.state.newItem.desc == '' ? this.setState({ addItemModalVisible: false }) : (alert('press add button, after input a new item.'), this.refs['newItemTempDescTextInput'].focus())}
-              />
+              >
+                <View style={{
+                  flex: 1,
+                  backgroundColor: 'white',
+                  opacity: 0.6
+                }}/>
+              </TouchableOpacity>
             </View>
             <KeyboardAvoidingView
               style={{
@@ -497,6 +508,7 @@ export default class TemplateDetailsModifyComponent extends React.Component {
                   <Button
                     title='Add'
                     backgroundColor='#008D14'
+                    buttonStyle={{ borderRadius: 10 }}
                     onPress={() => {
                       this.state.newItem.desc !== '' ? (this.setState(prevState => {
                         // prevState.tempItems = [

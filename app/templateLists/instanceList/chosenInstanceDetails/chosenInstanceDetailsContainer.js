@@ -43,5 +43,4 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
   }
 }
 
-// export default connect(make_mapStateToProps, mapDispatchToProps, mergeProps)(ChosenInstanceDetailsComponent)
 export default connect(mapStateToProps, mapDispatchToProps, mergeProps, { pure: false })(ChosenInstanceDetailsComponent)

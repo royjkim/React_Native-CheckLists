@@ -65,14 +65,25 @@ export function addTemplate(lastId, newData) {
     dispatch(lastIdPlusOneByOne('templates', lastId, newData));
     // dispatch(addItem(lastId, newData));
     dispatch(addItemWhenAddTemplate(lastId, newData));
+    dispatch(savelocal(false));
   }
 }
 
+const internal_modifyTemplate = (targetTemplateId, data) => ({
+  type: types.MODIFY_TEMPLATE,
+  targetTemplateId,
+  data
+})
+
 export function modifyTemplate(targetTemplateId, data) {
-  return {
-    type: types.MODIFY_TEMPLATE,
-    targetTemplateId,
-    data
+  // return {
+  //   type: types.MODIFY_TEMPLATE,
+  //   targetTemplateId,
+  //   data
+  // }
+  return dispatch => {
+    dispatch(internal_modifyTemplate(targetTemplateId, data));
+    dispatch(savelocal(false));
   }
 }
 
@@ -90,6 +101,7 @@ export function delTemplate(targetData) {
     dispatch(delItemWhenDeleteTemplate(targetData));
     dispatch(delInstancesWhenDelTemplate(targetData));
     dispatch(internal_delTemplate(targetData));
+    dispatch(savelocal(false));
   }
 }
 
@@ -121,6 +133,7 @@ export function addInstance(lastId, newData) {
     // dispatch(addInstanceThenAddOnResult(lastId, newData, newAddedItemsCustomized));
     dispatch(lastIdPlus('instances', lastId, newData));
     dispatch(lastIdPlus('itemsCustomized', lastId, newData));
+    dispatch(savelocal(false));
   }
 };
 
@@ -139,6 +152,7 @@ export function addItemsCustomizedWhenAddInstance(lastId, newData, preventBoolea
   return dispatch => {
     dispatch(internal_addItemsCustomizedWhenAddInstance(lastId, newData));
     preventBoolean || dispatch(lastIdPlus('itemsCustomized', lastId, newData));
+    dispatch(savelocal(false));
   }
   // return {
   //   type: types.ADD_ITEMS_CUSTOMIZED,
@@ -165,19 +179,7 @@ export function addItemsCustomized(lastId, newData) {
     dispatch(lastIdPlusMulti('itemsCustomized', lastId, {
       items: [ ...newData ]
     }));
-    // const targetInstanceId = newData[0].instanceId;
-    // const prevState = getState();
-    // prevState.
-    // const itemsCustomizedOfTargetInstance = cloneDeep(((tempResult = [])
-    //   prevState.instances[targetInstanceId].items.map(value => tempResult.push(prevState.itemsCustomized[value]))
-    // )())
-    // itemsCustomizedOfTargetInstance.sort((data1, data2) => data1.orderNum - data2.orderNum).map((value, index) => {
-    //   value.orderNum = index + 1;
-    //   return value
-    // });
-    // itemsCustomizedOfTargetInstance.map((value, index) => value.orderNum)
-    //
-    // dispatch(checkOrderNumOverlapOrNot('itemsCustomized', 'addItemsCustomized'))
+    dispatch(savelocal(false));
   }
 }
 
@@ -209,6 +211,7 @@ export function delInstance(targetData) {
     dispatch(internal_delInstance(targetData));
     dispatch(delItemsCustomized(targetData));
     // dispatch(delInstanceListByTemplateWhenDeleteInstance(targetData));
+    dispatch(savelocal(false));
   }
 }
 
@@ -217,26 +220,55 @@ const delInstancesWhenDelTemplate = targetData => ({
   targetData
 })
 
+const internal_modifyInstance = (targetInstanceId, data) => ({
+  type: types.MODIFY_INSTANCE,
+  targetInstanceId,
+  data
+})
+
 export function modifyInstance(targetInstanceId, data) {
-  return {
-    type: types.MODIFY_INSTANCE,
-    targetInstanceId,
-    data
+  // return {
+  //   type: types.MODIFY_INSTANCE,
+  //   targetInstanceId,
+  //   data
+  // }
+  return dispatch => {
+    dispatch(internal_modifyInstance(targetInstanceId, data));
+    dispatch(savelocal(false));
   }
 }
+
+const internal_modifyItemsCustomized = targetData => ({
+  type: types.MODIFY_ITEMS_CUSTOMIZED,
+  targetData,
+  targetInstanceId: Object.values(targetData).slice(0)[0].instanceId
+})
 
 export function modifyItemsCustomized(targetData) {
-  return {
-    type: types.MODIFY_ITEMS_CUSTOMIZED,
-    targetData,
-    targetInstanceId: Object.values(targetData).slice(0)[0].instanceId
+  // return {
+  //   type: types.MODIFY_ITEMS_CUSTOMIZED,
+  //   targetData,
+  //   targetInstanceId: Object.values(targetData).slice(0)[0].instanceId
+  // }
+  return dispatch => {
+    dispatch(internal_modifyItemsCustomized(targetData));
+    dispatch(savelocal(false));
   }
 }
 
+const internal_changeStatusOfItemsCustomized = targetData => ({
+  type: types.CHANGE_STATUS_OF_ITEMS_CUSTOMIZED,
+  targetData
+})
+
 export function changeStatusOfItemsCustomized(targetData) {
-  return {
-    type: types.CHANGE_STATUS_OF_ITEMS_CUSTOMIZED,
-    targetData
+  // return {
+  //   type: types.CHANGE_STATUS_OF_ITEMS_CUSTOMIZED,
+  //   targetData
+  // }
+  return dispatch => {
+    dispatch(internal_changeStatusOfItemsCustomized(targetData));
+    dispatch(savelocal(false));
   }
 }
 
@@ -256,6 +288,7 @@ export function addItem(lastId, newData, targetTemplateId) {
     // dispatch(lastIdPlus('items', lastId, newData));
     // dispatch(lastIdPlusMulti('items', lastId, newData));
     dispatch(lastIdPlusMultiObject('items', lastId, newData));
+    dispatch(savelocal(false));
   }
 }
 
@@ -286,15 +319,25 @@ export function modifyItem(data, templateId) {
       data[key] == '' && (delete data[key], dispatch(delItem(parseInt(key), parseInt(templateId))))
     }
     Object.keys(data).length > 0 && dispatch(internal_modifyItem(data));
+    dispatch(savelocal(false));
   }
 }
 
 export function delItem(targetItemId, targetTemplateId) {
-  return {
-    type: types.DEL_ITEM,
-    attr: 'items',
-    targetItemId,
-    targetTemplateId
+  // return {
+  //   type: types.DEL_ITEM,
+  //   attr: 'items',
+  //   targetItemId,
+  //   targetTemplateId
+  // }
+  return dispatch => {
+    disaptch(() => ({
+      type: types.DEL_ITEM,
+      attr: 'items',
+      targetItemId,
+      targetTemplateId
+    }));
+    dispatch(savelocal(false));
   }
 }
 
@@ -317,6 +360,7 @@ export function addTemplateCategory(lastId, newData) {
     // dispatch(addItem(lastId, newData));
     // dispatch(lastIdPlus('templateCategories', lastId, newData));
     dispatch(lastIdPlusOneByOne('templateCategories', lastId, newData));
+    dispatch(savelocal(false));
   }
   // return {
   //   type: types.ADD_TEMPLATE_CATEGORY,
@@ -409,7 +453,7 @@ export function triedNavigateWhenPrevented(__navigatorRouteID, statusBoolean) {
     status: statusBoolean
   }
 }
-
+let count = 0;
 export function savelocal(alertNeedBoolean) {
   // return {
   //   type: types.SAVE_LOCAL
@@ -426,6 +470,7 @@ export function savelocal(alertNeedBoolean) {
         { text: 'OK' }
       ]
     ));
+    console.log('save completed - count : ', ++count);
   }
 }
 
@@ -458,7 +503,8 @@ export function loadlocal(alertNeedBoolean) {
       ]
     )
     const prevState = getState();
-    prevState.hasOwnProperty('result') && dispatch(findLastId(prevState.result));
+    console.log('loadlocal - prevState : ', prevState)
+    prevState.normalizeReducer.hasOwnProperty('result') && dispatch(findLastId(prevState.normalizeReducer.result));
   }
 }
 

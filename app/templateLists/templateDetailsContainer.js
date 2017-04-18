@@ -30,5 +30,4 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
   ...dispatchProps
 })
 
-// export default connect(make_mapStateToProps, mapDispatchToProps, mergeProps)(TemplateDetailsComponent)
 export default connect(mapStateToProps, mapDispatchToProps, mergeProps, { pure: false })(TemplateDetailsComponent)

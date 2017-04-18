@@ -74,6 +74,7 @@ export default class InstanceListComponent extends React.Component {
             dataSourceInstancesOfChosenTemplate,
             badgeValueOfStatusOfEachInstanceOfChosenTemplate,
             existOrNot_chosenTemplate,
+            existOrNot_instancesOfChosenTemplate
           } = this.props;
     const renderRowInstances = (rowData, sectionId) => <ListItem
       key={sectionId}
@@ -152,7 +153,18 @@ export default class InstanceListComponent extends React.Component {
       <View
         style={styles.bodyContainer}
         >
-        {existOrNot_chosenTemplate ? <View>
+        {existOrNot_instancesOfChosenTemplate ? <View>
+          <FormLabel>
+            There is no instance of this template({chosenTemplate.title}), you need to add instance.
+          </FormLabel>
+          <Button
+            icon={{ name: 'add' }}
+            backgroundColor='#008D14'
+            title='Add Instance'
+            buttonStyle={{ borderRadius: 10, marginTop: 10 }}
+            onPress={() => this.setState({ addNewInstanceModalVisible: true })}
+          />
+        </View> : <View>
           <View>
           {/* <View style={{ marginVertical: 10, height: 2 }} /> */}
           <SearchBar
@@ -197,17 +209,6 @@ export default class InstanceListComponent extends React.Component {
               onPress={() => this.setState({ addNewInstanceModalVisible: true })}
             />
           </View>
-        </View> : <View>
-          <FormLabel>
-            There is no instance of this template({chosenTemplate.title}), you need to add instance.
-          </FormLabel>
-          <Button
-            icon={{ name: 'add' }}
-            backgroundColor='#008D14'
-            title='Add Instance'
-            buttonStyle={{ borderRadius: 10, marginTop: 10 }}
-            onPress={() => this.setState({ addNewInstanceModalVisible: true })}
-          />
         </View>}
         <Modal
           animationType={'slide'}

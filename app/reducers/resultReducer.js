@@ -1,17 +1,20 @@
 import types from '../actions/dataActions'
 
-const addTemplate = (state, action) => ({
-  ...state,
-  templates: [
-    ...state.templates,
-    action.lastId + 1
-  ],
-  // items: state.items.concat(action.newData.items.map(value => value.itemId))
-  items: [
-    ...state.items,
-    ...action.newData.items.map(value => value.itemId)
-  ]
-})
+const addTemplate = (state, action) => {
+  action.newData.items.sort((data1, data2) => data1.itemId - data2.itemId);
+  return {
+    ...state,
+    templates: [
+      ...state.templates,
+      action.lastId + 1
+    ],
+    // items: state.items.concat(action.newData.items.map(value => value.itemId))
+    items: [
+      ...state.items,
+      ...action.newData.items.map(value => value.itemId)
+    ]
+  }
+}
 
 const delTemplate = (state, action) => {
   let tempData_templates = [ ...state.templates ];
