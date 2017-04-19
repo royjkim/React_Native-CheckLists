@@ -176,7 +176,8 @@ export default class HomeComponent extends React.Component {
           </List>
           <View style={{ height: 10 }} />
           {checkInstanceEmptyOrNot || <Button
-            icon={{ name: 'format-list-bulleted' }}
+            // icon={{ name: 'format-list-bulleted' }}
+            icon={{ name: 'playlist-add-check'}}
             title={`Show instances with all items(${allItemslength})`}
             buttonStyle={{ borderRadius: 10 }}
             backgroundColor='#3D7CAA'

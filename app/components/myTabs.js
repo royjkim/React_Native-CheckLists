@@ -82,7 +82,7 @@ export default class MyTabs extends React.Component {
           title={this.state.selectedTab == 'templateList' ? 'Templates' : null}
           titleStyle={styles.tabTitleStyle}
           renderIcon={() => <Icon
-            name='list'
+            name='assignment'
           />}
           onPress={() => tabCountFn('templateList')}
           >
